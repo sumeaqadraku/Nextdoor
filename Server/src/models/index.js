@@ -1,0 +1,1 @@
+// Ktu ki me kriju relacionet midis tabelave. (kardinaliteti, entitetet e dobeta etc)
