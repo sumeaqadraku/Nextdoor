@@ -5,7 +5,7 @@ import LogoImage from '../assets/images/Logo.png';
 import KeysImage from '../assets/images/keys.jpg';
 import GmailImage from '../assets/images/gmail.png';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-
+import { Link } from 'react-router-dom';
 const validateEmail = (email) => {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return re.test(email);
@@ -174,8 +174,8 @@ const LoginPage = () => {
             </button>
 
             <div className={styles['login-signup']}>
-              <p>Don't have an account? <a href="#" className={styles['login-link']}>Sign Up now</a></p>
-            </div>
+  <p>Don't have an account? <Link to="/register" className={styles['login-link']}>Sign Up now</Link></p>
+</div>
 
             <div className={styles['login-social']}>
               <p className={styles['login-social-title']}>You can also Log In with:</p>
