@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-
-import styles from '../assets/login.module.css';
 import LogoImage from '../assets/images/Logo.png';
 import KeysImage from '../assets/images/keys.jpg';
 import GmailImage from '../assets/images/gmail.png';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+
 const validateEmail = (email) => {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return re.test(email);
@@ -47,7 +46,6 @@ const LoginPage = () => {
       [name]: type === 'checkbox' ? checked : value
     }));
     
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => {
         const newErrors = {...prev};
@@ -64,7 +62,6 @@ const LoginPage = () => {
     if (validation.isValid) {
       setIsLoading(true);
       try {
-        // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 1500));
         console.log('Login successful', formData);
         
@@ -73,8 +70,6 @@ const LoginPage = () => {
         } else {
           localStorage.removeItem('rememberedEmail');
         }
-        
-        // Redirect or handle successful login here
       } catch (error) {
         console.error('Login failed', error);
         setErrors({ submit: 'Login failed. Please try again.' });
@@ -91,31 +86,31 @@ const LoginPage = () => {
   };
 
   return (
-    <div className={styles['login-container']}>
+    <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
       {/* Left side - Login form */}
-      <div className={styles['login-form-side']}>
-        <div className={styles['login-content']}>
-          <div className={styles['login-header']}>
-            <div className={styles['login-brand']}>
-              <img src={LogoImage} alt="Logo" className={styles['login-logo']} />
+      <div className="w-full md:w-1/2 p-6 md:p-12 flex flex-col justify-center">
+        <div className="max-w-md mx-auto w-full">
+          <div className="text-center mb-8">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-4">
+              <img src={LogoImage} alt="Logo" className="h-12 w-12" />
               <div>
-                <h2 className={styles['login-title']}>Welcome to NextDoor Real Estate</h2>
-                <p className={styles['login-subtitle']}>Sign In now to start browsing properties</p>
+                <h2 className="text-2xl font-bold text-[#1175a3]">Welcome to NextDoor Real Estate</h2>
+                <p className="text-sm text-gray-600">Sign In now to start browsing properties</p>
               </div>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className={styles['login-form-box']}>
-            <h3 className={styles['login-form-title']}>Sign In</h3>
+          <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-sm">
+            <h3 className="text-center mb-6 text-lg font-medium text-gray-900">Sign In</h3>
 
             {errors.submit && (
-              <div className={styles['error-message']} style={{ textAlign: 'center', marginBottom: '1rem' }}>
+              <div className="text-center mb-4 text-red-500 text-sm">
                 {errors.submit}
               </div>
             )}
 
-            <div className={styles['login-input-group']}>
-              <label htmlFor="email" className={styles['login-label']}>Email</label>
+            <div className="mb-6 relative">
+              <label htmlFor="email" className="block mb-1 text-sm font-medium text-gray-700">Email</label>
               <input 
                 id="email"
                 name="email"
@@ -123,13 +118,13 @@ const LoginPage = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Type your email..." 
-                className={`${styles['login-input']} ${errors.email ? styles['input-error'] : ''}`}
+                className={`w-full p-3 border rounded-md text-sm ${errors.email ? 'border-red-500' : 'border-gray-300'} focus:border-[#1175a3] focus:ring-2 focus:ring-[#1175a3]/10 focus:outline-none`}
               />
-              {errors.email && <span className={styles['error-message']}>{errors.email}</span>}
+              {errors.email && <span className="text-red-500 text-xs mt-1 block">{errors.email}</span>}
             </div>
 
-            <div className={styles['login-input-group']}>
-              <label htmlFor="password" className={styles['login-label']}>Password</label>
+            <div className="mb-6 relative">
+              <label htmlFor="password" className="block mb-1 text-sm font-medium text-gray-700">Password</label>
               <input 
                 id="password"
                 name="password"
@@ -137,55 +132,60 @@ const LoginPage = () => {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Type your password..." 
-                className={`${styles['login-input']} ${errors.password ? styles['input-error'] : ''}`}
+                className={`w-full p-3 border rounded-md text-sm ${errors.password ? 'border-red-500' : 'border-gray-300'} focus:border-[#1175a3] focus:ring-2 focus:ring-[#1175a3]/10 focus:outline-none`}
               />
               <button 
                 type="button"
-                className={styles['password-toggle']}
+                className="absolute right-3 top-[60%] text-gray-500"
                 onClick={togglePasswordVisibility}
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
-              {errors.password && <span className={styles['error-message']}>{errors.password}</span>}
+              {errors.password && <span className="text-red-500 text-xs mt-1 block">{errors.password}</span>}
             </div>
 
-            <div className={styles['login-remember']}>
+            <div className="flex items-center mb-4">
               <input 
                 type="checkbox"
                 id="remember"
                 name="remember"
                 checked={formData.remember}
                 onChange={handleChange}
+                className="mr-2"
               />
-              <label htmlFor="remember">Remember me</label>
+              <label htmlFor="remember" className="text-sm text-gray-700">Remember me</label>
             </div>
 
-            <div className={styles['login-forgot']}>
-              <a href="#" className={styles['login-link']}>Forgot Password?</a>
+            <div className="text-right mb-4">
+              <a href="#" className="text-sm font-medium text-[#1175a3] hover:text-[#0e5f85] hover:underline">Forgot Password?</a>
             </div>
 
             <button 
               type="submit" 
-              className={`${styles['login-button']} ${isLoading ? styles['login-button-loading'] : ''}`}
+              className={`w-full bg-[#1175a3] text-white p-3 rounded-lg font-semibold text-sm hover:bg-[#0e5f85] transition-all duration-200 ${isLoading ? 'relative bg-[#93c5fd] cursor-not-allowed' : ''}`}
               disabled={isLoading}
             >
-              {isLoading ? '' : 'Sign In'}
+              {isLoading ? (
+                <span className="absolute inset-0 flex items-center justify-center">
+                  <span className="w-4 h-4 border-2 border-t-white border-transparent rounded-full animate-spin"></span>
+                </span>
+              ) : 'Sign In'}
             </button>
 
-            <div className={styles['login-signup']}>
-  <p>Don't have an account? <Link to="/register" className={styles['login-link']}>Sign Up now</Link></p>
-</div>
+            <div className="text-center mt-6 text-sm text-gray-600">
+              <p>Don't have an account? <Link to="/register" className="text-[#1175a3] font-medium hover:text-[#0e5f85] hover:underline">Sign Up now</Link></p>
+            </div>
 
-            <div className={styles['login-social']}>
-              <p className={styles['login-social-title']}>You can also Log In with:</p>
-              <div className={styles['login-social-buttons']}>
+            <div className="text-center mt-6">
+              <p className="text-sm text-gray-600 mb-2">You can also Log In with:</p>
+              <div className="flex justify-center gap-4">
                 <button 
                   type="button"
-                  className={styles['login-social-button']}
+                  className="bg-white border border-gray-200 rounded-full w-12 h-12 flex items-center justify-center hover:bg-gray-50 hover:-translate-y-0.5 transition-all duration-200"
                   onClick={() => console.log('Login with Google')}
                 >
-                  <img src={GmailImage} alt="Google" className={styles['login-social-icon']} />
+                  <img src={GmailImage} alt="Google" className="w-6 h-6" />
                 </button>
               </div>
             </div>
@@ -194,25 +194,25 @@ const LoginPage = () => {
       </div>
 
       {/* Right side - Property showcase */}
-      <div className={styles['login-showcase-side']}>
-        <div className={styles['login-content']}>
-          <div className={styles['login-showcase-images']}>
-            <div className={styles['login-image-row']}>
-              <div className={styles['login-half-image']}>
-                <img src={KeysImage} alt="Property 1" className={styles['login-image']} />
+      <div className="w-full md:w-1/2 p-6 md:p-12 bg-gray-100 hidden md:flex flex-col justify-center">
+        <div className="max-w-md mx-auto w-full">
+          <div className="mb-10">
+            <div className="flex gap-4 mb-4">
+              <div className="w-1/2">
+                <img src={KeysImage} alt="Property 1" className="w-full h-32 rounded-lg object-cover shadow-sm hover:scale-102 transition-transform duration-300" />
               </div>
-              <div className={styles['login-half-image']}>
-                <img src={KeysImage} alt="Property 2" className={styles['login-image']} />
+              <div className="w-1/2">
+                <img src={KeysImage} alt="Property 2" className="w-full h-32 rounded-lg object-cover shadow-sm hover:scale-102 transition-transform duration-300" />
               </div>
             </div>
-            <div className={styles['login-image-row']}>
-              <img src={KeysImage} alt="Property 3" className={styles['login-image']} />
+            <div>
+              <img src={KeysImage} alt="Property 3" className="w-full h-32 rounded-lg object-cover shadow-sm hover:scale-102 transition-transform duration-300" />
             </div>
           </div>
 
-          <div className={styles['login-showcase-text']}>
-            <h2 className={styles['login-title']}>Discover Your Perfect Home</h2>
-            <p className={styles['login-subtitle']}>
+          <div className="text-center px-4">
+            <h2 className="text-2xl font-bold text-[#1175a3]">Discover Your Perfect Home</h2>
+            <p className="text-sm text-gray-600 mt-2">
               Sign up with NextDoor to access exclusive listings and personalized recommendations.
             </p>
           </div>

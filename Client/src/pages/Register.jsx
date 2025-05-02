@@ -1,9 +1,66 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import styles from '../assets/register.module.css';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import LogoImage from '../assets/images/Logo.png';
 import KeysImage from '../assets/images/keys.jpg';
 import GmailImage from '../assets/images/gmail.png';
+
+const validateEmail = (email) => {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(email);
+};
+
+const validatePassword = (password) => {
+  if (password.length < 8) {
+    return {
+      isValid: false,
+      message: 'Password must be at least 8 characters'
+    };
+  }
+  if (!/[A-Z]/.test(password)) {
+    return {
+      isValid: false,
+      message: 'Password must contain at least one uppercase letter'
+    };
+  }
+  if (!/[0-9]/.test(password)) {
+    return {
+      isValid: false,
+      message: 'Password must contain at least one number'
+    };
+  }
+  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    return {
+      isValid: false,
+      message: 'Password must contain at least one special character'
+    };
+  }
+  return {
+    isValid: true,
+    message: ''
+  };
+};
+
+const validateForm = (data) => {
+  const errors = {};
+  if (!data.fullName) errors.fullName = 'Full name is required';
+  if (!data.email) errors.email = 'Email is required';
+  else if (!validateEmail(data.email)) errors.email = 'Invalid email format';
+  if (!data.password) {
+    errors.password = 'Password is required';
+  } else {
+    const passwordValidation = validatePassword(data.password);
+    if (!passwordValidation.isValid) {
+      errors.password = passwordValidation.message;
+    }
+  }
+  if (!data.role) errors.role = 'Please select a role';
+  if (!data.agreeTerms) errors.agreeTerms = 'You must agree to the Terms and Services';
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors,
+  };
+};
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -14,63 +71,7 @@ const RegisterPage = () => {
     agreeTerms: false,
   });
   const [errors, setErrors] = useState({});
-
-  const validateEmail = (email) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-  };
-
-  const validatePassword = (password) => {
-    if (password.length < 8) {
-      return {
-        isValid: false,
-        message: 'Password must be at least 8 characters'
-      };
-    }
-    if (!/[A-Z]/.test(password)) {
-      return {
-        isValid: false,
-        message: 'Password must contain at least one uppercase letter'
-      };
-    }
-    if (!/[0-9]/.test(password)) {
-      return {
-        isValid: false,
-        message: 'Password must contain at least one number'
-      };
-    }
-    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-      return {
-        isValid: false,
-        message: 'Password must contain at least one special character'
-      };
-    }
-    return {
-      isValid: true,
-      message: ''
-    };
-  };
-
-  const validateForm = (data) => {
-    const errors = {};
-    if (!data.fullName) errors.fullName = 'Full name is required';
-    if (!data.email) errors.email = 'Email is required';
-    else if (!validateEmail(data.email)) errors.email = 'Invalid email format';
-    if (!data.password) {
-      errors.password = 'Password is required';
-    } else {
-      const passwordValidation = validatePassword(data.password);
-      if (!passwordValidation.isValid) {
-        errors.password = passwordValidation.message;
-      }
-    }
-    if (!data.role) errors.role = 'Please select a role';
-    if (!data.agreeTerms) errors.agreeTerms = 'You must agree to the Terms and Services';
-    return {
-      isValid: Object.keys(errors).length === 0,
-      errors,
-    };
-  };
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -97,26 +98,31 @@ const RegisterPage = () => {
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
-    <div className={styles.container}>
-      <div className={styles.formSide}>
-        <div className={styles.formContent}>
-          <div className={styles.header}>
-            <div className={styles.brand}>
-              <img src={LogoImage} alt="Logo" className={styles.logo} />
+    <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
+      {/* Left side - Register form */}
+      <div className="w-full md:w-1/2 flex justify-center p-6 md:p-12">
+        <div className="w-full max-w-md">
+          <div className="mb-8 text-center">
+            <div className="flex items-center justify-center gap-4 flex-col md:flex-row">
+              <img src={LogoImage} alt="Logo" className="w-12 h-12" />
               <div>
-                <h2 className={styles.title}>Welcome to NextDoor Real Estate</h2>
-                <p className={styles.subtitle}>Create an account to get started</p>
+                <h2 className="text-2xl font-bold text-blue-600">Welcome to NextDoor Real Estate</h2>
+                <p className="mt-1 text-sm text-gray-600">Create an account to get started</p>
               </div>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className={styles.form}>
-            <h3 className={styles.formTitle}>Create an account</h3>
+          <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-sm">
+            <h3 className="mb-6 text-lg font-medium text-center text-gray-900">Create an Account</h3>
 
-            <div className={styles.inputGroup}>
-              <label htmlFor="fullName" className={styles.inputLabel}>Full Name</label>
-              <div className={styles.inputWrapper}>
+            <div className="mb-6">
+              <label htmlFor="fullName" className="block mb-1 text-sm font-medium text-gray-700">Full Name</label>
+              <div className="relative">
                 <input
                   id="fullName"
                   name="fullName"
@@ -124,16 +130,16 @@ const RegisterPage = () => {
                   value={formData.fullName}
                   onChange={handleChange}
                   placeholder="Type your full name..."
-                  className={`${styles.input} ${errors.fullName ? styles.inputError : ''}`}
+                  className={`w-full p-3 border rounded-md text-sm ${errors.fullName ? 'border-red-500' : 'border-gray-300'} focus:border-blue-600 focus:outline-none`}
                 />
-                <span className={styles.inputIcon}>👤</span>
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">👤</span>
               </div>
-              {errors.fullName && <span className={styles.errorMessage}>{errors.fullName}</span>}
+              {errors.fullName && <span className="text-red-500 text-xs mt-1 block">{errors.fullName}</span>}
             </div>
 
-            <div className={styles.inputGroup}>
-              <label htmlFor="email" className={styles.inputLabel}>Email</label>
-              <div className={styles.inputWrapper}>
+            <div className="mb-6">
+              <label htmlFor="email" className="block mb-1 text-sm font-medium text-gray-700">Email</label>
+              <div className="relative">
                 <input
                   id="email"
                   name="email"
@@ -141,111 +147,105 @@ const RegisterPage = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="Type your email..."
-                  className={`${styles.input} ${errors.email ? styles.inputError : ''}`}
+                  className={`w-full p-3 border rounded-md text-sm ${errors.email ? 'border-red-500' : 'border-gray-300'} focus:border-blue-600 focus:outline-none`}
                 />
-                <span className={styles.inputIcon}>✉️</span>
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">✉️</span>
               </div>
-              {errors.email && <span className={styles.errorMessage}>{errors.email}</span>}
+              {errors.email && <span className="text-red-500 text-xs mt-1 block">{errors.email}</span>}
             </div>
 
-            <div className={styles.inputGroup}>
-              <label htmlFor="password" className={styles.inputLabel}>Password</label>
-              <div className={styles.inputWrapper}>
+            <div className="mb-6">
+              <label htmlFor="password" className="block mb-1 text-sm font-medium text-gray-700">Password</label>
+              <div className="relative">
                 <input
                   id="password"
                   name="password"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="Type your password..."
-                  className={`${styles.input} ${errors.password ? styles.inputError : ''}`}
+                  className={`w-full p-3 border rounded-md text-sm ${errors.password ? 'border-red-500' : 'border-gray-300'} focus:border-blue-600 focus:outline-none`}
                 />
-                <span className={styles.inputIcon}>🔑</span>
-              </div>
-              {errors.password && (
-                <span className={styles.errorMessage}>
-                  {errors.password}
-                </span>
-              )}
-            </div>
-
-            <div className={styles.inputGroup}>
-              <label htmlFor="role" className={styles.inputLabel}>Role</label>
-              <div className={styles.inputWrapper}>
-                <select
-                  id="role"
-                  name="role"
-                  value={formData.role}
-                  onChange={handleChange}
-                  className={`${styles.input} ${errors.role ? styles.inputError : ''}`}
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                  onClick={togglePasswordVisibility}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
-                  <option value="">Pick your role...</option>
-                  <option value="buyer">Buyer</option>
-                  <option value="seller">Seller</option>
-                  <option value="agent">Agent</option>
-                </select>
-                <span className={styles.inputIcon}></span>
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
               </div>
-              {errors.role && <span className={styles.errorMessage}>{errors.role}</span>}
+              {errors.password && <span className="text-red-500 text-xs mt-1 block">{errors.password}</span>}
             </div>
 
-            <div className={styles.terms}>
+            <div className="mb-6">
+              <label htmlFor="role" className="block mb-1 text-sm font-medium text-gray-700">Role</label>
+              <select
+                id="role"
+                name="role"
+                value={formData.role}
+                onChange={handleChange}
+                className={`w-full p-3 border rounded-md text-sm ${errors.role ? 'border-red-500' : 'border-gray-300'} focus:border-blue-600 focus:outline-none`}
+              >
+                <option value="">Pick your role...</option>
+                <option value="buyer">Buyer</option>
+                <option value="seller">Seller</option>
+                <option value="agent">Agent</option>
+              </select>
+              {errors.role && <span className="text-red-500 text-xs mt-1 block">{errors.role}</span>}
+            </div>
+
+            <div className="flex items-center mb-4">
               <input
                 type="checkbox"
                 id="agreeTerms"
                 name="agreeTerms"
                 checked={formData.agreeTerms}
                 onChange={handleChange}
+                className="mr-2 h-4 w-4"
               />
-              <label htmlFor="agreeTerms">Please agree to our Terms and Services</label>
-              {errors.agreeTerms && <span className={styles.errorMessage}>{errors.agreeTerms}</span>}
+              <label htmlFor="agreeTerms" className="text-sm text-gray-700">Agree to Terms and Services</label>
+              {errors.agreeTerms && <span className="text-red-500 text-xs mt-1 block">{errors.agreeTerms}</span>}
             </div>
 
-            <button type="button" className={styles.submitButton}>
+            <button
+              type="submit"
+              className="w-full p-3 text-white bg-blue-600 rounded-lg font-semibold text-sm hover:bg-blue-700 transition-colors"
+            >
               Create
             </button>
 
-            <div className={styles.signInLink}>
-              <p>Already have an account? <Link to="/login">Sign in now</Link></p>
+            <div className="mt-6 text-center text-sm text-gray-600">
+              <p>Already have an account? <Link to="/login" className="text-blue-600 font-medium hover:underline">Sign In now</Link></p>
             </div>
 
-            <div className={styles.socialLogin}>
-              <p className={styles.socialTitle}>You can also Log in with:</p>
-              <div className={styles.socialButtons}>
-                <button
-                  type="button"
-                  className={styles.socialButton}
-                  onClick={() => console.log('Login with Google')}
-                >
-                  <img src={GmailImage} alt="Google" className={styles.socialIcon} />
-                </button>
-              </div>
+            <div className="mt-6 text-center">
+              <p className="mb-2 text-sm text-gray-600">You can also Log In with:</p>
+              <button
+                type="button"
+                className="flex items-center justify-center w-12 h-12 mx-auto bg-white border border-gray-200 rounded-full hover:bg-gray-50 hover:-translate-y-0.5 transition-all"
+                onClick={() => console.log('Login with Google')}
+              >
+                <img src={GmailImage} alt="Google" className="w-6 h-6" />
+              </button>
             </div>
           </form>
         </div>
       </div>
 
-      <div className={styles.showcaseSide}>
-        <div className={styles.showcaseContent}>
-          <div className={styles.showcaseImages}>
-            <div className={styles.imageRow}>
-              <div className={styles.halfImage}>
-                <img src={KeysImage} alt="Property 1" className={styles.image} />
-              </div>
-              <div className={styles.halfImage}>
-                <img src={KeysImage} alt="Property 2" className={styles.image} />
-              </div>
+      {/* Right side - Property showcase */}
+      <div className="w-full md:w-1/2 p-6 md:p-12 bg-gray-100 hidden md:flex items-center justify-center">
+        <div className="w-full max-w-md">
+          <div className="mb-10">
+            <div className="flex gap-4 mb-4">
+              <img src={KeysImage} alt="Property 1" className="w-1/2 h-32 rounded-lg object-cover shadow-sm hover:scale-105 transition-transform" />
+              <img src={KeysImage} alt="Property 2" className="w-1/2 h-32 rounded-lg object-cover shadow-sm hover:scale-105 transition-transform" />
             </div>
-            <div className={styles.imageRow}>
-              <img src={KeysImage} alt="Property 3" className={styles.image} />
-            </div>
+            <img src={KeysImage} alt="Property 3" className="w-full h-32 rounded-lg object-cover shadow-sm hover:scale-105 transition-transform" />
           </div>
-
-          <div className={styles.showcaseText}>
-            <h2 className={styles.showcaseTitle}>Discover Your Perfect Home—Just Around the Corner</h2>
-            <p className={styles.showcaseSubtitle}>
-              Sign up with NextDoor to access exclusive listings, get personalized recommendations, and take the next step toward the life you've been dreaming of.
-            </p>
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-blue-600">Discover Your Perfect Home</h2>
+            <p className="mt-2 text-sm text-gray-600">Sign up with NextDoor to access exclusive listings and personalized recommendations.</p>
           </div>
         </div>
       </div>
