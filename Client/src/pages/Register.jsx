@@ -21,38 +21,30 @@ const RegisterPage = () => {
   };
 
   const validatePassword = (password) => {
-    // Minimum 8 characters
     if (password.length < 8) {
       return {
         isValid: false,
         message: 'Password must be at least 8 characters'
       };
     }
-
-    // At least one uppercase letter
     if (!/[A-Z]/.test(password)) {
       return {
         isValid: false,
         message: 'Password must contain at least one uppercase letter'
       };
     }
-
-    // At least one number
     if (!/[0-9]/.test(password)) {
       return {
         isValid: false,
         message: 'Password must contain at least one number'
       };
     }
-
-    // At least one special character
     if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
       return {
         isValid: false,
         message: 'Password must contain at least one special character'
       };
     }
-
     return {
       isValid: true,
       message: ''
@@ -64,7 +56,6 @@ const RegisterPage = () => {
     if (!data.fullName) errors.fullName = 'Full name is required';
     if (!data.email) errors.email = 'Email is required';
     else if (!validateEmail(data.email)) errors.email = 'Invalid email format';
-    
     if (!data.password) {
       errors.password = 'Password is required';
     } else {
@@ -73,10 +64,8 @@ const RegisterPage = () => {
         errors.password = passwordValidation.message;
       }
     }
-    
     if (!data.role) errors.role = 'Please select a role';
     if (!data.agreeTerms) errors.agreeTerms = 'You must agree to the Terms and Services';
-    
     return {
       isValid: Object.keys(errors).length === 0,
       errors,
@@ -103,7 +92,6 @@ const RegisterPage = () => {
     const validation = validateForm(formData);
     if (validation.isValid) {
       console.log('Registration successful', formData);
-      // Add registration logic here (e.g., API call)
     } else {
       setErrors(validation.errors);
     }
@@ -111,7 +99,6 @@ const RegisterPage = () => {
 
   return (
     <div className={styles.container}>
-      {/* Left side - Form */}
       <div className={styles.formSide}>
         <div className={styles.formContent}>
           <div className={styles.header}>
@@ -127,83 +114,78 @@ const RegisterPage = () => {
           <form onSubmit={handleSubmit} className={styles.form}>
             <h3 className={styles.formTitle}>Create an account</h3>
 
-            {errors.submit && (
-              <div className={styles.errorMessage}>{errors.submit}</div>
-            )}
-
             <div className={styles.inputGroup}>
-              <input
-                id="fullName"
-                name="fullName"
-                type="text"
-                value={formData.fullName}
-                onChange={handleChange}
-                placeholder="Type your full name..."
-                className={`${styles.input} ${errors.fullName ? styles.inputError : ''}`}
-              />
+              <label htmlFor="fullName" className={styles.inputLabel}>Full Name</label>
+              <div className={styles.inputWrapper}>
+                <input
+                  id="fullName"
+                  name="fullName"
+                  type="text"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  placeholder="Type your full name..."
+                  className={`${styles.input} ${errors.fullName ? styles.inputError : ''}`}
+                />
+                <span className={styles.inputIcon}>👤</span>
+              </div>
               {errors.fullName && <span className={styles.errorMessage}>{errors.fullName}</span>}
             </div>
 
             <div className={styles.inputGroup}>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="Type your email..."
-                className={`${styles.input} ${errors.email ? styles.inputError : ''}`}
-              />
+              <label htmlFor="email" className={styles.inputLabel}>Email</label>
+              <div className={styles.inputWrapper}>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Type your email..."
+                  className={`${styles.input} ${errors.email ? styles.inputError : ''}`}
+                />
+                <span className={styles.inputIcon}>✉️</span>
+              </div>
               {errors.email && <span className={styles.errorMessage}>{errors.email}</span>}
             </div>
 
             <div className={styles.inputGroup}>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Type your password..."
-                className={`${styles.input} ${errors.password ? styles.inputError : ''}`}
-              />
+              <label htmlFor="password" className={styles.inputLabel}>Password</label>
+              <div className={styles.inputWrapper}>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Type your password..."
+                  className={`${styles.input} ${errors.password ? styles.inputError : ''}`}
+                />
+                <span className={styles.inputIcon}>🔑</span>
+              </div>
               {errors.password && (
                 <span className={styles.errorMessage}>
                   {errors.password}
-                  <div className={styles.passwordRequirements}>
-                    <p>Password must contain:</p>
-                    <ul>
-                      <li className={formData.password.length >= 8 ? styles.requirementMet : ''}>
-                        At least 8 characters
-                      </li>
-                      <li className={/[A-Z]/.test(formData.password) ? styles.requirementMet : ''}>
-                        At least one uppercase letter
-                      </li>
-                      <li className={/[0-9]/.test(formData.password) ? styles.requirementMet : ''}>
-                        At least one number
-                      </li>
-                      <li className={/[!@#$%^&*(),.?":{}|<>]/.test(formData.password) ? styles.requirementMet : ''}>
-                        At least one special character
-                      </li>
-                    </ul>
-                  </div>
                 </span>
               )}
             </div>
 
             <div className={styles.inputGroup}>
-              <select
-                id="role"
-                name="role"
-                value={formData.role}
-                onChange={handleChange}
-                className={`${styles.input} ${errors.role ? styles.inputError : ''}`}
-              >
-                <option value="">Pick your role...</option>
-                <option value="buyer">Buyer</option>
-                <option value="seller">Seller</option>
-                <option value="agent">Agent</option>
-              </select>
+              <label htmlFor="role" className={styles.inputLabel}>Role</label>
+              <div className={styles.inputWrapper}>
+                <select
+                  id="role"
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  className={`${styles.input} ${errors.role ? styles.inputError : ''}`}
+                >
+                  <option value="">Pick your role...</option>
+                  <option value="buyer">Buyer</option>
+                  <option value="seller">Seller</option>
+                  <option value="agent">Agent</option>
+                </select>
+                <span className={styles.inputIcon}></span>
+              </div>
               {errors.role && <span className={styles.errorMessage}>{errors.role}</span>}
             </div>
 
@@ -219,7 +201,7 @@ const RegisterPage = () => {
               {errors.agreeTerms && <span className={styles.errorMessage}>{errors.agreeTerms}</span>}
             </div>
 
-            <button type="submit" className={styles.submitButton}>
+            <button type="button" className={styles.submitButton}>
               Create
             </button>
 
@@ -243,7 +225,6 @@ const RegisterPage = () => {
         </div>
       </div>
 
-      {/* Right side - Showcase */}
       <div className={styles.showcaseSide}>
         <div className={styles.showcaseContent}>
           <div className={styles.showcaseImages}>
