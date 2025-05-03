@@ -9,6 +9,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<Register />} />
+        
         {/* Opsionale: Një rrugë default për faqen kryesore ose ridrejtim */}
         <Route path="/" element={<LoginPage />} />
       </Routes>

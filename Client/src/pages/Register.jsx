@@ -105,56 +105,50 @@ const RegisterPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
       {/* Left side - Register form */}
-      <div className="w-full md:w-1/2 flex justify-center p-6 md:p-12">
+      <div className="w-full md:w-1/2 flex justify-center p-4 md:p-8">
         <div className="w-full max-w-md">
-          <div className="mb-8 text-center">
+          <div className="mb-6 text-center">
             <div className="flex items-center justify-center gap-4 flex-col md:flex-row">
-              <img src={LogoImage} alt="Logo" className="w-12 h-12" />
+              <img src={LogoImage} alt="Logo" className="w-10 h-10" />
               <div>
-                <h2 className="text-2xl font-bold text-blue-600">Welcome to NextDoor Real Estate</h2>
+                <h2 className="text-xl font-bold text-blue-600">Welcome to NextDoor Real Estate</h2>
                 <p className="mt-1 text-sm text-gray-600">Create an account to get started</p>
               </div>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-sm">
-            <h3 className="mb-6 text-lg font-medium text-center text-gray-900">Create an Account</h3>
+          <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-sm">
+            <h3 className="mb-4 text-lg font-medium text-center text-gray-900">Create an Account</h3>
 
-            <div className="mb-6">
+            <div className="mb-4">
               <label htmlFor="fullName" className="block mb-1 text-sm font-medium text-gray-700">Full Name</label>
-              <div className="relative">
-                <input
-                  id="fullName"
-                  name="fullName"
-                  type="text"
-                  value={formData.fullName}
-                  onChange={handleChange}
-                  placeholder="Type your full name..."
-                  className={`w-full p-3 border rounded-md text-sm ${errors.fullName ? 'border-red-500' : 'border-gray-300'} focus:border-blue-600 focus:outline-none`}
-                />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">👤</span>
-              </div>
-              {errors.fullName && <span className="text-red-500 text-xs mt-1 block">{errors.fullName}</span>}
+              <input
+                id="fullName"
+                name="fullName"
+                type="text"
+                value={formData.fullName}
+                onChange={handleChange}
+                placeholder="Type your full name..."
+                className={`w-full p-3 border rounded-md text-sm ${errors.fullName ? 'border-red-500' : 'border-gray-300'} focus:border-blue-600 focus:outline-none`}
+              />
+              {errors.fullName && <span className="text-red-500 text-xs mt-1">{errors.fullName}</span>}
             </div>
 
-            <div className="mb-6">
+            <div className="mb-4">
               <label htmlFor="email" className="block mb-1 text-sm font-medium text-gray-700">Email</label>
-              <div className="relative">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="Type your email..."
-                  className={`w-full p-3 border rounded-md text-sm ${errors.email ? 'border-red-500' : 'border-gray-300'} focus:border-blue-600 focus:outline-none`}
-                />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">✉️</span>
-              </div>
-              {errors.email && <span className="text-red-500 text-xs mt-1 block">{errors.email}</span>}
+              <input
+                id="email"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Type your email..."
+                className={`w-full p-3 border rounded-md text-sm ${errors.email ? 'border-red-500' : 'border-gray-300'} focus:border-blue-600 focus:outline-none`}
+              />
+              {errors.email && <span className="text-red-500 text-xs mt-1">{errors.email}</span>}
             </div>
 
-            <div className="mb-6">
+            <div className="mb-4">
               <label htmlFor="password" className="block mb-1 text-sm font-medium text-gray-700">Password</label>
               <div className="relative">
                 <input
@@ -170,15 +164,14 @@ const RegisterPage = () => {
                   type="button"
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
                   onClick={togglePasswordVisibility}
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
-              {errors.password && <span className="text-red-500 text-xs mt-1 block">{errors.password}</span>}
+              {errors.password && <span className="text-red-500 text-xs mt-1">{errors.password}</span>}
             </div>
 
-            <div className="mb-6">
+            <div className="mb-4">
               <label htmlFor="role" className="block mb-1 text-sm font-medium text-gray-700">Role</label>
               <select
                 id="role"
@@ -192,7 +185,7 @@ const RegisterPage = () => {
                 <option value="seller">Seller</option>
                 <option value="agent">Agent</option>
               </select>
-              {errors.role && <span className="text-red-500 text-xs mt-1 block">{errors.role}</span>}
+              {errors.role && <span className="text-red-500 text-xs mt-1">{errors.role}</span>}
             </div>
 
             <div className="flex items-center mb-4">
@@ -205,7 +198,7 @@ const RegisterPage = () => {
                 className="mr-2 h-4 w-4"
               />
               <label htmlFor="agreeTerms" className="text-sm text-gray-700">Agree to Terms and Services</label>
-              {errors.agreeTerms && <span className="text-red-500 text-xs mt-1 block">{errors.agreeTerms}</span>}
+              {errors.agreeTerms && <span className="text-red-500 text-xs mt-1">{errors.agreeTerms}</span>}
             </div>
 
             <button
@@ -215,41 +208,41 @@ const RegisterPage = () => {
               Create
             </button>
 
-            <div className="mt-6 text-center text-sm text-gray-600">
+            <div className="mt-4 text-center text-sm text-gray-600">
               <p>Already have an account? <Link to="/login" className="text-blue-600 font-medium hover:underline">Sign In now</Link></p>
             </div>
 
-            <div className="mt-6 text-center">
+            <div className="mt-4 text-center">
               <p className="mb-2 text-sm text-gray-600">You can also Log In with:</p>
               <button
                 type="button"
-                className="flex items-center justify-center w-12 h-12 mx-auto bg-white border border-gray-200 rounded-full hover:bg-gray-50 hover:-translate-y-0.5 transition-all"
+                className="flex items-center justify-center w-10 h-10 mx-auto bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-all"
                 onClick={() => console.log('Login with Google')}
               >
-                <img src={GmailImage} alt="Google" className="w-6 h-6" />
+                <img src={GmailImage} alt="Google" className="w-5 h-5" />
               </button>
             </div>
           </form>
         </div>
       </div>
 
-      {/* Right side - Property showcase */}
-      <div className="w-full md:w-1/2 p-6 md:p-12 bg-gray-100 hidden md:flex items-center justify-center">
-        <div className="w-full max-w-md">
-          <div className="mb-10">
-            <div className="flex gap-4 mb-4">
-              <img src={KeysImage} alt="Property 1" className="w-1/2 h-32 rounded-lg object-cover shadow-sm hover:scale-105 transition-transform" />
-              <img src={KeysImage} alt="Property 2" className="w-1/2 h-32 rounded-lg object-cover shadow-sm hover:scale-105 transition-transform" />
-            </div>
-            <img src={KeysImage} alt="Property 3" className="w-full h-32 rounded-lg object-cover shadow-sm hover:scale-105 transition-transform" />
-          </div>
-          <div className="text-center">
-            <h2 className="text-2xl font-bold text-blue-600">Discover Your Perfect Home</h2>
-            <p className="mt-2 text-sm text-gray-600">Sign up with NextDoor to access exclusive listings and personalized recommendations.</p>
-          </div>
-        </div>
+    {/* Right side - Property showcase */}
+<div className="w-full md:w-1/2 p-6 md:p-12 bg-gray-100 hidden md:flex justify-center items-center">
+  <div className="w-full max-w-md mt-[-2rem]">
+    <div className="mb-10">
+      <div className="flex gap-4 mb-4">
+        <img src={KeysImage} alt="Property 1" className="w-1/2 h-32 rounded-lg object-cover shadow-sm hover:scale-105 transition-transform" />
+        <img src={KeysImage} alt="Property 2" className="w-1/2 h-32 rounded-lg object-cover shadow-sm hover:scale-105 transition-transform" />
       </div>
+      <img src={KeysImage} alt="Property 3" className="w-full h-32 rounded-lg object-cover shadow-sm hover:scale-105 transition-transform" />
     </div>
+    <div className="text-center">
+      <h2 className="text-2xl font-bold text-blue-600">Discover Your Perfect Home</h2>
+      <p className="mt-2 text-sm text-gray-600">Sign up with NextDoor to access exclusive listings and personalized recommendations.</p>
+    </div>
+  </div>
+</div>
+</div>
   );
 };
 
