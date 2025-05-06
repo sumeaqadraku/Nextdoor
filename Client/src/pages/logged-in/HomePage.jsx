@@ -4,7 +4,21 @@ import Topbar from "../../components/Topbar";
 import PropertyWidget from "../../components/widgets/PropertyWidget";
 
 const HomePage = () => {
+
+    const PropertyData = [
+        { id: 1, name: "Modern Flat", size: "72m²", rooms: 3, location: "Prishtine", price: "430.00" },
+        { id: 2, name: "Cozy Apartment", size: "55m²", rooms: 2, location: "Prishtine", price: "300.00" },
+        { id: 3, name: "Luxury Condo ", size: "85m²", rooms: 4, location: "Prishtine", price: "600.00" },
+        { id: 4, name: "Studio Room ", size: "40m²", rooms: 1, location: "Prishtine", price: "250.00" },
+        { id: 5, name: "Family Home ", size: "100m²", rooms: 5, location: "Prishtine", price: "700.00" },
+        { id: 6, name: "Penthouse ", size: "120m²", rooms: 4, location: "Prishtine", price: "850.00" },
+        { id: 7, name: "Cozy Loft", size: "50m²", rooms: 1, location: "Prishtine", price: "280.00" },
+        { id: 8, name: "Spacious Villa", size: "150m²", rooms: 6, location: "Shkup", price: "900.00" },
+        { id: 9, name: "Urban Studio", size: "45m²", rooms: 1, location: "Ferizaj", price: "220.00" }
+    ]
+
     return (
+
         <div className="flex h-lvh">
             <Sidebar/>
             <div className="w-full">
@@ -45,14 +59,10 @@ const HomePage = () => {
                         </div>
                         <div className="px-10 py-2 w-full">
                             <h1 className="text-2xl font-semibold">Top Apartment Rooms</h1>
-                            <div className="overflow-y-auto w-full h-[490px] flex flex-wrap mt-3 gap-5">
-                                <PropertyWidget/>
-                                <PropertyWidget/>
-                                <PropertyWidget/>
-                                <PropertyWidget/>
-                                <PropertyWidget/>
-                                <PropertyWidget/>
-                                
+                            <div className="overflow-y-auto w-full h-[470px] flex pb-4 flex-wrap mt-3 gap-5">
+                            {PropertyData.map((property, index) => (
+                                <PropertyWidget key={index} {...property} isSavedPage={false} />
+                          ))}
                             </div>
                             </div>
                     </div>

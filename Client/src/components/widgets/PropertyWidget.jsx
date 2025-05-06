@@ -1,12 +1,30 @@
+import { useState } from "react";
 import apartament1 from "../../assets/images/apartament1.jpg";
 import { SlSizeActual } from "react-icons/sl";
 import { MdOutlineBedroomParent } from "react-icons/md";
 import { IoLocationSharp } from "react-icons/io5";
+import { FaTimes } from "react-icons/fa";
 
-const PropertyWidget = () => {
+const PropertyWidget = ({ id, name, size, rooms, location, price, onRemove, isSavedPage = false  }) => {
+  const [hovered, setHovered] = useState(false);
+
   return (
-    <div className="bg-white w-[45%] h-40 flex shadow-lg hover:scale-105 transition-transform duration-300 cursor-pointer">
-      <div className="bg-gray-50 m-4 w-[35%] rounded-2xl overflow-hidden">
+    <div
+      className="bg-white w-[30%] h-40 flex shadow-md hover:scale-105 transition-transform duration-300 cursor-pointer relative"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {hovered && isSavedPage && (
+        <button
+          onClick={() => onRemove(id)}
+          className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 z-10"
+          title="Remove from saved"
+        >
+          <FaTimes size={12} />
+        </button>
+      )}
+
+      <div className="bg-gray-50 m-3 w-[35%] rounded-xl overflow-hidden">
         <img
           src={apartament1}
           alt="first property"
@@ -14,29 +32,27 @@ const PropertyWidget = () => {
         />
       </div>
 
-      <div className="flex flex-col m-4">
-        <h1 className="text-[22px] font-semibold">Apartament Emshir</h1>
+      <div className="flex flex-col m-3 justify-between">
+        <h1 className="text-[20px] font-semibold">{name}</h1>
 
-        <div className="flex gap-4 font-regular mt-2">
+        <div className="flex gap-2 text-sm mt-1">
           <div className="flex items-center gap-1">
-            <SlSizeActual className="text-2xl" />
-            <p>67m²</p>
+            <SlSizeActual className="text-xl" />
+            <p className="text-[14px] font-semibold">{size}</p>
           </div>
-
           <div className="flex items-center gap-1">
-            <MdOutlineBedroomParent className="text-2xl" />
-            <p>2 rooms</p>
+            <MdOutlineBedroomParent className="text-xl" />
+            <p className="text-[14px] font-semibold">{rooms} rooms</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-1 mt-2">
-          <IoLocationSharp className="text-2xl" />
-          <p>Prishtine</p>
+        <div className="flex items-center gap-1 text-sm mt-1">
+          <IoLocationSharp className="text-xl" />
+          <p>{location}</p>
         </div>
 
-        <h2 className="text-[22px] font-bold mt-4 text-[#1275A4]">
-          EUR 350.00
-          <span className="text-black font-light">/monthly</span>
+        <h2 className="text-[18px] font-bold mt-1 text-[#1275A4]">
+          EUR {price} <span className="text-black font-light">/monthly</span>
         </h2>
       </div>
     </div>
