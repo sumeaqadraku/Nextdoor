@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Sidebar from "../../components/Sidebar";
-import Topbar from "../../components/Topbar";
-import PropertyWidget from "../../components/widgets/PropertyWidget";
+import Sidebar from "../../../components/Sidebar";
+import Topbar from "../../../components/Topbar";
+import PropertyWidget from "../../../components/widgets/PropertyWidget";
 
 const SavedItems = () => {
   const [savedItems, setSavedItems] = useState([

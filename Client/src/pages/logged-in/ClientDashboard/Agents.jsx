@@ -1,6 +1,6 @@
-import Sidebar from "../../components/Sidebar"
-import Topbar from "../../components/Topbar";
-import AgentsWidget from "../../components/widgets/AgentsWidget";
+import Sidebar from "../../../components/Sidebar"
+import Topbar from "../../../components/Topbar";
+import AgentsWidget from "../../../components/widgets/AgentsWidget";
 
 
 const Agents = () => {

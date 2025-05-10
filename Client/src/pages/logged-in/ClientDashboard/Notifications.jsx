@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FaCheck, FaTimes, FaHome, FaExclamationCircle } from "react-icons/fa";
-import Sidebar from "../../components/Sidebar";
-import Topbar from "../../components/Topbar";
+import Sidebar from "../../../components/Sidebar";
+import Topbar from "../../../components/Topbar";
 
 // Sample data for notifications (focused on specific actions)
 const notificationsData = [
