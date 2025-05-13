@@ -1,24 +1,29 @@
 const express = require('express');
 const cors = require('cors');
-const sequelize = require('./config/database');
+const sequelize = require('./src/config/database');
 require('dotenv').config();
 
+// Import models
+const User = require('./src/models/UserModel');
 
+// Initialize Express app
 const app = express();
-app.use(express.json());
+
+// Middleware
 app.use(cors());
+app.use(express.json());
 
-require('./models');
-
-sequelize.sync({ force: false }) 
+// Sync database
+sequelize.sync({ force: false })
   .then(() => {
-    console.log('Database & tables synced!');
+    console.log('✅ Database synced successfully');
+    
+    // Start server after DB is ready
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+      console.log(`🚀 Server is running on port ${PORT}`);
+    });
   })
-  .catch((err) => {
-    console.error('Error syncing database:', err);
+  .catch(err => {
+    console.error('❌ Error syncing database:', err);
   });
-
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log("Server is running on port: ", PORT);
-})

@@ -1,44 +1,16 @@
-//E bon definimin e tabeles User per Databaz
-
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database'); 
-
+const sequelize = require('../config/database');
 
 const User = sequelize.define('User', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  username: {
+  name: {
     type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
+    allowNull: false
   },
   email: {
     type: DataTypes.STRING,
-    allowNull: false,
     unique: true,
-  },
-  password: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  role: {
-    type: DataTypes.ENUM('admin', 'user', 'moderator'),
-    defaultValue: 'user',
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    onUpdate: DataTypes.NOW,
-  },
-}, {
-  tableName: 'Users',
+    allowNull: false
+  }
 });
 
 module.exports = User;

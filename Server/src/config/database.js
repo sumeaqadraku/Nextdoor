@@ -3,7 +3,7 @@
 const { Sequelize } = require('sequelize');
 
 // Set up the connection to the database
-const sequelize = new Sequelize('users', 'root', 'coraline', {
+const sequelize = new Sequelize('nextdoor', 'root', 'coraline', {
   host: 'localhost',
   dialect: 'mysql',
   logging: true, 
