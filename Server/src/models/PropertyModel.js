@@ -12,3 +12,4 @@ module.exports = (sequelize, DataTypes) => {
     status: { type: DataTypes.ENUM("available", "sold", "rented"), defaultValue: "available" },
   });
 };
+
