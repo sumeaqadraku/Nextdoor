@@ -59,8 +59,7 @@ const NotificationsPage = () => {
   };
 
   return (
-    <div className="flex h-screen">
-      <Sidebar />
+    <div className="flex h-lvh">
       <div className="w-full">
         <Topbar />
         <div className="bg-[#f6f6f6] h-[88%] px-10 py-6">

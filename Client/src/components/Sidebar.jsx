@@ -4,6 +4,7 @@ import { IoBookmarkOutline } from "react-icons/io5";
 import { FiBell } from "react-icons/fi";
 import { GoGear } from "react-icons/go";
 import { IoLogInOutline } from "react-icons/io5";
+import { Link } from "react-router-dom";
 
 const Sidebar = () => {
     return (
@@ -11,33 +12,51 @@ const Sidebar = () => {
             <div>
                 <h1 className="text-[20px] text-white font-semibold">NextDoor</h1>
                 <div className="flex flex-col mt-10 gap-3 text-white text-sm">
-                    <div className="flex items-center gap-2 cursor-pointer p-2 rounded-md transition-colors duration-200 hover:bg-[#1E4E65]">
-                        <IoHomeOutline className="text-xl"/>
-                        <span>Discover</span>
-                    </div>
-                    <div className="flex items-center gap-2 cursor-pointer p-2 rounded-md transition-colors duration-200 hover:bg-[#1E4E65]">
-                        <FaUserTie className="text-xl"/>
+                    <Link 
+                      to="/user/home" 
+                      className="flex items-center gap-2 p-2 rounded-md transition-colors duration-200 hover:bg-[#1E4E65]"
+                    >
+                        <IoHomeOutline className="text-xl" />
+                        <span>Home</span>
+                    </Link>
+                    <Link 
+                      to="/user/agents" 
+                      className="flex items-center gap-2 p-2 rounded-md transition-colors duration-200 hover:bg-[#1E4E65]"
+                    >
+                        <FaUserTie className="text-xl" />
                         <span>Agents</span>
-                    </div>
-                    <div className="flex items-center gap-2 cursor-pointer p-2 rounded-md transition-colors duration-200 hover:bg-[#1E4E65]">
-                        <IoBookmarkOutline className="text-xl"/>
+                    </Link>
+                    <Link 
+                      to="/user/saved" 
+                      className="flex items-center gap-2 p-2 rounded-md transition-colors duration-200 hover:bg-[#1E4E65]"
+                    >
+                        <IoBookmarkOutline className="text-xl" />
                         <span>Saved</span>
-                    </div>
-                    <div className="flex items-center gap-2 cursor-pointer p-2 rounded-md transition-colors duration-200 hover:bg-[#1E4E65]">
-                        <FiBell className="text-xl"/>
+                    </Link>
+                    <Link 
+                      to="/user/notifications" 
+                      className="flex items-center gap-2 p-2 rounded-md transition-colors duration-200 hover:bg-[#1E4E65]"
+                    >
+                        <FiBell className="text-xl" />
                         <span>Notifications</span>
-                    </div>
+                    </Link>
                 </div>
             </div>
             <div className="flex flex-col gap-2 text-white text-sm">
-                <div className="flex items-center gap-2 cursor-pointer p-2 rounded-md transition-colors duration-200 hover:bg-[#1E4E65]">
-                    <GoGear className="text-xl"/>
+                <Link 
+                  to="/user/settings" 
+                  className="flex items-center gap-2 p-2 rounded-md transition-colors duration-200 hover:bg-[#1E4E65]"
+                >
+                    <GoGear className="text-xl" />
                     <span>Settings</span>
-                </div>
-                <div className="flex items-center gap-2 cursor-pointer p-2 rounded-md transition-colors duration-200 hover:bg-[#1E4E65]">
-                    <IoLogInOutline className="text-xl"/>
+                </Link>
+                <Link 
+                  to="/user/logout" 
+                  className="flex items-center gap-2 p-2 rounded-md transition-colors duration-200 hover:bg-[#1E4E65]"
+                >
+                    <IoLogInOutline className="text-xl" />
                     <span>Log Out</span>
-                </div>
+                </Link>
             </div>
         </div>
     );

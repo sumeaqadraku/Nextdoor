@@ -22,7 +22,6 @@ const SavedItems = () => {
 
   return (
     <div className="flex h-lvh">
-      <Sidebar />
       <div className="w-full">
         <div className="w-full h-full bg-[#f6f6f6]">
           <div className="w-full flex justify-between py-3 px-10">

@@ -13,7 +13,6 @@ const [showModal, setShowModal] = useState(false);
 
   return (
     <div className="flex h-screen bg-gray-100">
-      <Agentbar />
       <main className="w-full overflow-y-auto">
         <div className="bg-white px-10 py-2 flex justify-between items-center">
             <div className="">

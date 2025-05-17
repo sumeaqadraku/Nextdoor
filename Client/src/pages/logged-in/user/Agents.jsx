@@ -17,7 +17,7 @@ const Agents = () => {
 
     return (
         <div className="flex h-lvh">
-            <Sidebar/>
+
             <div className="w-full">
                 <Topbar/>
                 <div className="w-full h-[88%] bg-[#f6f6f6]">

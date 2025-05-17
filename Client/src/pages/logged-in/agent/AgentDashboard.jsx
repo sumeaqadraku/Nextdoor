@@ -42,7 +42,6 @@ const AgentDashboard = () => {
 
   return (
     <div className="flex h-lvh">
-      <Agentbar />
       <div className="w-full bg-[#f6f6f6] p-6 overflow-y-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
