@@ -1,28 +1,9 @@
-// server.js
-const express = require('express');
-const app = express();
-const port = 3000;
+const db = require('./src/models');
 
-
-const { sequelize } = require('./src/models');
-
-
-app.use(express.json());
-
-// Sync DB
-sequelize.sync({ alter: true })
+db.sequelize.sync({ alter: true }) // or { force: true } for full drop & recreate
   .then(() => {
-    console.log('DB synced');
+    console.log('Database synced successfully ✅');
   })
-  .catch((err) => {
-    console.error('Failed to sync DB:', err);
+  .catch(err => {
+    console.error('Failed to sync database ❌', err);
   });
-
-// Basic route
-app.get('/', (req, res) => {
-  res.send('Server is running!');
-});
-
-app.listen(port, () => {
-  console.log(`Server is listening at http://localhost:${port}`);
-});
