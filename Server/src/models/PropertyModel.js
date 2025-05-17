@@ -1,15 +1,61 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define("Property", {
-    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-    title: { type: DataTypes.STRING, allowNull: false },
-    description: { type: DataTypes.TEXT, allowNull: true },
-    price: { type: DataTypes.FLOAT, allowNull: false },
-    address: { type: DataTypes.STRING, allowNull: false },
-    city: { type: DataTypes.STRING, allowNull: false },
-    state: { type: DataTypes.STRING, allowNull: false },
-    zipCode: { type: DataTypes.STRING, allowNull: false },
-    type: { type: DataTypes.ENUM("house", "apartment", "commercial", "land"), allowNull: false },
-    status: { type: DataTypes.ENUM("available", "sold", "rented"), defaultValue: "available" },
+  const Property = sequelize.define('Property', {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    description: {
+      type: DataTypes.TEXT,
+    },
+    price: {
+      type: DataTypes.DECIMAL,
+      allowNull: false,
+    },
+    type: {
+      type: DataTypes.STRING, // e.g. 'Apartment', 'House'
+      allowNull: false,
+    },
+    status: {
+      type: DataTypes.ENUM('Active', 'Sold', 'Rented'),
+      defaultValue: 'Active',
+    },
+    ownerId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+  }, {
+    tableName: 'properties',
+    timestamps: true,
   });
-};
 
+  Property.associate = (models) => {
+    Property.belongsTo(models.Owner, { foreignKey: 'ownerId', as: 'owner' });
+
+    Property.hasMany(models.PropertyImage, {
+      foreignKey: 'propertyId',
+      as: 'images',
+    });
+
+    Property.hasOne(models.PropertyLocation, {
+      foreignKey: 'propertyId',
+      as: 'location',
+    });
+
+    Property.hasOne(models.PropertyFeature, {
+      foreignKey: 'propertyId',
+      as: 'features',
+    });
+
+    Property.hasMany(models.Appointment, {
+    foreignKey: 'propertyId',
+    as: 'appointments'
+  });
+  };
+
+  return Property;
+};

@@ -1,62 +1,33 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const path = require('path');
 
-// DB Connect
-const sequelize = new Sequelize('nextdoor', 'root', '', {
-  host: 'localhost',
-  dialect: 'mysql',
-  logging: false, 
+const env = process.env.NODE_ENV || 'development';
+const config = require(path.join(__dirname, '..', 'config', 'database.js'))[env];
+
+const sequelize = new Sequelize(config.database, config.username, config.password, config);
+
+const db = {};
+
+db.User = require('./UserModel')(sequelize, DataTypes);
+db.Buyer = require('./BuyerModel')(sequelize, DataTypes);
+db.Agent = require('./AgentModel')(sequelize, DataTypes);
+db.Owner = require('./OwnerModel')(sequelize, DataTypes);
+db.Admin = require('./AdminModel')(sequelize, DataTypes);
+db.Property = require('./PropertyModel')(sequelize, DataTypes);
+db.PropertyImage = require('./PropertyImageModel')(sequelize, DataTypes);
+db.PropertyLocation = require('./PropertyLocationModel')(sequelize, DataTypes);
+db.PropertyFeature = require('./PropertyFeatureModel')(sequelize, DataTypes);
+db.Review = require('./ReviewModel')(sequelize, DataTypes);
+db.Appointment = require('./AppointmentModel')(sequelize, DataTypes);
+
+// ✅ Setup associations
+Object.keys(db).forEach((modelName) => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
 });
 
-// Importimi i modeleve
-const User = require('./UserModel')(sequelize, DataTypes);
-const Property = require('./PropertyModel')(sequelize, DataTypes);
-const Listing = require('./ListingModel')(sequelize, DataTypes);
-const Transaction = require('./TransactionModel')(sequelize, DataTypes);
-const Payment = require('./PaymentModel')(sequelize, DataTypes);
-const Favorite = require('./FavoritesModel')(sequelize, DataTypes);
-const Image = require('./ImagesModel')(sequelize, DataTypes);
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
 
-// Lidhjet 
-
-// USER
-User.hasMany(Property, { foreignKey: 'ownerId' });
-Property.belongsTo(User, { foreignKey: 'ownerId' });
-
-User.hasMany(Listing, { foreignKey: 'agentId' });
-Listing.belongsTo(User, { foreignKey: 'agentId' });
-
-User.hasMany(Transaction, { foreignKey: 'buyerId' });
-Transaction.belongsTo(User, { foreignKey: 'buyerId' });
-
-User.hasMany(Payment, { foreignKey: 'userId' });
-Payment.belongsTo(User, { foreignKey: 'userId' });
-
-User.belongsToMany(Property, { through: Favorite, foreignKey: 'userId', as: 'favorites' });
-Property.belongsToMany(User, { through: Favorite, foreignKey: 'propertyId' });
-
-// PROPERTY
-Property.hasMany(Listing, { foreignKey: 'propertyId' });
-Listing.belongsTo(Property, { foreignKey: 'propertyId' });
-
-Property.hasMany(Transaction, { foreignKey: 'propertyId' });
-Transaction.belongsTo(Property, { foreignKey: 'propertyId' });
-
-Property.hasMany(Image, { foreignKey: 'propertyId' });
-Image.belongsTo(Property, { foreignKey: 'propertyId' });
-
-// TRANSACTION
-Transaction.hasMany(Payment, { foreignKey: 'transactionId' });
-Payment.belongsTo(Transaction, { foreignKey: 'transactionId' });
-
-// thirrja e 'tabelave'
-module.exports = {
-  sequelize,
-  User,
-  Property,
-  Listing,
-  Transaction,
-  Payment,
-  Favorite,
-  Image,
-};
+module.exports = db;
