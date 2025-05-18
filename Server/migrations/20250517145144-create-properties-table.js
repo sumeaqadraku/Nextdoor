@@ -9,7 +9,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      ownerId: {  // FK to owners
+      ownerId: {  // FK 
         type: Sequelize.INTEGER,
         allowNull: false,
         references: { model: 'owners', key: 'id' },
@@ -27,7 +27,7 @@ module.exports = {
         type: Sequelize.FLOAT,
         allowNull: false
       },
-      // add other property fields as needed
+      
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

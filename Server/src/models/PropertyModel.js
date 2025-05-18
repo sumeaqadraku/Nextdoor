@@ -28,13 +28,17 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
+    listingType: {
+    type: DataTypes.ENUM('sale', 'rent', 'lease', 'other'),
+    allowNull: false,
+    defaultValue: 'rent',
+},
   }, {
     tableName: 'properties',
     timestamps: true,
   });
 
   Property.associate = (models) => {
-    Property.belongsTo(models.Owner, { foreignKey: 'ownerId', as: 'owner' });
 
     Property.hasMany(models.PropertyImage, {
       foreignKey: 'propertyId',
