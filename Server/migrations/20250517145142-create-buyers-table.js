@@ -9,13 +9,13 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      userId: {  // FK to users table
+      userId: {  //FK
         type: Sequelize.INTEGER,
         allowNull: false,
         references: { model: 'users', key: 'id' },
         onDelete: 'CASCADE'
       },
-      // Add buyer-specific fields here
+      
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

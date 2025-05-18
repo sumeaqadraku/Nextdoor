@@ -35,7 +35,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true
       },
-      // other location fields
+     
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

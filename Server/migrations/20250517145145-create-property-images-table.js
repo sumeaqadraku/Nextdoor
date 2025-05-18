@@ -19,7 +19,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      // other image metadata if any
+     
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
