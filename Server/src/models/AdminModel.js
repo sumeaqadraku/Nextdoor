@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      unique: true,
+      
     },
     accessLevel: {
       type: DataTypes.STRING,

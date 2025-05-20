@@ -8,7 +8,6 @@ module.exports = (sequelize, DataTypes) => {
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      unique: true,
     },
     ownedPropertiesCount: {
       type: DataTypes.INTEGER,

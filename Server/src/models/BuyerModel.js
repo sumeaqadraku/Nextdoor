@@ -8,7 +8,6 @@ module.exports = (sequelize, DataTypes) => {
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      unique: true,
     },
     preferences: {
       type: DataTypes.TEXT, // JSON or string for simplicity

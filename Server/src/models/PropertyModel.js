@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM('Active', 'Sold', 'Rented'),
       defaultValue: 'Active',
     },
-    ownerId: {
+    agentId: {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
@@ -43,6 +43,11 @@ module.exports = (sequelize, DataTypes) => {
     Property.hasMany(models.PropertyImage, {
       foreignKey: 'propertyId',
       as: 'images',
+    });
+
+    Property.belongsTo(models.User, {
+      foreignKey: 'agentId',
+      as: 'agent',
     });
 
     Property.hasOne(models.PropertyLocation, {

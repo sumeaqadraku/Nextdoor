@@ -10,12 +10,12 @@ module.exports = (sequelize, DataTypes) => {
     username: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true
+      
     },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
+      
       validate: {
         isEmail: true
       }
@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     role: {
-      type: DataTypes.ENUM('buyer', 'agent', 'owner', 'admin'),
+      type: DataTypes.ENUM('buyer', 'agent', 'admin'),
       allowNull: false
     }
   }, {
@@ -33,7 +33,6 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: true
   });
 
-  // Define associations in this function
   User.associate = (models) => {
     User.hasMany(models.Review, {
       foreignKey: 'userId',
