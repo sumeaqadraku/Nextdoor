@@ -1,42 +1,28 @@
-const db = require('./src/models');
-
 const express = require('express');
 const app = express();
-
-db.sequelize.sync({ alter: true }) // or { force: true } for full drop & recreate
-  .then(() => {
-    console.log('Database synced successfully ✅');
-  })
-  .catch(err => {
-    console.error('Failed to sync database ❌', err);
-  });
-
+const db = require('./src/models'); 
+const userRoutes = require('./src/routes/Users');
+const propertyRoutes = require('./src/routes/Properties');
+const notificationRoutes = require('./src/routes/Notifications');
+const appointmentRoutes = require('./src/routes/Appointments');
+require('dotenv').config();
 
 app.use(express.json());
 
-// Import routes
-const userRoutes = require('./src/routes/Users');
 
-const propertyRoutes = require('./src/routes/Properties');
-// Use routes
 app.use('/api/users', userRoutes);
+app.use('/api/properties', propertyRoutes); 
+app.use('/api/appointments', appointmentRoutes);
+app.use('/api/notifications', notificationRoutes);
+
+const PORT = process.env.PORT || 3000;
 
 
-app.listen(3000, () => {
-  console.log('Server running on port 3000');
+app.get('/', (req, res) => {
+  res.send('🚀 Server is running!');
 });
 
-
-const router = express.Router();
-
-
-
-// Use property routes under /api/properties
-app.use('/api/properties', propertyRoutes);
-
-app.listen(3000, () => {
-  console.log('Server running on port 3000');
+app.listen(PORT, () => {
+  console.log(`✅ Server is running on http://localhost:${PORT}`);
 });
 
-
-module.exports = router;

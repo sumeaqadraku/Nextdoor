@@ -5,17 +5,22 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     const hashedPassword = await bcrypt.hash('password123', 10);
 
-    await queryInterface.bulkInsert('users', [{
-      username: 'sumea',
-      email: 'sumea@example.com',
-      password: hashedPassword,
-      role: 'admin',
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }], {});
+   
+    const { User } = require('../src/models');
+
+    await User.findOrCreate({
+      where: { email: 'admin@example.com' },
+      defaults: {
+        username: 'admin',
+        password: hashedPassword,
+        role: 'admin',
+      },
+    });
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('users', { email: 'sumea@example.com' }, {});
+    await queryInterface.bulkDelete('users', { email: 'admin@example.com' }, {});
   }
 };
+
+
