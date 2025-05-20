@@ -11,6 +11,7 @@ import Notifications from './pages/logged-in/user/Notifications';
 import AgentDasboard from './pages/logged-in/agent/AgentDashboard';
 import AddProperty from './pages/logged-in/agent/AddProperty';
 import PropertyDetails from './pages/logged-in/user/PropertyDetails';
+import Requests from './pages/logged-in/agent/Requests';
 
 function App() {
   return (
@@ -30,13 +31,16 @@ function App() {
           <Route path="home" element={<HomePage />} />
           <Route path="agents" element={<Agents />} />
           <Route path="saved" element={<SavedItems />} />
+          <Route path="property-details" element={<PropertyDetails />} />
+
           <Route path="notifications" element={<Notifications />} />
         </Route>
         <Route path="/agent" element={<AgentLayout />}>
           <Route path="dashboard" element={<AgentDasboard />} />
-          <Route path="add-property" element={<AddProperty />} />
-          <Route path="property-details" element={<PropertyDetails />} />
+          <Route path="management" element={<AddProperty />} />
+          <Route path="requests" element={<Requests/>} />
         </Route>      
+
         {/* Opsionale: Një rrugë default për faqen kryesore ose ridrejtim */}
         <Route path="/" element={<LoginPage />} />
       </Routes>

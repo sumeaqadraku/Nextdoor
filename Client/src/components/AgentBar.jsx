@@ -20,18 +20,11 @@ const Agentbar = () => {
                         <span>Dashboard</span>
                     </Link>
                     <Link
-                        to="/agent/add-property"
+                        to="/agent/management"
                         className="flex items-center gap-2 p-2 rounded-md transition-colors duration-200 hover:bg-[#1E4E65]"
                     >
                         <MdAddBusiness className="text-xl" />
-                        <span>Add Property</span>
-                    </Link>
-                    <Link
-                        to="/agent/edit-property"
-                        className="flex items-center gap-2 p-2 rounded-md transition-colors duration-200 hover:bg-[#1E4E65]"
-                    >
-                        <MdEdit className="text-xl" />
-                        <span>Edit Property</span>
+                        <span>Management</span>
                     </Link>
                     <Link
                         to="/agent/requests"

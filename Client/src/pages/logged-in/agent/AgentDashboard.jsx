@@ -42,28 +42,21 @@ const AgentDashboard = () => {
 
   return (
     <div className="flex h-lvh">
-      <div className="w-full bg-[#f6f6f6] p-6 overflow-y-auto">
+      <div className="w-full  bg-[#f6f6f6] overflow-y-auto">
         {/* Header */}
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h1 className="text-2xl font-semibold">Hello, Agent Sarah 👋</h1>
-            <p className="text-gray-500">Your dashboard overview today.</p>
-          </div>
-          <div className="flex items-center gap-4 bg-white p-2 rounded-xl shadow">
-            <img
-              src="https://i.pravatar.cc/40"
-              alt="Agent Avatar"
-              className="rounded-full w-10 h-10"
-            />
-            <div>
-              <p className="text-sm font-medium">Sarah Johnson</p>
-              <span className="text-xs text-gray-500">Senior Agent</span>
+         <div className="bg-white px-10 py-2 mb-5 flex justify-between items-center">
+            <div className="">
+                <h1 className="text-2xl font-medium leading-tight">Property Management</h1>
+                <p className="text-[20px] font-light leading-5">Manage all your properties here</p>
             </div>
-          </div>
+            <div className="flex items-center gap-1">
+                <div className="bg-gray-200 size-10 rounded-full"></div>
+                <h1 className="font-semibold">Erris Binxhija</h1>
+            </div>
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 px-10 xl:grid-cols-6 gap-4 mb-6">
           <StatCard title="Listings" value="22" icon={<FaRegBuilding />} />
           <StatCard title="Sold" value="10" icon={<FaCheckCircle />} />
           <StatCard title="Pending" value="4" icon={<FaHourglassHalf />} />
@@ -73,7 +66,7 @@ const AgentDashboard = () => {
         </div>
 
         {/* Main Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 px-10 gap-6">
           {/* Sales Chart */}
           <div className="bg-white p-4 rounded-xl shadow col-span-2">
             <h2 className="text-lg font-semibold mb-4">Monthly Sales</h2>
@@ -81,7 +74,7 @@ const AgentDashboard = () => {
           </div>
 
           {/* Top Properties */}
-          <div className="bg-white p-4 rounded-xl shadow">
+          <div className="bg-white p-4 rounded-xl px-10 shadow">
             <h2 className="text-lg font-semibold mb-4">Top Properties</h2>
             <ul className="divide-y">
               {topProperties.map((prop) => (
@@ -96,7 +89,7 @@ const AgentDashboard = () => {
         </div>
 
         {/* Recent Activity */}
-        <div className="mt-6 bg-white p-4 rounded-xl shadow">
+        <div className="mt-6 bg-white p-4 rounded-xl px-10 shadow">
           <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
           <ul className="space-y-3 text-sm text-gray-600">
             <li>📬 John Doe sent an inquiry on Luxury Condo.</li>

@@ -5,7 +5,7 @@ const ImageUploadPreview = ({ images, setImages }) => {
       file,
       url: URL.createObjectURL(file),
     }));
-    setImages(previews); // Updates formData in parent
+    setImages(previews)
   };
 
   return (
