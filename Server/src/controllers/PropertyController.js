@@ -25,38 +25,3 @@ exports.getPropertyById = async (req, res) => {
   }
 };
 
-// POST create new property
-exports.createProperty = async (req, res) => {
-  try {
-    const newProperty = await Property.create(req.body);
-    res.status(201).json(newProperty);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-};
-
-// PUT update property
-exports.updateProperty = async (req, res) => {
-  try {
-    const [updated] = await Property.update(req.body, {
-      where: { id: req.params.id }
-    });
-    if (!updated) return res.status(404).json({ message: "Property not found" });
-    res.json({ message: "Property updated" });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-// DELETE property
-exports.deleteProperty = async (req, res) => {
-  try {
-    const deleted = await Property.destroy({
-      where: { id: req.params.id }
-    });
-    if (!deleted) return res.status(404).json({ message: "Property not found" });
-    res.json({ message: "Property deleted" });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};

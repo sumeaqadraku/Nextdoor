@@ -112,7 +112,7 @@ const deleteProperty = async (req, res) => {
 }
 
 
-modules.exports = {
+module.exports = {
     CreateProperty,
     deleteProperty,
     editProperty

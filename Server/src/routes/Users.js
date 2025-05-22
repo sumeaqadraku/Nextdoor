@@ -8,13 +8,5 @@ router.get('/', userController.getAllUsers);
 // GET user by ID
 router.get('/:id', userController.getUserById);
 
-// POST create a new user
-router.post('/', userController.createUser);
-
-// PUT update a user
-router.put('/:id', userController.updateUser);
-
-// DELETE a user
-router.delete('/:id', userController.deleteUser);
 
 module.exports = router;

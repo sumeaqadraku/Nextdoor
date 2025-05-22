@@ -1,25 +1,6 @@
 const { Appointment, User, Property } = require('../models');
 
 module.exports = {
-  // Create an appointment
-  async createAppointment(req, res) {
-    try {
-      const { date, status, userId, propertyId, note } = req.body;
-
-      const appointment = await Appointment.create({
-        date,
-        status,
-        userId,
-        propertyId,
-        note,
-      });
-
-      res.status(201).json(appointment);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Failed to create appointment' });
-    }
-  },
 
   // Get all appointments
   async getAllAppointments(req, res) {
@@ -71,42 +52,4 @@ module.exports = {
     }
   },
 
-  // Update status
-  async updateAppointmentStatus(req, res) {
-    try {
-      const { id } = req.params;
-      const { status } = req.body;
-
-      const appointment = await Appointment.findByPk(id);
-      if (!appointment) {
-        return res.status(404).json({ error: 'Appointment not found' });
-      }
-
-      appointment.status = status;
-      await appointment.save();
-
-      res.json(appointment);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Failed to update status' });
-    }
-  },
-
-  // Delete
-  async deleteAppointment(req, res) {
-    try {
-      const { id } = req.params;
-
-      const deleted = await Appointment.destroy({ where: { id } });
-
-      if (!deleted) {
-        return res.status(404).json({ error: 'Appointment not found' });
-      }
-
-      res.json({ message: 'Appointment deleted' });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Error deleting appointment' });
-    }
-  }
-};
+}
