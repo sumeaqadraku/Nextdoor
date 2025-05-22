@@ -1,13 +1,17 @@
 const express = require('express');
 const app = express();
 const db = require('./src/models'); 
+const cors = require('cors');
+app.use(cors())
+app.use(express.json());
+
 const userRoutes = require('./src/routes/Users');
 const propertyRoutes = require('./src/routes/Properties');
 const notificationRoutes = require('./src/routes/Notifications');
 const appointmentRoutes = require('./src/routes/Appointments');
 require('dotenv').config();
 
-app.use(express.json());
+
 
 
 app.use('/api/users', userRoutes);

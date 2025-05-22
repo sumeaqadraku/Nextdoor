@@ -17,6 +17,11 @@ module.exports = {
       },
       imageUrl: {
         type: Sequelize.STRING,
+        allowNull: true 
+      },
+      isPrimary: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
         allowNull: false
       },
      

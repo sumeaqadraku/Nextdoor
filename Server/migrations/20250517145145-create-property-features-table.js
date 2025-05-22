@@ -13,23 +13,28 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: { model: 'properties', key: 'id' },
-        onDelete: 'CASCADE'
-      },
-      bedrooms: {
-        type: Sequelize.INTEGER,
-        allowNull: false
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       },
       bathrooms: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: true
       },
-      area: {
-        type: Sequelize.FLOAT,
-        allowNull: false
+      bedrooms: {
+        type: Sequelize.INTEGER,
+        allowNull: true
       },
-      amenities: {
-      type: Sequelize.TEXT,
-      allowNull: true
+      certificates: {
+        type: Sequelize.TEXT,
+        allowNull: true
+      },
+      size: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      elevator: {
+        type: Sequelize.TEXT,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,

@@ -7,37 +7,48 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
-      },
-      ownerId: {  // FK 
         type: Sequelize.INTEGER,
-        allowNull: false,
-        references: { model: 'owners', key: 'id' },
-        onDelete: 'CASCADE'
       },
       title: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       description: {
         type: Sequelize.TEXT,
-        allowNull: true
+        allowNull: true,
       },
       price: {
         type: Sequelize.FLOAT,
-        allowNull: false
+        allowNull: false,
       },
-      
+      type: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      status: {
+        type: Sequelize.ENUM('Active', 'Sold', 'Rented'),
+        defaultValue: 'Active',
+        allowNull: false,
+      },
+      agentId: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+      },
+      listingTypes: {
+        type: Sequelize.ENUM('Sale', 'Rent'),
+        allowNull: false,
+        defaultValue: 'rent',
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('NOW')
+        defaultValue: Sequelize.fn('NOW'),
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('NOW')
-      }
+        defaultValue: Sequelize.fn('NOW'),
+      },
     });
   },
 
