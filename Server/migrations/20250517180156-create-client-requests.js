@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('client_requests', {
+    await await queryInterface.createTable('client_requests', {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -20,6 +20,12 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
       },
+      userId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: 'users', key: 'id' },
+        onDelete: 'CASCADE',
+      },
       notif_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -29,6 +35,7 @@ module.exports = {
       createdAt: Sequelize.DATE,
       updatedAt: Sequelize.DATE,
     });
+
   },
 
   down: async (queryInterface) => {

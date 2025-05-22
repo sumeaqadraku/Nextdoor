@@ -1,14 +1,18 @@
 import React, {useState} from "react";
 import { motion } from "framer-motion";
 import FormInput from "../ui/LabelInput";
+import Select from "../ui/Select";
 import ImageUploadPreview from "../ui/imageInput";
-import toast from "react-hot-toast";    
+import toast from "react-hot-toast";
+import axios from "axios";    
 const PropertyModal = ({ onClose }) => {
 
     const [formData, setFormData] = useState({
-        name: "",
+        title: "",
         type: "",
         price: "",
+        owner: "",
+        listingType: "",
         city: "",
         address: "",
         latitude: "",
@@ -19,6 +23,7 @@ const PropertyModal = ({ onClose }) => {
         size: "",
         yearBuilt: "",
         certificate: "",
+        elevator: "",
         images: []
     });
 
@@ -27,13 +32,35 @@ const PropertyModal = ({ onClose }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log("Form submitted with:", formData);
-        onClose();
-        toast.success("Property added successfully!");
+    const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    };
+  try {
+    const form = new FormData();
+
+    for (let key in formData) {
+      if (key === "images") {
+        formData.images.forEach((image) => {
+          form.append("images", image);
+        });
+      } else {
+        form.append(key, formData[key]);
+      }
+    }
+
+    const response = await axios.post("http://localhost:3000/api/properties", form);
+
+    toast.success("Property created successfully!");
+    console.log("Property created:", response.data);
+    onClose(); 
+  } catch (error) {
+    console.log(formData)
+    console.error("Error creating property:", error);
+    
+    toast.error("Failed to create property.");
+  }
+};
+
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">
@@ -51,8 +78,10 @@ const PropertyModal = ({ onClose }) => {
         <form onSubmit={handleSubmit} className="flex flex-col h-95 overflow-y-scroll gap-4 mt-2">
             <div className="flex  flex-wrap gap-2 px-10">
                 <FormInput label={"Property Name:"} placeholder={"Enter property name"} name={"name"} type={"text"} onChange={handleChange} />
-                <FormInput label={"Type:"} placeholder={"Choose type..."} name={"type"} type={"text"} onChange={handleChange}/>
+                <Select label={"Type:"} value={formData.type} name={"type"} onChange={handleChange} options={[{value: "House", label: "House"}, {value: "Apartment", label: "Apartment"}]}/>
                 <FormInput label={"Price:"} placeholder={"Enter price... (300.00)"} name={"price"} type={"number"} onChange={handleChange}/>
+                <FormInput label={"Owner Name:"} placeholder={"Enter owner's name..."} name={"owner"} type={"text"} onChange={handleChange}/>
+                <Select label={"Listing Type:"} value={formData.listingType}  name={"listingType"} onChange={handleChange} options={[{value: "Rent", label: "Rent"},{value: "Sale", label:"Sale"}]} />
                 <FormInput label={"City:"} placeholder={"Enter city name..."} name={"city"} type={"text"} onChange={handleChange}/>
                 <FormInput label={"Address:"} placeholder={"Enter property address..."} name={"address"} type={"text"} onChange={handleChange}/>
                 <FormInput label={"Latitude:"} placeholder={"Enter latitude value..."} name={"latitude"} type={"number"} onChange={handleChange}/>
@@ -60,7 +89,7 @@ const PropertyModal = ({ onClose }) => {
 
                 <div className="w-full flex flex-col gap-1">
                     <label>Property Description:</label>
-                    <textarea className="bg-[#F6F6F6] text-[17px] rounded-lg h-10 px-3 py-2"
+                    <textarea className="bg-[#F6F6F6] text-[17px] rounded-lg h-25 px-3 py-2"
                     placeholder="Enter a description about the property..." name="description" onChange={handleChange} id=""></textarea>
                 </div>
 
@@ -71,8 +100,9 @@ const PropertyModal = ({ onClose }) => {
                 <FormInput label={"Bedrooms"} placeholder={"Enter amount..."} name={"bedrooms"} type={"number"} onChange={handleChange}/>
                 <FormInput label={"Bathrooms"} placeholder={"Enter amount..."} name={"bathrooms"} type={"number"} onChange={handleChange}/>
                 <FormInput label={"Size"} placeholder={"Enter size..."} name={"size"} type={"number"} onChange={handleChange}/>
+                <Select label={"Elevator:"} value={formData.elevator} name={"elevator"} onChange={handleChange} options={[{value: "Yes", label: "Yes"},{value: "No", label:"No"}]} />
                 <FormInput label={"Year-built"} placeholder={"Enter the year"} name={"yearBuilt"} type={"number"} onChange={handleChange}/>
-                <FormInput label={"Has Certificate"} placeholder={"Certificated or not?"} name={"certificate"} type={"text"} onChange={handleChange}/>
+                <Select label={"Certificate:"}value={formData.certificate} name={"certificate"} onChange={handleChange} options={[{value: "Yes", label: "Yes"},{value: "No", label:"No"}]} />
 
                 <div className="w-full">
                     <h1 className="text-xl font-bold">Upload Images</h1>

@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true,
       primaryKey: true,
     },
-    name: {
+    title: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -28,10 +28,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    listingType: {
-    type: DataTypes.ENUM('sale', 'rent', 'lease', 'other'),
+    listingTypes: {
+    type: DataTypes.ENUM('Sale', 'Rent'),
     allowNull: false,
-    defaultValue: 'rent',
 },
   }, {
     tableName: 'properties',

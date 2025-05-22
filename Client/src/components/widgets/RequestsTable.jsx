@@ -85,12 +85,12 @@ export default function RequestsMailPanel() {
                 <div className="flex items-center gap-3 py-2">
                   <FiUser className="text-[#b2b0b0] rounded-full p-2 bg-gray-100 text-[45px]" />
                   <div>
-                    <p className="text-xs leading-tight">Client:</p>
+                    <p className="text-xs  text-gray-500 leading-tight">Client:</p>
                     <h1 className="leading-5 font-medium">{req.client}</h1>
                   </div>
                 </div>
                 <div>
-                  <p className="text-xs leading-tight">Message:</p>
+                  <p className="text-xs text-gray-500 leading-tight">Message:</p>
                   <h1 className="leading-5">{req.message}</h1>
                 </div>
               </div>

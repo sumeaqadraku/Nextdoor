@@ -13,6 +13,7 @@ const [showModal, setShowModal] = useState(false);
 
   return (
     <div className="flex h-screen bg-gray-100">
+
       <main className="w-full overflow-y-auto">
         <div className="bg-white px-10 py-2 flex justify-between items-center">
             <div className="">
@@ -51,7 +52,6 @@ const [showModal, setShowModal] = useState(false);
                 <PropertyTable/>
 
                 <div className="w-full flex justify-center">
-                    <Pagination/>
                     {showModal && <PropertyModal onClose={() => setShowModal(false)} />}
                     
 

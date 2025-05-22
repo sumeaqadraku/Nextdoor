@@ -1,53 +1,47 @@
-const { PropertyModel, PropertyLocation, PropertyFeaturesModel, PropertyImagesModel, sequelize } = require('../models');
+const { Property, PropertyLocation, PropertyFeature, PropertyImage, sequelize } = require('../models');
+console.log('PropertyModel', Property);
+console.log('PropertyLocation', PropertyLocation);
+console.log('PropertyFeaturesModel', PropertyFeature);
+console.log('PropertyImagesModel', PropertyImage);
 
-const CreateProperty = async (req, res) => {
-    const t = await sequelize.transaction();
+const createProperty = async (req, res) => {
+  try {
+    const { 
+      title, type, price, description, listingTypes, city, address, 
+      latitude, longitude, bedrooms, bathrooms, size, elevator, yearBuilt, 
+      certificate, imageUrl 
+    } = req.body;
 
-    try {
-        const { name, type, price, description, agentId, city, address, latitude, longitude, bedrooms, bathrooms, size, elevator, yearBuilt, certificate, images } = req.body;
+    const newProperty = await Property.create({
+      title, description, price, type, agentId: "1", listingTypes
+    });
 
-        const newProperty = await PropertyModel.create({
-        name,
-        type,
-        price,
-        description,
-        agentId: agentId,
-    }, { transaction: t });
+    const propertyId = newProperty.id;
 
-        const propertyId = newProperty.id;
+    await PropertyLocation.create({
+      propertyId, city, address, latitude, longitude
+    });
 
-        await PropertyLocation.create({
-            propertyId,
-            city,
-            address,
-            latitude,
-            longitude
-        }, { transaction: t });
+    await PropertyFeature.create({
+      propertyId, bedrooms, bathrooms, size, elevator, yearBuilt, certificate
+    });
 
-        await PropertyFeaturesModel.create({
-            propertyId,
-            bedrooms,
-            bathrooms,
-            size,
-            elevator,
-            yearBuilt,
-            certificate
-        }, { transaction: t });
+    await PropertyImage.create({ propertyId, imageUrl });
 
-        const imagesRecords = images.map((url) => ({
-            propertyId,
-            url
-        }));
-        await PropertyImagesModel.bulkCreate(imagesRecords, { transaction: t });
-        await t.commit();
+    return res.status(201).json({
+      message: 'Property created successfully',
+      propertyId
+    });
 
-        return res.status(201).json({ message: 'Property created successfully', propertyId });
-    } catch (error) {
-        await t.rollback();
-        console.error('Error creating property:', error);
-        return res.status(500).json({ message: 'Error creating property', error });
-    }   
-}
+  } catch (error) {
+    console.error('Error creating property:', error);
+    return res.status(500).json({
+      message: 'Error creating property',
+      error
+    });
+  }
+};
+
 
 const editProperty = async (req, res) => {
     const { id } = req.params;
@@ -112,8 +106,8 @@ const deleteProperty = async (req, res) => {
 }
 
 
-modules.exports = {
-    CreateProperty,
+module.exports = {
+    createProperty,
     deleteProperty,
     editProperty
 }

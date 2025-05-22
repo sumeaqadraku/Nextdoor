@@ -22,8 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
     },
     elevator: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
+      type: DataTypes.STRING,
     },
   }, {
     tableName: 'property_features',

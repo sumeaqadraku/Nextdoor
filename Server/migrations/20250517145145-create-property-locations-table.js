@@ -7,49 +7,44 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       propertyId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: { model: 'properties', key: 'id' },
-        onDelete: 'CASCADE'
+        onDelete: 'CASCADE',
       },
       address: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       city: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
-      state: {
-        type: Sequelize.STRING,
-        allowNull: true
+      latitude: {
+        type: Sequelize.FLOAT, // Changed to FLOAT for geo-coordinates
+        allowNull: false,
       },
-      country: {
-        type: Sequelize.STRING,
-        allowNull: false
+      longitude: {
+        type: Sequelize.FLOAT, // Changed to FLOAT for geo-coordinates
+        allowNull: false,
       },
-      postalCode: {
-        type: Sequelize.STRING,
-        allowNull: true
-      },
-     
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('NOW')
+        defaultValue: Sequelize.fn('NOW'),
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('NOW')
-      }
+        defaultValue: Sequelize.fn('NOW'),
+      },
     });
   },
 
   down: async (queryInterface) => {
     await queryInterface.dropTable('property_locations');
-  }
+  },
 };

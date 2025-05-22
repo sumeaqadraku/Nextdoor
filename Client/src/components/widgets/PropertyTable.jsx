@@ -3,6 +3,7 @@ import View1 from "../../assets/images/view1.jpg";
 import RemovePropertyModal from "../../components/confirmModals/removeProp";
 import EditPropertyModal from "../forms/EditPropertyModal";
 import toast from "react-hot-toast";
+import Pagination from "../../components/ui/Pagniations";
 
 
 const initialData = [
@@ -10,7 +11,12 @@ const initialData = [
   { id: "#03", name: "Banese Kalabri",   status: "Sold",    customer: "Denis Prela",  createdAt: "11‑03‑2024" },
   { id: "#04", name: "Apartament FK",    status: "Rented",  customer: "Frroki",       createdAt: "14‑03‑2025" },
   { id: "#05", name: "Banese Lipjan",    status: "Rented",  customer: "Valdrin H.",   createdAt: "14‑03‑2025" },
-  { id: "#06", name: "Banese Lipjan",    status: "Rented",  customer: "Valdrin H.",   createdAt: "14‑03‑2025" }
+  { id: "#06", name: "Banese Lipjan",    status: "Rented",  customer: "Valdrin H.",   createdAt: "14‑03‑2025" },
+  { id: "#07", name: "Banese Lipjan",    status: "Rented",  customer: "Valdrin H.",   createdAt: "14‑03‑2025" },
+    { id: "#08", name: "Banese Lipjan",    status: "Rented",  customer: "Valdrin H.",   createdAt: "14‑03‑2025" },
+    { id: "#09", name: "Banese Lipjan",    status: "Rented",  customer: "Valdrin H.",   createdAt: "14‑03‑2025" },
+    { id: "#10", name: "Banese Lipjan",    status: "Rented",  customer: "Valdrin H.",   createdAt: "14‑03‑2025" },
+    { id: "#11", name: "Banese Lipjan",    status: "Rented",  customer: "Valdrin H.",   createdAt: "14‑03‑2025" },
 ];
 
 const statusColors = {
@@ -24,6 +30,14 @@ const PropertyTable = () => {
   const [modalOpen,  setModalOpen]    = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selected,   setSelected]     = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = properties.slice(indexOfFirstItem, indexOfLastItem);
+
 
   const handleRemove = (id) => {
     setProperties((prev) => prev.filter((p) => p.id !== id));
@@ -46,7 +60,7 @@ const PropertyTable = () => {
           </thead>
 
           <tbody className="divide-y divide-gray-200">
-            {properties.map((item) => (
+            {currentItems.map((item) => (
               <tr key={item.id} className="hover:bg-gray-50">
                 <td className="px-4 py-3 font-semibold">{item.id}</td>
 
@@ -90,6 +104,14 @@ const PropertyTable = () => {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="w-full flex justify-center">
+        <Pagination
+        totalItems={properties.length}
+        itemsPerPage={itemsPerPage}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}        
+        />
       </div>
 
       {editModalOpen && <EditPropertyModal onClose={() => setEditModalOpen(false)}/>}
