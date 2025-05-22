@@ -1,13 +1,13 @@
 module.exports = (sequelize, DataTypes) => {
   const Review = sequelize.define('Review', {
     userId: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false,
         references: { model: 'users', key: 'id' },
         onDelete: 'CASCADE'
       },
       propertyId: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false,
         references: { model: 'properties', key: 'id' },
         onDelete: 'CASCADE'

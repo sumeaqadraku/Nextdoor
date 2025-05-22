@@ -9,12 +9,14 @@ const userRoutes = require('./src/routes/Users');
 const propertyRoutes = require('./src/routes/Properties');
 const notificationRoutes = require('./src/routes/Notifications');
 const appointmentRoutes = require('./src/routes/Appointments');
+const agentRoutes = require('./src/routes/Agent');
 require('dotenv').config();
 
 
 
 
 app.use('/api/users', userRoutes);
+app.use('/api/agents', agentRoutes);
 app.use('/api/properties', propertyRoutes); 
 app.use('/api/appointments', appointmentRoutes);
 app.use('/api/notifications', notificationRoutes);
