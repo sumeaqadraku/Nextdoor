@@ -12,7 +12,7 @@ const PropertyModal = ({ onClose }) => {
         type: "",
         price: "",
         owner: "",
-        listingType: "",
+        listingTypes: "",
         city: "",
         address: "",
         latitude: "",
@@ -24,7 +24,7 @@ const PropertyModal = ({ onClose }) => {
         yearBuilt: "",
         certificate: "",
         elevator: "",
-        images: []
+        imageUrl: []
     });
 
     const handleChange = (e) => {
@@ -33,22 +33,23 @@ const PropertyModal = ({ onClose }) => {
     };
 
     const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
   try {
     const form = new FormData();
 
     for (let key in formData) {
-      if (key === "images") {
-        formData.images.forEach((image) => {
-          form.append("images", image);
+      if (key === "imageUrl") {
+        formData.imageUrl.forEach((image) => {
+          form.append("imageUrl", image.file);
         });
       } else {
         form.append(key, formData[key]);
       }
     }
 
-    const response = await axios.post("http://localhost:3000/api/properties", form);
+    const response = await axios.post("http://localhost:5000/api/agents/createProperty", form);
+    console.log(formData);
 
     toast.success("Property created successfully!");
     console.log("Property created:", response.data);
@@ -70,18 +71,18 @@ const PropertyModal = ({ onClose }) => {
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.7, opacity: 0 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
-      >
+      > 
         <div className="w-full bg-[#f6f6f6] p-1 flex text-center ">
             <h2 className="text-xl px-10 pt-3 font-bold mb-4">Add New Property</h2>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col h-95 overflow-y-scroll gap-4 mt-2">
             <div className="flex  flex-wrap gap-2 px-10">
-                <FormInput label={"Property Name:"} placeholder={"Enter property name"} name={"name"} type={"text"} onChange={handleChange} />
+                <FormInput label={"Property Name:"} placeholder={"Enter property name"} name={"title"} type={"text"} onChange={handleChange} />
                 <Select label={"Type:"} value={formData.type} name={"type"} onChange={handleChange} options={[{value: "House", label: "House"}, {value: "Apartment", label: "Apartment"}]}/>
                 <FormInput label={"Price:"} placeholder={"Enter price... (300.00)"} name={"price"} type={"number"} onChange={handleChange}/>
                 <FormInput label={"Owner Name:"} placeholder={"Enter owner's name..."} name={"owner"} type={"text"} onChange={handleChange}/>
-                <Select label={"Listing Type:"} value={formData.listingType}  name={"listingType"} onChange={handleChange} options={[{value: "Rent", label: "Rent"},{value: "Sale", label:"Sale"}]} />
+                <Select label={"Listing Type:"} value={formData.listingTypes}  name={"listingTypes"} onChange={handleChange} options={[{value: "Rent", label: "Rent"},{value: "Sale", label:"Sale"}]} />
                 <FormInput label={"City:"} placeholder={"Enter city name..."} name={"city"} type={"text"} onChange={handleChange}/>
                 <FormInput label={"Address:"} placeholder={"Enter property address..."} name={"address"} type={"text"} onChange={handleChange}/>
                 <FormInput label={"Latitude:"} placeholder={"Enter latitude value..."} name={"latitude"} type={"number"} onChange={handleChange}/>
@@ -109,8 +110,8 @@ const PropertyModal = ({ onClose }) => {
                 </div>
 
                 <ImageUploadPreview
-                images={formData.images}
-                setImages={(files) => setFormData({ ...formData, images: files })}/>
+                images={formData.imageUrl}
+                setImages={(files) => setFormData({ ...formData, imageUrl: files })}/>
             </div>
             <button 
             type="submit"

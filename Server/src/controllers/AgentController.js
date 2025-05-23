@@ -7,13 +7,13 @@ console.log('PropertyImagesModel', PropertyImage);
 const createProperty = async (req, res) => {
   try {
     console.log("Creating property...")
+    const files = req.files;
     const { 
       title, type, price, description, listingTypes, city, address, 
       latitude, longitude, bedrooms, bathrooms, size, elevator, yearBuilt, 
-      certificate,imageUrl
+      certificate
     } = req.body;
 
-    // const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
 
     const newProperty = await Property.create({
       title, description, price, type, agentId: "1", listingTypes
@@ -29,13 +29,12 @@ const createProperty = async (req, res) => {
       propertyId, bedrooms, bathrooms, size, elevator, yearBuilt, certificate
     });
 
-    if (Array.isArray(imageUrl)) {
-      const imageRecords = imageUrl.map(url => ({
-        propertyId,
-        imageUrl: url
-      }));
-      await PropertyImage.bulkCreate(imageRecords);
-    }
+    const imageRecords = files.map(file => ({
+    propertyId,
+    imageUrl: `/uploads/${file.filename}`
+    }));
+
+    await PropertyImage.bulkCreate(imageRecords);
 
 
     return res.status(201).json({

@@ -2,14 +2,33 @@ import Agentbar from "../../../components/AgentBar";
 import apartament1 from "../../../assets/images/apartament1.jpg";
 import PropertyTable from "../../../components/widgets/PropertyTable";
 import PropertyModal from "../../../components/forms/AddPropModal";
-
+import axios from "axios";
+import { useEffect, useState } from "react";
 import Pagination from "../../../components/ui/Pagniations";
 import { FiSearch } from "react-icons/fi";
-import { useState } from "react";
 
 const AddProperty = () => {
 
 const [showModal, setShowModal] = useState(false);
+const [searchQuery, setSearchQuery] = useState("");
+const [properties, setProperties] = useState([])
+
+useEffect(() => {
+  const fetchProperties = async () => {
+    const endpoint = searchQuery
+      ? `http://localhost:5000/api/properties?search=${searchQuery}`
+      : `http://localhost:5000/api/properties`;
+
+    try {
+      const res = await axios.get(endpoint);
+      setProperties(res.data);
+    } catch (err) {
+      console.error("Error fetching properties:", err);
+    }
+  };
+
+  fetchProperties();
+}, [searchQuery]);
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -41,6 +60,8 @@ const [showModal, setShowModal] = useState(false);
                             type="text"
                             name="search"
                             placeholder="Enter property name..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
                             className="bg-[#F6F6F6] pl-12 pr-4 py-2 font-light text-[19px] rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
                         />
                     </div>
@@ -49,7 +70,7 @@ const [showModal, setShowModal] = useState(false);
                     className="bg-[#42ABDD] hover:bg-[#2D9CDB] rounded-xl text-white text-[16px] px-3 font-medium cursor-pointer transition duration-200 transform hover:scale-105 ">Add Property</button>
                     
                 </div>
-                <PropertyTable/>
+                <PropertyTable propertiesData={properties} />
 
                 <div className="w-full flex justify-center">
                     {showModal && <PropertyModal onClose={() => setShowModal(false)} />}

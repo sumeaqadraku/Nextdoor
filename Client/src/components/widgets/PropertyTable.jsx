@@ -2,21 +2,22 @@ import { useState } from "react";
 import View1 from "../../assets/images/view1.jpg";
 import RemovePropertyModal from "../../components/confirmModals/removeProp";
 import EditPropertyModal from "../forms/EditPropertyModal";
+import axios from "axios";
 import toast from "react-hot-toast";
 import Pagination from "../../components/ui/Pagniations";
 
 
 const initialData = [
-  { id: "#01", name: "Prishtina Stars", status: "Active",  customer: "Erris Binxhija", createdAt: "13‑05‑2024" },
-  { id: "#03", name: "Banese Kalabri",   status: "Sold",    customer: "Denis Prela",  createdAt: "11‑03‑2024" },
-  { id: "#04", name: "Apartament FK",    status: "Rented",  customer: "Frroki",       createdAt: "14‑03‑2025" },
-  { id: "#05", name: "Banese Lipjan",    status: "Rented",  customer: "Valdrin H.",   createdAt: "14‑03‑2025" },
-  { id: "#06", name: "Banese Lipjan",    status: "Rented",  customer: "Valdrin H.",   createdAt: "14‑03‑2025" },
-  { id: "#07", name: "Banese Lipjan",    status: "Rented",  customer: "Valdrin H.",   createdAt: "14‑03‑2025" },
-    { id: "#08", name: "Banese Lipjan",    status: "Rented",  customer: "Valdrin H.",   createdAt: "14‑03‑2025" },
-    { id: "#09", name: "Banese Lipjan",    status: "Rented",  customer: "Valdrin H.",   createdAt: "14‑03‑2025" },
-    { id: "#10", name: "Banese Lipjan",    status: "Rented",  customer: "Valdrin H.",   createdAt: "14‑03‑2025" },
-    { id: "#11", name: "Banese Lipjan",    status: "Rented",  customer: "Valdrin H.",   createdAt: "14‑03‑2025" },
+  { id: 1, name: "Prishtina Stars", status: "Active",  customer: "Erris Binxhija", createdAt: "13‑05‑2024" },
+  { id: 2, name: "Banese Kalabri",   status: "Sold",    customer: "Denis Prela",  createdAt: "11‑03‑2024" },
+  { id: 3, name: "Apartament FK",    status: "Rented",  customer: "Frroki",       createdAt: "14‑03‑2025" },
+  { id: 5, name: "Banese Lipjan",    status: "Rented",  customer: "Valdrin H.",   createdAt: "14‑03‑2025" },
+  { id: 6, name: "Banese Lipjan",    status: "Rented",  customer: "Valdrin H.",   createdAt: "14‑03‑2025" },
+  { id: 7, name: "Banese Lipjan",    status: "Rented",  customer: "Valdrin H.",   createdAt: "14‑03‑2025" },
+    { id: 8, name: "Banese Lipjan",    status: "Rented",  customer: "Valdrin H.",   createdAt: "14‑03‑2025" },
+    { id: 9, name: "Banese Lipjan",    status: "Rented",  customer: "Valdrin H.",   createdAt: "14‑03‑2025" },
+    { id: 10, name: "Banese Lipjan",    status: "Rented",  customer: "Valdrin H.",   createdAt: "14‑03‑2025" },
+    { id: 11, name: "Banese Lipjan",    status: "Rented",  customer: "Valdrin H.",   createdAt: "14‑03‑2025" },
 ];
 
 const statusColors = {
@@ -25,8 +26,8 @@ const statusColors = {
   Rented:  "bg-sky-200   text-sky-800"
 };
 
-const PropertyTable = () => {
-  const [properties, setProperties]   = useState(initialData);
+const PropertyTable = ( propertiesData ) => {
+  const [properties, setProperties]   = useState( initialData);
   const [modalOpen,  setModalOpen]    = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selected,   setSelected]     = useState(null);
@@ -39,11 +40,21 @@ const PropertyTable = () => {
   const currentItems = properties.slice(indexOfFirstItem, indexOfLastItem);
 
 
-  const handleRemove = (id) => {
-    setProperties((prev) => prev.filter((p) => p.id !== id));
-    toast.success(`Property ${id} deleted`);
-  }
+  const handleRemove = async (id) => {
+  try {
 
+    // Backend DELETE request
+    await axios.delete(`http://localhost:5000/api/agents/deleteProperty/${id}`);
+
+    setProperties((prev) => prev.filter((p) => p.id !== id));
+
+    // Success feedback
+    toast.success(`Property ${id} deleted successfully.`);
+  } catch (error) {
+    console.error('Delete error:', error);
+    toast.error(`Failed to delete property ${id}.`);
+  }
+};
   return (
     <>
       <div className="w-full bg-white rounded-xl px-10 overflow-x-auto">

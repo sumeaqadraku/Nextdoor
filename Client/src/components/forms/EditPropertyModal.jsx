@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import FormInput from "../ui/LabelInput";
 import ImageUploadPreview from "../ui/imageInput";
+import Select from "../ui/Select";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 const EditPropertyModal = ({ onClose}) => {
   const [formData, setFormData] = useState({
-    name: "",
+    title: "",
     type: "",
     price: "",
     city: "",
@@ -19,7 +21,9 @@ const EditPropertyModal = ({ onClose}) => {
     size: "",
     yearBuilt: "",
     certificate: "",
-    images: []
+    elevator: "",
+    listingTypes: "",
+    imageUrl: []
   });
 
   const handleChange = (e) => {
@@ -27,12 +31,34 @@ const EditPropertyModal = ({ onClose}) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted with:", formData);
+
+  try {
+    const form = new FormData();
+
+    for (let key in formData) {
+      if (key === "imageUrl") {
+        formData.imageUrl.forEach((image) => {
+          form.append("imageUrl", image);
+        });
+      } else {
+        form.append(key, formData[key]);
+      }
+    }
+
+    const response = await axios.put("http://localhost:5000/api/agents/editProperty/2", form);
+
     toast.success("Property updated successfully!");
-    onClose();
-  };
+    console.log("Property updated:", response.data);
+    onClose(); 
+  } catch (error) {
+    console.log(formData)
+    console.error("Error updating property:", error);
+    
+    toast.error("Failed to update property.");
+  }
+};
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">
@@ -49,42 +75,40 @@ const EditPropertyModal = ({ onClose}) => {
 
         <form onSubmit={handleSubmit} className="flex flex-col h-95 overflow-y-scroll gap-4 mt-2">
           <div className="flex flex-wrap gap-2 px-10">
-            <FormInput label="Property Name:" name="name" value={formData.name} type="text" onChange={handleChange} placeholder="Enter property name" />
-            <FormInput label="Type:" name="type" value={formData.type} type="text" onChange={handleChange} placeholder="e.g. Apartment, House" />
-            <FormInput label="Price:" name="price" value={formData.price} type="number" onChange={handleChange} placeholder="Enter price in €" />
-            <FormInput label="City:" name="city" value={formData.city} type="text" onChange={handleChange} placeholder="Enter city name" />
-            <FormInput label="Address:" name="address" value={formData.address} type="text" onChange={handleChange} placeholder="Enter street address" />
-            <FormInput label="Latitude:" name="latitude" value={formData.latitude} type="number" onChange={handleChange} placeholder="e.g. 42.6611" />
-            <FormInput label="Longitude:" name="longitude" value={formData.longitude} type="number" onChange={handleChange} placeholder="e.g. 21.1589" />
+             <FormInput label={"Property Name:"} placeholder={"Enter property name"} name={"title"} type={"text"} onChange={handleChange} />
+             <Select label={"Type:"} value={formData.type} name={"type"} onChange={handleChange} options={[{value: "House", label: "House"}, {value: "Apartment", label: "Apartment"}]}/>
+             <FormInput label={"Price:"} placeholder={"Enter price... (300.00)"} name={"price"} type={"number"} onChange={handleChange}/>
+             <FormInput label={"Owner Name:"} placeholder={"Enter owner's name..."} name={"owner"} type={"text"} onChange={handleChange}/>
+             <Select label={"Listing Type:"} value={formData.listingTypes}  name={"listingTypes"} onChange={handleChange} options={[{value: "Rent", label: "Rent"},{value: "Sale", label:"Sale"}]} /> 
+             <FormInput label={"City:"} placeholder={"Enter city name..."} name={"city"} type={"text"} onChange={handleChange}/>
+             <FormInput label={"Address:"} placeholder={"Enter property address..."} name={"address"} type={"text"} onChange={handleChange}/>
+             <FormInput label={"Latitude:"} placeholder={"Enter latitude value..."} name={"latitude"} type={"number"} onChange={handleChange}/>
+             <FormInput label={"Longitude:"} placeholder={"Enter longitude value..."} name={"longitude"} type={"number"} onChange={handleChange}/>
 
             <div className="w-full flex flex-col gap-1">
-              <label>Property Description:</label>
-              <textarea
-                className="bg-[#F6F6F6] text-[17px] rounded-lg h-10 px-3 py-2"
-                placeholder="Enter a description about the property..."
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-              />
+                <label>Property Description:</label>
+                <textarea className="bg-[#F6F6F6] text-[17px] rounded-lg h-25 px-3 py-2"
+                placeholder="Enter a description about the property..." name="description" onChange={handleChange} id=""></textarea>
             </div>
 
             <div className="w-full">
               <h1 className="text-xl font-bold">Features</h1>
             </div>
 
-            <FormInput label="Bedrooms" name="bedrooms" value={formData.bedrooms} type="number" onChange={handleChange} placeholder="Number of bedrooms" />
-            <FormInput label="Bathrooms" name="bathrooms" value={formData.bathrooms} type="number" onChange={handleChange} placeholder="Number of bathrooms" />
-            <FormInput label="Size" name="size" value={formData.size} type="number" onChange={handleChange} placeholder="Size in m²" />
-            <FormInput label="Year Built" name="yearBuilt" value={formData.yearBuilt} type="number" onChange={handleChange} placeholder="e.g. 2020" />
-            <FormInput label="Has Certificate" name="certificate" value={formData.certificate} type="text" onChange={handleChange} placeholder="Yes / No" />
+            <FormInput label={"Bedrooms"} placeholder={"Enter amount..."} name={"bedrooms"} type={"number"} onChange={handleChange}/>
+            <FormInput label={"Bathrooms"} placeholder={"Enter amount..."} name={"bathrooms"} type={"number"} onChange={handleChange}/>
+            <FormInput label={"Size"} placeholder={"Enter size..."} name={"size"} type={"number"} onChange={handleChange}/>
+            <Select label={"Elevator:"} value={formData.elevator} name={"elevator"} onChange={handleChange} options={[{value: "Yes", label: "Yes"},{value: "No", label:"No"}]} />
+            <FormInput label={"Year-built"} placeholder={"Enter the year"} name={"yearBuilt"} type={"number"} onChange={handleChange}/>
+            <Select label={"Certificate:"}value={formData.certificate} name={"certificate"} onChange={handleChange} options={[{value: "Yes", label: "Yes"},{value: "No", label:"No"}]} />
 
             <div className="w-full">
               <h1 className="text-xl font-bold">Upload Images</h1>
             </div>
 
             <ImageUploadPreview
-              images={formData.images}
-              setImages={(files) => setFormData({ ...formData, images: files })}
+              images={formData.imageUrl}
+              setImages={(files) => setFormData({ ...formData, imageUrl: files })}
             />
           </div>
 
