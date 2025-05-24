@@ -3,7 +3,7 @@ import { Toaster } from "react-hot-toast";
 import LoginPage from './pages/LoginPage';
 import Register from './pages/Register';
 import UserLayout from './components/UserLayout';
-import AgentLayout from './components/AgentLayout'; 
+import AgentLayout from './components/AgentLayout';
 import HomePage from './pages/logged-in/user/HomePage';
 import Agents from './pages/logged-in/user/Agents';
 import SavedItems from './pages/logged-in/user/SavedProps';
@@ -12,11 +12,12 @@ import AgentDasboard from './pages/logged-in/agent/AgentDashboard';
 import AddProperty from './pages/logged-in/agent/AddProperty';
 import PropertyDetails from './pages/logged-in/user/PropertyDetails';
 import Requests from './pages/logged-in/agent/Requests';
+import AgentDetails from './pages/logged-in/user/AgentsDetails';
 
 function App() {
   return (
     <BrowserRouter>
-    <Toaster
+      <Toaster
         position="bottom-right"
         toastOptions={{
           duration: 3000,
@@ -32,14 +33,14 @@ function App() {
           <Route path="agents" element={<Agents />} />
           <Route path="saved" element={<SavedItems />} />
           <Route path="property-details" element={<PropertyDetails />} />
-
+          <Route path="agent-details" element={<AgentDetails />} />
           <Route path="notifications" element={<Notifications />} />
         </Route>
         <Route path="/agent" element={<AgentLayout />}>
           <Route path="dashboard" element={<AgentDasboard />} />
           <Route path="management" element={<AddProperty />} />
-          <Route path="requests" element={<Requests/>} />
-        </Route>      
+          <Route path="requests" element={<Requests />} />
+        </Route>
 
         {/* Opsionale: Një rrugë default për faqen kryesore ose ridrejtim */}
         <Route path="/" element={<LoginPage />} />
