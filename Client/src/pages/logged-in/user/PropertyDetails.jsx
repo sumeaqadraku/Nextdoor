@@ -1,5 +1,8 @@
 import { FaLocationArrow } from "react-icons/fa";
 import MapComponent from "../../../components/widgets/MapComponent";
+import { useParams } from "react-router-dom";
+import {  use, useEffect, useState } from "react";
+import axios from "axios";
 import Logo from "../../../assets/images/logo.png";
 import View1 from "../../../assets/images/view1.jpg";
 import View2 from "../../../assets/images/view2.jpg";
@@ -7,6 +10,26 @@ import View3 from "../../../assets/images/view3.jpg";
 import View4 from "../../../assets/images/view4.jpg";
 
 const PropertyDetails = () => {
+    const { id } = useParams();
+    const [propertyDetails, setPropertyDetails] = useState(null);
+    useEffect(() => {
+        const fetchPropertyDetails = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5000/api/properties/${id}`);
+                setPropertyDetails(response.data);
+                console.log(response.data);
+            } catch (error) {
+                console.error("Error fetching property details:", error);
+            }
+        };
+
+        fetchPropertyDetails();
+    }, [id]);
+
+    if (!propertyDetails) {
+    return <div className="p-6">Loading property details...</div>;
+  }
+
     return (
         <div className="w-full bg-[#F6F6F6] flex justify-center">
             <div className="w-[87%] bg-white min-h-screen pb-4">
@@ -27,7 +50,7 @@ const PropertyDetails = () => {
                         <div className="flex flex-wrap justify-between items-center mb-5 px-2">
                             <div className="flex items-center gap-2 text-sm md:text-lg">
                                 <FaLocationArrow className="text-[#008CB3]" />
-                                <h1 className="font-semibold">Kosove, Prishtine</h1>
+                                <h1 className="font-semibold">{propertyDetails.location.city}</h1>
                             </div>
                             <button className="w-24 md:w-28 bg-[#008CB3] h-9 rounded-md text-white text-sm font-medium">Save</button>
                         </div>
@@ -48,13 +71,13 @@ const PropertyDetails = () => {
 
                         {/* Title and Price */}
                         <div className="flex justify-between items-center mt-6 px-2">
-                            <h1 className="text-xl md:text-2xl font-bold">Property Title</h1>
-                            <p className="text-lg md:text-xl text-[#008CB3] font-semibold">$1,110/month</p>
+                            <h1 className="text-xl md:text-2xl font-bold">{propertyDetails.title}</h1>
+                            <p className="text-lg md:text-xl text-[#008CB3] font-semibold">${propertyDetails.price}/month</p>
                         </div>
 
                         {/* Highlights */}
                         <div className="mt-4 flex flex-wrap gap-3 px-2">
-                            {["Size: 105m2", "Status: Active", "Type: Market", "For Rent", "Has Certificate"].map((item, i) => (
+                            {[`Size: ${propertyDetails.features.size}m2`, `Status: ${propertyDetails.status}`, `Type: ${propertyDetails.type}`, `For ${propertyDetails.listingTypes}`, `Has Certificate: ${propertyDetails.features.certificates} `].map((item, i) => (
                                 <div key={i} className="p-2 border-2 w-full sm:w-[30%] md:w-[20%] text-center text-sm font-semibold border-[#008CB3] rounded-md">
                                     {item}
                                 </div>
@@ -66,15 +89,13 @@ const PropertyDetails = () => {
                             <div className="w-full md:w-[60%]">
                                 <h2 className="text-xl md:text-2xl font-bold mb-2">Description:</h2>
                                 <p className="text-sm font-light leading-relaxed">
-                                    The environment is fully invested and has verandas that can be used for various businesses such as offices, showrooms, shops, etc. It is located on the main road, and easily accessible.
-                                    <br />• Area: 105m2 <br />• Veranda: 155m2 <br />• Floor 0
-                                    <br />For more info, contact us!
+                                    {propertyDetails.description || "This property is a beautiful and spacious apartment located in the heart of the city. It features modern amenities, a large living area, and stunning views of the skyline. Perfect for families or professionals looking for a comfortable and convenient living space."}
                                 </p>
 
                                 <div className="mt-5">
                                     <h2 className="text-xl md:text-2xl font-bold mb-2">Property Info:</h2>
                                     <div className="flex flex-wrap gap-3">
-                                        {["Bedrooms: 2", "Elevator: No"].map((info, i) => (
+                                        {[`Bedrooms: ${propertyDetails.features.bedrooms}`, `Elevator: ${propertyDetails.features.elevator}`].map((info, i) => (
                                             <div key={i} className="p-2 border-2 w-full sm:w-[45%] md:w-[30%] text-center text-sm font-semibold border-[#008CB3] rounded-md">
                                                 {info}
                                             </div>
@@ -87,7 +108,7 @@ const PropertyDetails = () => {
                         {/* Map */}
                         <div className="mt-8 px-2">
                             <h2 className="text-xl md:text-2xl font-bold mb-4">Location in map:</h2>
-                            <MapComponent />
+                            <MapComponent latitude={propertyDetails.location.latitude} longitude={propertyDetails.location.latitude} address={propertyDetails.location.address}/>
                         </div>
 
                         {/* CTA */}

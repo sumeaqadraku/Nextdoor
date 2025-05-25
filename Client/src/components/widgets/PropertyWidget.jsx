@@ -5,12 +5,12 @@ import { MdOutlineBedroomParent } from "react-icons/md";
 import { IoLocationSharp } from "react-icons/io5";
 import { FaTimes } from "react-icons/fa";
 
-const PropertyWidget = ({ id, name, size, rooms, location, price, onRemove, isSavedPage = false  }) => {
+const PropertyWidget = ({ id, title, size, bedrooms, city , price, imageUrl, onRemove, isSavedPage = false  }) => {
   const [hovered, setHovered] = useState(false);
 
   return (
     <div
-      className="bg-white w-[30%] h-40 flex shadow-md hover:scale-105 transition-transform duration-300 cursor-pointer relative"
+      className="bg-white w-[97%] h-40 flex shadow-md hover:scale-105 transition-transform duration-300 cursor-pointer relative"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -33,7 +33,7 @@ const PropertyWidget = ({ id, name, size, rooms, location, price, onRemove, isSa
       </div>
 
       <div className="flex flex-col m-3 justify-between">
-        <h1 className="text-[20px] font-semibold">{name}</h1>
+        <h1 className="text-[20px] font-semibold">{title}</h1>
 
         <div className="flex gap-2 text-sm mt-1">
           <div className="flex items-center gap-1">
@@ -42,13 +42,13 @@ const PropertyWidget = ({ id, name, size, rooms, location, price, onRemove, isSa
           </div>
           <div className="flex items-center gap-1">
             <MdOutlineBedroomParent className="text-xl" />
-            <p className="text-[14px] font-semibold">{rooms} rooms</p>
+            <p className="text-[14px] font-semibold">{bedrooms} rooms</p>
           </div>
         </div>
 
         <div className="flex items-center gap-1 text-sm mt-1">
           <IoLocationSharp className="text-xl" />
-          <p>{location}</p>
+          <p>{city}</p>
         </div>
 
         <h2 className="text-[18px] font-bold mt-1 text-[#1275A4]">

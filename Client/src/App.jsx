@@ -32,7 +32,7 @@ function App() {
           <Route path="home" element={<HomePage />} />
           <Route path="agents" element={<Agents />} />
           <Route path="saved" element={<SavedItems />} />
-          <Route path="property-details" element={<PropertyDetails />} />
+          <Route path="/user/properties/:id" element={<PropertyDetails />} />
           <Route path="agent-details" element={<AgentDetails />} />
           <Route path="notifications" element={<Notifications />} />
         </Route>

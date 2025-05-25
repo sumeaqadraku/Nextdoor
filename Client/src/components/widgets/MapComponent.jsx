@@ -3,9 +3,21 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
 // Vendndodhja e qendrës
-const center = [37.7749, -122.4194];
 
-const MapComponent = () => {
+const MapComponent = ({longitude,latitude,address}) => {
+    console.log("🛰️ MapComponent received →", { latitude, longitude, address });
+
+   const rawLat = latitude;
+  const rawLng = longitude;
+
+  const lat = parseFloat(rawLat);
+  const lng = parseFloat(rawLng);
+
+  // Bail out early if coords are invalid
+  
+
+  const center = [lat, lng];
+
   return (
     <MapContainer center={center} zoom={12} style={{ height: "300px", width: "100%" }}>
       {/* OpenStreetMap Tiles */}
