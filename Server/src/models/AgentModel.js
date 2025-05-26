@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     licenseNumber: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     agency: {
       type: DataTypes.STRING,

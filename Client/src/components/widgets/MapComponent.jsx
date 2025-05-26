@@ -12,10 +12,7 @@ const MapComponent = ({longitude,latitude,address}) => {
 
   const lat = parseFloat(rawLat);
   const lng = parseFloat(rawLng);
-
-  // Bail out early if coords are invalid
   
-
   const center = [lat, lng];
 
   return (

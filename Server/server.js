@@ -5,17 +5,19 @@ const cors = require('cors');
 app.use(cors())
 app.use(express.json());
 
+
+
 const userRoutes = require('./src/routes/Users');
 const propertyRoutes = require('./src/routes/Properties');
 const notificationRoutes = require('./src/routes/Notifications');
 const appointmentRoutes = require('./src/routes/Appointments');
 const agentRoutes = require('./src/routes/Agent');
+
+const savedRoutes = require('./src/routes/Saved');
 require('dotenv').config();
 
-
-
-
 app.use('/api/users', userRoutes);
+app.use('/api/saved', savedRoutes);
 app.use('/api/agents', agentRoutes);
 app.use('/api/properties', propertyRoutes); 
 app.use('/api/appointments', appointmentRoutes);

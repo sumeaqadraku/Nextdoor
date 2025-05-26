@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     accessLevel: {
       type: DataTypes.STRING,
-      defaultValue: 'super', // or 'moderator', 'support' etc.
+      defaultValue: 'super',
     },
   }, {
     tableName: 'admins',
