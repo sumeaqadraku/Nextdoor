@@ -4,6 +4,7 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import LogoImage from '../assets/images/Logo.png';
 import KeysImage from '../assets/images/keys.jpg';
 import GmailImage from '../assets/images/gmail.png';
+import axios from 'axios';
 
 // Validimi i email-it
 const validateEmail = (email) => {
@@ -23,7 +24,7 @@ const validatePassword = (password) => {
 // Validimi i formularit
 const validateForm = (data) => {
   const errors = {};
-  if (!data.fullName) errors.fullName = 'Emri i plotë është i detyrueshëm';
+  if (!data.username) errors.username = 'Emri i plotë është i detyrueshëm';
   if (!data.email) errors.email = 'Email-i është i detyrueshëm';
   else if (!validateEmail(data.email)) errors.email = 'Format i pavlefshëm i email-it';
   if (!data.password) errors.password = 'Fjalëkalimi është i detyrueshëm';
@@ -38,7 +39,7 @@ const validateForm = (data) => {
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
-    fullName: '',
+    username: '',
     email: '',
     password: '',
     role: '',
@@ -62,15 +63,25 @@ const RegisterPage = () => {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const validation = validateForm(formData);
-    if (validation.isValid) {
-      console.log('Regjistrimi i suksesshëm', formData);
-    } else {
-      setErrors(validation.errors);
-    }
-  };
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const validation = validateForm(formData);
+  if (!validation.isValid) {
+    console.warn('Form validation failed:', validation.errors);
+    return;
+  }
+
+  
+  try {
+    console.log('Submitting registration form:', formData);
+    const response = await axios.post('http://localhost:5000/api/auth/register', formData);
+    console.log('Registration success:', response.data);
+  } catch (error) {
+    console.error('Error during registration:', error.response?.data || error.message);
+  }
+};
+
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -98,14 +109,14 @@ const RegisterPage = () => {
               <label htmlFor="fullName" className="block mb-1 text-sm font-medium text-gray-700">Full Name</label>
               <input
                 id="fullName"
-                name="fullName"
+                name="username"
                 type="text"
-                value={formData.fullName}
+                value={formData.username}
                 onChange={handleChange}
                 placeholder="Type your full name..."
-                className={`w-full p-3 border rounded-md text-sm ${errors.fullName ? 'border-red-500' : 'border-gray-300'} focus:border-[#1175a3] focus:outline-none`}
+                className={`w-full p-3 border rounded-md text-sm ${errors.username ? 'border-red-500' : 'border-gray-300'} focus:border-[#1175a3] focus:outline-none`}
               />
-              {errors.fullName && <span className="text-red-500 text-xs mt-1">{errors.fullName}</span>}
+              {errors.username && <span className="text-red-500 text-xs mt-1">{errors.username}</span>}
             </div>
 
             <div className="mb-4">
@@ -155,8 +166,7 @@ const RegisterPage = () => {
                 className={`w-full p-3 border rounded-md text-sm ${errors.role ? 'border-red-500' : 'border-gray-300'} focus:border-[#1175a3] focus:outline-none`}
               >
                 <option value="">Pick your role...</option>
-                <option value="buyer">Buyer</option>
-                <option value="seller">Seller</option>
+                <option value="buyer">Buyer</option>  
                 <option value="agent">Agent</option>
               </select>
               {errors.role && <span className="text-red-500 text-xs mt-1">{errors.role}</span>}
