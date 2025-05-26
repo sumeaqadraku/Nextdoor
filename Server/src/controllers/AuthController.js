@@ -56,7 +56,6 @@ const login = async (req, res) => {
     const payload = { id: user.id, email: user.email, username: user.username, role: user.role };
 
     const accessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '15m' });
-    
     const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
 
     res.cookie('refreshToken', refreshToken, {

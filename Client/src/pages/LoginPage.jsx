@@ -3,6 +3,8 @@ import LogoImage from '../assets/images/Logo.png';
 import KeysImage from '../assets/images/keys.jpg';
 import GmailImage from '../assets/images/gmail.png';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 const validateEmail = (email) => {
@@ -30,6 +32,7 @@ const validateForm = (email, password) => {
 };
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -58,20 +61,33 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validation = validateForm(formData.email, formData.password);
+    if (!validation.isValid) {
+    console.warn('Form validation failed:', validation.errors);
+    return;
+   }
     
     if (validation.isValid) {
       setIsLoading(true);
       try {
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        console.log('Login successful', formData);
         
-        if (formData.remember) {
-          localStorage.setItem('rememberedEmail', formData.email);
-        } else {
-          localStorage.removeItem('rememberedEmail');
+        const response = await axios.post('http://localhost:5000/api/auth/login', formData);
+        const userData = response.data.user;
+
+        console.log('Login successful:', userData);
+        switch (userData.role) {
+          case 'buyer':
+            navigate('/user/home');
+            break;
+          case 'admin':
+            navigate('/admin/dashboard');
+          case 'agent':
+            navigate('/agent/dashboard');
+            break;
+          default:
+            navigate('/login');
         }
       } catch (error) {
-        console.error('Login failed', error);
+        console.error('Error during registration:', error.response?.data || error.message);
         setErrors({ submit: 'Login failed. Please try again.' });
       } finally {
         setIsLoading(false);
@@ -79,6 +95,7 @@ const LoginPage = () => {
     } else {
       setErrors(validation.errors);
     }
+
   };
 
   const togglePasswordVisibility = () => {
