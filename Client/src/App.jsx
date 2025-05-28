@@ -13,41 +13,52 @@ import AddProperty from './pages/logged-in/agent/AddProperty';
 import PropertyDetails from './pages/logged-in/user/PropertyDetails';
 import Requests from './pages/logged-in/agent/Requests';
 import AgentDetails from './pages/logged-in/user/AgentsDetails';
+import UnauthorizedPage from './pages/Unathorized';
+import { AuthProvider } from './context/AuthContext';
+import PrivateRoute from './context/PrivateRoutes';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Toaster
-        position="bottom-right"
-        toastOptions={{
-          duration: 3000,
-          style: { background: "#333", color: "#fff" }
-        }}
-      />
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<Register />} />
+      <BrowserRouter>
+        <AuthProvider>
+        {/* Toast container */}
+        <Toaster
+          position="bottom-right"
+          toastOptions={{
+            duration: 3000,
+            style: { background: "#333", color: "#fff" },
+          }}
+        />
 
-        <Route path="/user" element={<UserLayout />}>
-          <Route path="home" element={<HomePage />} />
-          <Route path="agents" element={<Agents />} />
-          <Route path="saved" element={<SavedItems />} />
-          <Route path="/user/properties/:id" element={<PropertyDetails />} />
-          <Route path="agent-details" element={<AgentDetails />} />
-          <Route path="notifications" element={<Notifications />} />
-        </Route>
-        <Route path="/agent" element={<AgentLayout />}>
-          <Route path="dashboard" element={<AgentDasboard />} />
-          <Route path="management" element={<AddProperty />} />
-          <Route path="requests" element={<Requests />} />
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<Register />} />
+
+          <Route path="/agent" element={<PrivateRoute allowedRoles={['agent', 'admin']} />}>
+          <Route element={<AgentLayout />}>
+            <Route path="dashboard" element={<AgentDasboard />} />
+            <Route path="management" element={<AddProperty />} />
+            <Route path="requests" element={<Requests />} />
+          </Route>
         </Route>
 
-        {/* Opsionale: Një rrugë default për faqen kryesore ose ridrejtim */}
-        <Route path="/" element={<LoginPage />} />
-      </Routes>
-    </BrowserRouter>
+        <Route path="/user" element={<PrivateRoute allowedRoles={['buyer']} />}>
+          <Route element={<UserLayout />}>
+            <Route path="home" element={<HomePage />} />
+            <Route path="agents" element={<Agents />} />
+            <Route path="saved" element={<SavedItems />} />
+            <Route path="properties/:id" element={<PropertyDetails />} />
+            <Route path="agent-details" element={<AgentDetails />} />
+            <Route path="notifications" element={<Notifications />} />
+          </Route>
+        </Route>
+
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/unauthorized" element={<UnauthorizedPage />} />
+        </Routes>
+            </AuthProvider>
+      </BrowserRouter>
   );
 }
 
 export default App;
-

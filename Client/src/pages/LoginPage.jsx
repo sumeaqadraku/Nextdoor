@@ -6,6 +6,7 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const validateEmail = (email) => {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -33,6 +34,7 @@ const validateForm = (email, password) => {
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -73,9 +75,8 @@ const LoginPage = () => {
         const response = await axios.post('http://localhost:5000/api/auth/login', formData);
         const { token, user} = response.data;
 
-        localStorage.setItem('token', token);
-        localStorage.setItem('userData', JSON.stringify(user));
-        
+        login(token, user);
+
         switch (user.role) {
           case 'buyer':
             navigate('/user/home');
