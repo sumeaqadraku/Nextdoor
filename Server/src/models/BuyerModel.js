@@ -1,3 +1,4 @@
+//file is name BuyerModel.js
 module.exports = (sequelize, DataTypes) => {
   const Buyer = sequelize.define('Buyer', {
     id: {
@@ -9,14 +10,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    preferences: {
-      type: DataTypes.TEXT, // JSON or string for simplicity
-      allowNull: true,
-    },
-    budget: {
-      type: DataTypes.FLOAT,
-      allowNull: true,
-    },
   }, {
     tableName: 'buyers',
     timestamps: true,
@@ -24,7 +17,9 @@ module.exports = (sequelize, DataTypes) => {
 
   Buyer.associate = (models) => {
     Buyer.belongsTo(models.User, { foreignKey: 'userId', as: 'user' });
+    Buyer.hasMany(models.SavedProperty, { foreignKey: 'buyerId', as: 'savedProperties' });
   };
+  
 
   return Buyer;
 };

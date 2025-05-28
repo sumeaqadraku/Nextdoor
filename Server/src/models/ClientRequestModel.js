@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: false,
     },
     notif_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER, 
       allowNull: false,
     },
     userId: {

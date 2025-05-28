@@ -7,16 +7,12 @@ app.use(cors())
 app.use(express.json());
 app.use(cookieParser());
 
-
-
 const userRoutes = require('./src/routes/Users');
 const authRoutes = require('./src/routes/Auth');
 const propertyRoutes = require('./src/routes/Properties');
 const notificationRoutes = require('./src/routes/Notifications');
 const appointmentRoutes = require('./src/routes/Appointments');
 const agentRoutes = require('./src/routes/Agent');
-
-
 const savedRoutes = require('./src/routes/Saved');
 require('dotenv').config();
 

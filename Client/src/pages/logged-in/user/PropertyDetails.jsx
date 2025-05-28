@@ -2,6 +2,7 @@ import { FaLocationArrow } from "react-icons/fa";
 import MapComponent from "../../../components/widgets/MapComponent";
 import { useParams } from "react-router-dom";
 import {  use, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import axios from "axios";
 import Logo from "../../../assets/images/logo.png";
 import View1 from "../../../assets/images/view1.jpg";
@@ -26,6 +27,21 @@ const PropertyDetails = () => {
         fetchPropertyDetails();
     }, [id]);
 
+    const handleSaveProperty = async () => {
+        try {   
+            const token = localStorage.getItem('token');
+            await axios.post(`http://localhost:5000/api/saved/save/${id}`,{},{
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            toast.success("Property saved successfully!");
+
+        } catch (error) {
+            console.error("Error saving property:", error);
+            toast.error("Failed to save property. Please try again.");
+        }
+    }
     if (!propertyDetails) {
     return <div className="p-6">Loading property details...</div>;
   }
@@ -52,7 +68,9 @@ const PropertyDetails = () => {
                                 <FaLocationArrow className="text-[#008CB3]" />
                                 <h1 className="font-semibold">{propertyDetails.location.city}</h1>
                             </div>
-                            <button className="w-24 md:w-28 bg-[#008CB3] h-9 rounded-md text-white text-sm font-medium">Save</button>
+                            <button
+                            onClick={handleSaveProperty}
+                            className="w-24 md:w-28 bg-[#008CB3] h-9 rounded-md text-white text-sm font-medium cursor-pointer">Save</button>
                         </div>
 
                         {/* Image Grid */}

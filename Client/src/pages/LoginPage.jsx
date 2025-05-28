@@ -71,10 +71,12 @@ const LoginPage = () => {
       try {
         
         const response = await axios.post('http://localhost:5000/api/auth/login', formData);
-        const userData = response.data.user;
+        const { token, user} = response.data;
 
-        console.log('Login successful:', userData);
-        switch (userData.role) {
+        localStorage.setItem('token', token);
+        localStorage.setItem('userData', JSON.stringify(user));
+        
+        switch (user.role) {
           case 'buyer':
             navigate('/user/home');
             break;

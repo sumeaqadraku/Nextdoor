@@ -29,11 +29,14 @@ const HomePage = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentProperties = PropertyData.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(PropertyData.length / itemsPerPage);
+  const user = JSON.parse(localStorage.getItem('userData'))
+ 
+
 
   return (
     <div className="flex h-lvh">
       <div className="w-full">
-        <Topbar />
+        <Topbar name={user.username} />
         <div className="w-full h-[88%] bg-[rgb(246,246,246)]">
           <div className="w-full flex justify-between py-3 px-10">
             {/* Radio Buttons */}

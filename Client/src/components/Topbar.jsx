@@ -1,4 +1,4 @@
-const Topbar = () => {
+const Topbar = ( {name} ) => {
     return (
         <div className="w-full h-[12%] flex items-center justify-between px-10">
             {/* Left side: search + location */}
@@ -21,7 +21,7 @@ const Topbar = () => {
             {/* Right side: user info */}
             <div className="flex items-center gap-3">
                 <div className="bg-gray-100 size-10 rounded-full"></div>
-                <h1 className="font-semibold">Erris Binxhija</h1>
+                <h1 className="font-semibold">{name}</h1>
             </div>
         </div>
     )

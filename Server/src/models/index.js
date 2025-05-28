@@ -27,6 +27,8 @@ db.Appointment = require('./AppointmentModel')(sequelize, DataTypes);
 db.ClientRequest = require('./ClientRequestModel')(sequelize, DataTypes);
 db.NewListing = require('./NewListingModel')(sequelize, DataTypes);
 db.Notification = require('./NotificationModel')(sequelize, DataTypes);
+db.SavedProperty = require('./SavedPropertiesModel')(sequelize, DataTypes);
+
 
 
 // ✅ Setup associations

@@ -1,4 +1,4 @@
-import Buyer from "./BuyerModel";
+const Buyer = require('./BuyerModel');
 
 module.exports = (sequelize, DataTypes) => {
   const SavedProperty = sequelize.define("SavedProperty", {
@@ -25,10 +25,13 @@ module.exports = (sequelize, DataTypes) => {
       },
       onDelete: 'CASCADE',
     },
+  },{
+    tableName: 'savedproperty',
+    timestamps: false,
   });
 
   SavedProperty.associate = (models) => {
-    SavedProperty.belongsTo(models.User, {
+    SavedProperty.belongsTo(models.Buyer, {
       foreignKey: 'buyerId',
       as: 'buyer',
     });

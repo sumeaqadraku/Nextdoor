@@ -16,7 +16,11 @@ const PropertyWidget = ({ id, title, size, bedrooms, city , price, imageUrl, onR
     >
       {hovered && isSavedPage && (
         <button
-          onClick={() => onRemove(id)}
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            onRemove(id);
+          }}
           className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 z-10"
           title="Remove from saved"
         >

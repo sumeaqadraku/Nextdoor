@@ -1,22 +1,27 @@
-const { SavedProperty, Property, PropertyFeature, PropertyLocation, PropertyImage } = require('../models');
+const { SavedProperty, Property, PropertyFeature, PropertyLocation, PropertyImage, Buyer} = require('../models');
 
 const saveProperty = async (req, res) => {
   try {
-    const { propertyId, buyerId } = req.body;
+    const propertyId = req.params.id;
+    userId = req.user?.id;
 
-    if (!propertyId || !buyerId) {
-      return res.status(400).json({ message: 'propertyId and buyerId are required.' });
+    const buyer = await Buyer.findOne({ where: { userId } });
+
+    if (!buyer) {
+      return res.status(404).json({ message: 'Buyer profile not found.' });
     }
 
     const alreadySaved = await SavedProperty.findOne({
-      where: { propertyId, buyerId },
+      where: { propertyId, buyerId: buyer.id },
     });
-
     if (alreadySaved) {
       return res.status(409).json({ message: 'Property already saved by this buyer.' });
     }
 
-    const saved = await SavedProperty.create({ propertyId, buyerId });
+    const saved = await SavedProperty.create({
+      propertyId,
+      buyerId: buyer.id,
+    });
 
     return res.status(201).json({
       message: 'Property saved successfully.',
@@ -28,10 +33,13 @@ const saveProperty = async (req, res) => {
   }
 };
 
-
 const getSavedByBuyerId = async (req, res) => {
   try {
-    const { buyerId } = req.params;
+    const userId = req.params.userId
+
+    const buyer = await Buyer.findOne({ where: { userId } });
+    const buyerId = buyer?.id;
+
 
     if (!buyerId) {
       return res.status(400).json({ message: 'buyerId is required.' });
@@ -55,17 +63,14 @@ const getSavedByBuyerId = async (req, res) => {
           ],
         },
       ],
-      order: [['createdAt', 'DESC']],
+
     });
 
     const formattedProperties = savedProperties
       .map((item) => item.property)
       .filter((prop) => prop);
 
-    return res.status(200).json({
-      message: 'Saved properties fetched successfully.',
-      properties: formattedProperties,
-    });
+    res.json(formattedProperties)
   } catch (error) {
     console.error('Error fetching saved home properties:', error);
     return res.status(500).json({ message: 'Internal server error.' });
@@ -74,7 +79,11 @@ const getSavedByBuyerId = async (req, res) => {
 
 const removeSavedProperty = async (req, res) => {
   try {
-    const { propertyId, buyerId } = req.body;
+    const {propertyId} = req.body;
+    const userId = req.user.id;
+
+    const buyer = await Buyer.findOne({ where: { userId } });
+    const buyerId = buyer.id;
 
     if (!propertyId || !buyerId) {
       return res.status(400).json({ message: 'propertyId and buyerId are required.' });
