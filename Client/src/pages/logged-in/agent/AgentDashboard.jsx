@@ -19,10 +19,12 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import useCheckRole  from "../../../context/checkRole";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const AgentDashboard = () => {
+  useCheckRole(['agent','admin'], '/login');
   const [topProperties] = useState([
     { id: 1, name: "Luxury Condo", location: "Prishtine", price: "$600,000" },
     { id: 2, name: "Modern Flat", location: "Ferizaj", price: "$420,000" },

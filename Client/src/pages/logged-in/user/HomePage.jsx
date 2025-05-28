@@ -4,9 +4,12 @@ import PropertyWidget from "../../../components/widgets/PropertyWidget";
 import Pagination from "../../../components/ui/Pagniations";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import PropertyTypeSelector from "../../../components/ui/RadioType";
+import useCheckRole  from "../../../context/checkRole";
 
 
 const HomePage = () => {
+  useCheckRole(['buyer', 'admin', 'agent'], '/login');
   const [PropertyData, setPropertyData] = useState([]);
     useEffect(() => {
     const fetchPropertyData = async () => {
@@ -39,17 +42,8 @@ const HomePage = () => {
         <Topbar name={user.username} />
         <div className="w-full h-[88%] bg-[rgb(246,246,246)]">
           <div className="w-full flex justify-between py-3 px-10">
-            {/* Radio Buttons */}
-            <div className="bg-white rounded-full p-1 flex w-fit gap-2">
-              <input type="radio" name="property" id="apartments" className="hidden peer/apartments" defaultChecked />
-              <label htmlFor="apartments" className="px-5 py-2 rounded-full font-medium cursor-pointer peer-checked/apartments:bg-[#1275A4] peer-checked/apartments:text-white">
-                Apartments
-              </label>
-              <input type="radio" name="property" id="house" className="hidden peer/house" />
-              <label htmlFor="house" className="px-5 py-2 rounded-full font-medium cursor-pointer peer-checked/house:bg-[#1275A4] peer-checked/house:text-white">
-                House
-              </label>
-            </div>
+           <PropertyTypeSelector/>
+
 
             {/* Filters */}
             <div className="bg-white flex justify-center gap-2 items-center rounded-2xl p-1 w-[30%]">

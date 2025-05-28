@@ -4,8 +4,10 @@ import Pagination from "../../../components/ui/Pagniations";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
+import useCheckRole from "../../../context/checkRole";
 
 const SavedItems = () => {
+      useCheckRole(['buyer', 'admin', 'agent'], '/login');
   const [savedItems, setSavedItems] = useState([]);
       useEffect(() => {
       const fetchSavedData = async () => {

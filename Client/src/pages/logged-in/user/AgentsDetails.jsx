@@ -1,5 +1,6 @@
 import React from "react";
 import ReviewsSection from "../../../components/widgets/Reviews";
+import useCheckRole from "../../../context/checkRole";
 
 import { FaStar } from "react-icons/fa";
 
@@ -14,6 +15,7 @@ const properties = [
 ];
 
 const AgentDetails = () => {
+    useCheckRole(['buyer', 'admin', 'agent'], '/login');
     return (
         <>
 

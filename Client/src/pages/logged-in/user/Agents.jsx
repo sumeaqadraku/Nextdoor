@@ -1,9 +1,11 @@
 import Sidebar from "../../../components/Sidebar"
 import Topbar from "../../../components/Topbar";
 import AgentsWidget from "../../../components/widgets/AgentsWidget";
+import useCheckRole from "../../../context/checkRole";
 
 
 const Agents = () => {
+    useCheckRole(['buyer', 'admin', 'agent'], '/login');
 
     const agentsData = [
         { name: "Erris Binxhija", title: "Agent", rating: 5, phone: "045-522-356", email: "eb5454@gmail.com", properties: 25 },
@@ -19,7 +21,7 @@ const Agents = () => {
         <div className="flex h-lvh">
 
             <div className="w-full">
-                <Topbar/>
+                <Topbar showLocationFilter={false}/>
                 <div className="w-full h-[88%] bg-[#f6f6f6]">
                     <div className="w-full flex justify-between py-3 px-10">
                         <div className="bg-white flex justify-center gap-2 items-center rounded-2xl p-1 w-[30%]">

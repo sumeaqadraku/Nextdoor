@@ -5,9 +5,11 @@ import PropertyModal from "../../../components/forms/AddPropModal";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Pagination from "../../../components/ui/Pagniations";
+import useCheckRole from "../../../context/checkRole";
 import { FiSearch } from "react-icons/fi";
 
 const AddProperty = () => {
+useCheckRole(['agent','admin'], '/login');
 
 const [showModal, setShowModal] = useState(false);
 const [searchQuery, setSearchQuery] = useState("");

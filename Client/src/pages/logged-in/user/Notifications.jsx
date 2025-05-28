@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FaCheck, FaTimes, FaHome, FaExclamationCircle } from "react-icons/fa";
 import Sidebar from "../../../components/Sidebar";
 import Topbar from "../../../components/Topbar";
+import useCheckRole from "../../../context/checkRole";
 
 // Sample data for notifications (focused on specific actions)
 const notificationsData = [
@@ -36,6 +37,7 @@ const notificationsData = [
 ];
 
 const NotificationsPage = () => {
+  useCheckRole(['buyer', 'admin', 'agent'], '/login');
   const [notifications, setNotifications] = useState(notificationsData);
 
   const markAsRead = (id) => {

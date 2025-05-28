@@ -9,8 +9,10 @@ import View1 from "../../../assets/images/view1.jpg";
 import View2 from "../../../assets/images/view2.jpg";
 import View3 from "../../../assets/images/view3.jpg";
 import View4 from "../../../assets/images/view4.jpg";
+import useCheckRole from "../../../context/checkRole";
 
 const PropertyDetails = () => {
+    useCheckRole(['buyer', 'admin', 'agent'], '/login');
     const { id } = useParams();
     const [propertyDetails, setPropertyDetails] = useState(null);
     useEffect(() => {

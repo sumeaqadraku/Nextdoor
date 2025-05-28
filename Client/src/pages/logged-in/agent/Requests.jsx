@@ -1,7 +1,9 @@
 
+import useCheckRole from "../../../context/checkRole";
 import RequestsMailPanel from "../../../components/widgets/RequestsTable";
 
 const Request = () => {
+    useCheckRole(['buyer', 'admin', 'agent'], '/login');
     return(
         <div className="flex h-lvh bg-gray-100">
             <main className="flex-grow overflow-auto">
