@@ -10,10 +10,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       
     },
-    accessLevel: {
-      type: DataTypes.STRING,
-      defaultValue: 'super',
-    },
   }, {
     tableName: 'admins',
     timestamps: true,

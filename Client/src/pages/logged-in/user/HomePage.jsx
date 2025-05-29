@@ -10,20 +10,43 @@ import useCheckRole  from "../../../context/checkRole";
 
 const HomePage = () => {
   useCheckRole(['buyer', 'admin', 'agent'], '/login');
+  const [propertyType, setPropertyType] = useState("");
+  const [priceFilter, setPriceFilter] = useState("");
+  const [roomFilter, setRoomFilter] = useState("");
+  const [otherFilter, setOtherFilter] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [locationFilter, setLocationFilter] = useState('');
   const [PropertyData, setPropertyData] = useState([]);
-    useEffect(() => {
-    const fetchPropertyData = async () => {
-      try {
-        const response = await axios.get("http://localhost:5000/api/properties");
-        setPropertyData(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.error("Error fetching property data:", error);
-      }
-    };
 
-    fetchPropertyData();
-    }, []);
+ 
+  useEffect(() => {
+  const fetchPropertyData = async () => {
+    try {
+      const hasFilters =
+        propertyType || priceFilter || roomFilter || otherFilter || searchTerm || locationFilter;
+
+      const params = {
+        ...(propertyType && { type: propertyType }),
+        ...(priceFilter && { price: priceFilter }),
+        ...(roomFilter && { bedrooms: roomFilter }),
+        ...(otherFilter && { certified: otherFilter }),
+        ...(searchTerm && { search: searchTerm }),
+        ...(locationFilter && { location: locationFilter }),
+      };
+
+      const endpoint = "http://localhost:5000/api/properties";
+
+      const response = await axios.get(endpoint, { params });
+      setPropertyData(response.data);
+    } catch (error) {
+      console.error("Error fetching property data:", error);
+    }
+  };
+
+  fetchPropertyData();
+}, [propertyType, priceFilter, roomFilter, otherFilter, searchTerm, locationFilter]);
+
+
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
@@ -39,32 +62,52 @@ const HomePage = () => {
   return (
     <div className="flex h-lvh">
       <div className="w-full">
-        <Topbar name={user.username} />
+        <Topbar name={user.username} onSearchChange={setSearchTerm} onLocationChange={setLocationFilter} />
         <div className="w-full h-[88%] bg-[rgb(246,246,246)]">
           <div className="w-full flex justify-between py-3 px-10">
-           <PropertyTypeSelector/>
-
+            
+            <div className="flex flex-col w-[25%] border-x-2 rounded-2xl border-gray-200 px-3 py-2 bg-white">
+            <select
+              className="w-full px-3 py-2 border border-gray-300 rounded-xl bg-gray-50 text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+              value={propertyType}
+              onChange={(e) => setPropertyType(e.target.value)}
+            >
+              <option value="Select type" disabled >Select type:</option>
+              <option value="house">Home</option>
+              <option value="apartment">Apartment</option>
+            </select>
+          </div>
 
             {/* Filters */}
             <div className="bg-white flex justify-center gap-2 items-center rounded-2xl p-1 w-[30%]">
               <div className="bg-[#f6f6f6] p-2 rounded-2xl">
-                <select>
+                <select 
+                  value={priceFilter}
+                  onChange={(e) => setPriceFilter(e.target.value)}>
                   <option value="">Price</option>
                   <option value="350">{"< 350"}</option>
                   <option value="350">{"> 350"}</option>
                 </select>
               </div>
               <div className="bg-[#f6f6f6] p-2 rounded-2xl">
-                <select>
-                  <option value="">Rooms</option>
-                  <option value="">2</option>
+                <select
+                 value={roomFilter}
+                 onChange={(e) => setRoomFilter(e.target.value)}>
+                  <option value="" disabled>Rooms</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
                 </select>
               </div>
               <div className="bg-[#f6f6f6] p-2 rounded-2xl">
-                <select>
-                  <option value="">Other</option>
-                  <option value="">2</option>
+                <select
+                  value={otherFilter}
+                  onChange={(e) => setOtherFilter(e.target.value)}
+                >
+                  <option value="">Certified</option>
+                  <option value="Yes">With Contract</option>
+                  <option value="No">Without Contract</option>
                 </select>
+
               </div>
             </div>
           </div>

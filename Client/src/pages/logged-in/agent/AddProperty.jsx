@@ -1,5 +1,4 @@
-import Agentbar from "../../../components/AgentBar";
-import apartament1 from "../../../assets/images/apartament1.jpg";
+
 import PropertyTable from "../../../components/widgets/PropertyTable";
 import PropertyModal from "../../../components/forms/AddPropModal";
 import axios from "axios";
@@ -16,21 +15,38 @@ const [searchQuery, setSearchQuery] = useState("");
 const [properties, setProperties] = useState([])
 
 useEffect(() => {
-  const fetchProperties = async () => {
-    const endpoint = searchQuery
-      ? `http://localhost:5000/api/properties?search=${searchQuery}`
-      : `http://localhost:5000/api/properties`;
+    const fetchMyProperties = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) throw new Error("No access token");
 
-    try {
-      const res = await axios.get(endpoint);
-      setProperties(res.data);
-    } catch (err) {
-      console.error("Error fetching properties:", err);
-    }
-  };
+        const response = await axios.get("http://localhost:5000/api/agents/my-properties", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log("Fetched properties:", response.data);
 
-  fetchProperties();
-}, [searchQuery]);
+        setProperties(response.data);
+      } catch (err) {
+        console.error("Error fetching properties:", err);
+        toast.error("Could not load properties.");
+        if (err?.response?.status === 401) {
+          localStorage.clear();
+          window.location.href = "/login";
+        }
+      }
+    };
+
+    fetchMyProperties();
+  }, []);
+
+  const amountOfProperties = properties.length;
+
+  const filteredProperties = properties.filter((property) =>
+    property.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -49,7 +65,7 @@ useEffect(() => {
         <div className="px-10 w-full mt-5 flex gap-1">
             <h1 className="text-xl font-medium">All Properties: </h1>
             <div className="bg-gray-300 w-7 flex items-center justify-center rounded-full">
-                <h1>2</h1>
+                <h1>{amountOfProperties}</h1>
             </div>
         </div>
         <section className="w-full px-10 flex mt-3">
@@ -72,7 +88,7 @@ useEffect(() => {
                     className="bg-[#42ABDD] hover:bg-[#2D9CDB] rounded-xl text-white text-[16px] px-3 font-medium cursor-pointer transition duration-200 transform hover:scale-105 ">Add Property</button>
                     
                 </div>
-                <PropertyTable propertiesData={properties} />
+                <PropertyTable properties={filteredProperties} />
 
                 <div className="w-full flex justify-center">
                     {showModal && <PropertyModal onClose={() => setShowModal(false)} />}

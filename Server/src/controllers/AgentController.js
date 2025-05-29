@@ -1,4 +1,4 @@
-const { Property, PropertyLocation, PropertyFeature, PropertyImage, sequelize } = require('../models');
+const { Property, PropertyLocation, PropertyFeature, PropertyImage, sequelize, Agent } = require('../models');
 console.log('PropertyModel', Property);
 console.log('PropertyLocation', PropertyLocation);
 console.log('PropertyFeaturesModel', PropertyFeature);
@@ -8,15 +8,19 @@ const createProperty = async (req, res) => {
   try {
     console.log("Creating property...")
     const files = req.files;
+    const userId = req.user?.id;
     const { 
-      title, type, price, description, listingTypes, city, address, 
+      title, type, price, owner, description, listingTypes, city, address, 
       latitude, longitude, bedrooms, bathrooms, size, elevator, yearBuilt, 
       certificate
     } = req.body;
 
+    const agent = await Agent.findOne({ where: { userId } });
+    const agentId = agent?.id;
+    console.log('Agent ID:', agentId);
 
     const newProperty = await Property.create({
-      title, description, price, type, agentId: "1", listingTypes
+      title, description, price, type, owner, listingTypes, agentId
     });
 
     const propertyId = newProperty.id;
@@ -85,25 +89,36 @@ const editProperty = async (req, res) => {
     }
 }
 
-const getAllPropertiesByUserId = async (req, res) => {
-    const { userId } = req.params;
+const getAllPropertiesByAgent = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    console.log('User ID from request:', userId);
 
-    try {
-        const properties = await Property.findAll({
-            where: { agentId: userId },
-            include: ['images', 'location', 'features']
-        });
+    const agent = await Agent.findOne({ where: { userId } });
+    const agentId = agent?.id;
+    console.log('Agent ID:', agentId);
 
-        if (!properties.length) {
-            return res.status(404).json({ message: 'No properties found for this user' });
-        }
-
-        return res.status(200).json(properties);
-    } catch (error) {
-        console.error('Error fetching properties:', error);
-        return res.status(500).json({ message: 'Error fetching properties', error });
+    if (!userId) {
+      return res.status(401).json({ message: 'Unauthorized: No user found in request' });
     }
-}
+
+    const properties = await Property.findAll({
+      where: { agentId: agentId },
+      attributes: ['id', 'title', 'status', 'owner', 'createdAt'], 
+    });
+
+    if (!properties.length) {
+      return res.status(404).json({ message: 'No properties found for this user' });
+    }
+
+    return res.status(200).json(properties);
+
+  } catch (error) {
+    console.error('Error fetching user-specific properties:', error);
+    return res.status(500).json({ message: 'Internal server error', error });
+  }
+};
+
 
 
 const deleteProperty = async (req, res) => {
@@ -130,5 +145,5 @@ module.exports = {
     createProperty,
     deleteProperty,
     editProperty,
-    getAllPropertiesByUserId,
+    getAllPropertiesByAgent,
 }

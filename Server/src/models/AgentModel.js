@@ -9,14 +9,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    licenseNumber: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    agency: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
   }, {
     tableName: 'agents',
     timestamps: true,

@@ -48,8 +48,11 @@ const PropertyModal = ({ onClose }) => {
       }
     }
 
-    const response = await axios.post("http://localhost:5000/api/agents/createProperty", form);
-    console.log(formData);
+    const token = localStorage.getItem("token");
+
+   const response = await axios.post('http://localhost:5000/api/agents/createProperty',form,
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
 
     toast.success("Property created successfully!");
     console.log("Property created:", response.data);

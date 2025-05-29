@@ -1,14 +1,29 @@
 // hooks/useCheckRole.js
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from "jwt-decode";
 
 const useCheckRole = (allowedRoles = [], redirectPath = '/login') => {
   const navigate = useNavigate();
 
   useEffect(() => {
     const storedUser = localStorage.getItem('userData');
+    const storedToken = localStorage.getItem('token');
+
+    if (!storedToken) {
+      navigate('/login', { replace: true });
+      return;
+    }
 
     if (!storedUser) {
+      navigate('/login', { replace: true });
+      return;
+    }
+
+    const decodedToken = jwtDecode(storedToken);
+    if (decodedToken.exp * 1000 < Date.now()) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userData');
       navigate('/login', { replace: true });
       return;
     }
@@ -25,7 +40,7 @@ const useCheckRole = (allowedRoles = [], redirectPath = '/login') => {
           navigate('/unauthorized', { replace: true });
           break;
         case 'buyer':
-          navigate('/unauthorized', { replace: true });
+          navigate('/', { replace: true });
           break;
         default:
           navigate(redirectPath, { replace: true });
