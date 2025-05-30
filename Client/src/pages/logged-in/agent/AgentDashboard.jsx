@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Bar } from "react-chartjs-2";
 import {
   FaRegBuilding,
@@ -20,6 +20,7 @@ import {
   Legend,
 } from "chart.js";
 import useCheckRole  from "../../../context/checkRole";
+import axios from "axios";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -30,6 +31,44 @@ const AgentDashboard = () => {
     { id: 2, name: "Modern Flat", location: "Ferizaj", price: "$420,000" },
     { id: 3, name: "Spacious Villa", location: "Shkup", price: "$900,000" },
   ]);
+
+  const [stats, setStats] = useState({
+    listings: 0,
+    sold: 0,
+    appointments: 0,
+    revenue: "$0",
+    leads: 0,
+    meetings: 0,
+  });
+
+  const fetchDashboardData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const headers = { Authorization: `Bearer ${token}` };
+
+      const [propsRes, soldRes, appointRes, reqsRes] = await Promise.all([
+        axios.get("http://localhost:5000/api/agent/countProperties", { headers }),
+        axios.get("http://localhost:5000/api/agent/countSold", { headers }),
+        axios.get("http://localhost:5000/api/agent/countAppointments", { headers }),
+        axios.get("http://localhost:5000/api/agent/getRequests", { headers }),
+      ]);
+
+      setStats({
+        listings: propsRes.data.count,
+        sold: soldRes.data.count,
+        appointments: appointRes.data.count,
+        leads: reqsRes.data.requests.length,
+        meetings: appointRes.data.count, // Simplified assumption
+        revenue: `$${soldRes.data.count * 100000}`, // Hypothetical revenue
+      });
+    } catch (err) {
+      console.error("Dashboard API error", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
 
   const salesData = {
     labels: ["Jan", "Feb", "Mar", "Apr", "May"],
@@ -59,11 +98,11 @@ const AgentDashboard = () => {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 px-10 xl:grid-cols-6 gap-4 mb-6">
-          <StatCard title="Listings" value="22" icon={<FaRegBuilding />} />
-          <StatCard title="Sold" value="10" icon={<FaCheckCircle />} />
-          <StatCard title="Pending" value="4" icon={<FaHourglassHalf />} />
-          <StatCard title="Revenue" value="$1.2M" icon={<FaDollarSign />} />
-          <StatCard title="New Leads" value="7" icon={<MdOutlinePersonAddAlt1 />} />
+          <StatCard title="Listings" value={stats.listings} icon={<FaRegBuilding />} />
+          <StatCard title="Sold" value={stats.sold} icon={<FaCheckCircle />} />
+          <StatCard title="Pending" value={stats.appointments} icon={<FaHourglassHalf />} />
+          <StatCard title="Revenue" value={stats.revenue} icon={<FaDollarSign />} />
+          <StatCard title="New Leads" value={stats.leads} icon={<MdOutlinePersonAddAlt1 />} />
           <StatCard title="Meetings" value="3 Today" icon={<FaCalendarAlt />} />
         </div>
 
@@ -77,7 +116,7 @@ const AgentDashboard = () => {
 
           {/* Top Properties */}
           <div className="bg-white p-4 rounded-xl px-10 shadow">
-            <h2 className="text-lg font-semibold mb-4">Top Properties</h2>
+            <h2 className="text-lg font-semibold mb-4">Appointments</h2>
             <ul className="divide-y">
               {topProperties.map((prop) => (
                 <li key={prop.id} className="py-3 flex flex-col">

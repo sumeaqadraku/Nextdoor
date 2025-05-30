@@ -1,79 +1,130 @@
-const { Notification, NewListing, ClientRequest } = require('../models');
+const { Notification, NewListing, ClientRequest, Property, PropertyLocation } = require('../models');
 
-module.exports = {
-  // Get all notifications for a user
-  async getAllByUser(req, res) {
-    try {
-      const userId = req.params.userId;
+exports.getNotifications = async (req, res) => {
+  try {
+    const userId = req.user?.id;
 
-      const notifications = await Notification.findAll({
-        where: { userId },
-        include: [
-          { model: NewListing, as: 'newListing' },
-          { model: ClientRequest, as: 'clientRequest' },
-        ],
-        order: [['createdAt', 'DESC']],
-      });
-
-      return res.status(200).json(notifications);
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'Failed to get notifications' });
+    if (!userId) {
+      return res.status(400).json({ message: 'User ID is required.' });
     }
-  },
 
-  // Mark a notification as read
-  async markAsRead(req, res) {
-    try {
-      const { id } = req.params;
+    const notifications = await Notification.findAll({
+      where: { userId },
+      include: [
+        {
+          model: NewListing,
+          as: 'newListing',
+          include: [
+            {
+              model: Property,
+              as: 'property',
+              attributes: ['id', 'listingTypes'],
+              include: [
+                { model: PropertyLocation, as: 'location', attributes: ['city'] }
+              ]
+            }
+          ]
+        },
+        {
+          model: ClientRequest,
+          as: 'clientRequest'
+        }
+      ],
+      order: [['createdAt', 'DESC']]
+    });
 
-      const notification = await Notification.findByPk(id);
-      if (!notification) {
-        return res.status(404).json({ error: 'Notification not found' });
-      }
+    const formatted = notifications.map(n => {
+    return {
+      id: n.id,
+      type: n.type,
+      is_read: n.is_read,
+      createdAt: n.createdAt,
+      newListing: n.newListing ? {
+        propertyId: n.newListing.property?.id,
+        listingType: n.newListing.property?.listingTypes,
+        city: n.newListing.property?.location?.city
+      } : null,
+      clientRequest: n.clientRequest ? {
+        id: n.clientRequest.id,
+      } : null
+    };
+  });
 
-      notification.is_read = true;
-      await notification.save();
+    return res.status(200).json(formatted);
+  } catch (error) {
+    console.error('Error fetching notifications:', error);
+    return res.status(500).json({ message: 'Internal server error.' });
+  }
+}
 
-      return res.status(200).json({ message: 'Notification marked as read' });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'Failed to update notification' });
+exports.updateReadStatus = async (req, res) => {
+  try {
+    const { id, read } = req.body;
+    const userId = req.user.id; // from JWT
+
+    if (!id || typeof read !== 'boolean') {
+      return res.status(400).json({ message: 'Notification ID and read status are required.' });
     }
-  },
 
-  // Create a new notification 
-  async create(req, res) {
-    try {
-      const { userId, type } = req.body;
+    const notification = await Notification.findOne({ where: { id, userId } });
 
-      const newNotification = await Notification.create({
-        userId,
-        type,
-        is_read: false,
-      });
-
-      return res.status(201).json(newNotification);
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'Failed to create notification' });
+    if (!notification) {
+      return res.status(404).json({ message: 'Notification not found or access denied.' });
     }
-  },
 
-  // Delete a notification
-  async delete(req, res) {
-    try {
-      const { id } = req.params;
+    notification.is_read = read;
+    await notification.save();
 
-      const deleted = await Notification.destroy({ where: { id } });
-      if (!deleted) {
-        return res.status(404).json({ error: 'Notification not found' });
-      }
-
-      return res.status(200).json({ message: 'Notification deleted' });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'Failed to delete notification' });
-    }
-  },
+    return res.status(200).json({ message: `Notification marked as ${read ? 'read' : 'unread'}.` });
+  } catch (error) {
+    console.error('Error updating read status:', error);
+    return res.status(500).json({ message: 'Internal server error.' });
+  }
 };
+
+ exports.markAllNotificationsAsRead = async (req, res) => {
+    try {
+      const userId = req.user.id;
+
+      if (!userId) {
+        return res.status(400).json({ message: 'User ID is required.' });
+      }
+
+      const [updatedCount] = await Notification.update(
+        { is_read: true },
+        { where: { userId, is_read: false } }
+      );
+
+      if (updatedCount === 0) {
+        return res.status(404).json({ message: 'No unread notifications found.' });
+      }
+
+      res.status(200).json({ message: 'All notifications marked as read.' });
+    } catch (error) {
+      console.error('Error marking notifications as read:', error);
+      res.status(500).json({ message: 'Internal server error.' });
+    }
+  }
+
+  exports.removeAllNotifications = async (req, res) => {
+    try {
+      const userId = req.user.id;
+
+      if (!userId) {
+        return res.status(400).json({ message: 'User ID is required.' });
+      }
+
+      const deletedCount = await Notification.destroy({
+        where: { userId }
+      });
+
+      if (deletedCount === 0) {
+        return res.status(404).json({ message: 'No notifications found for this user.' });
+      }
+
+      res.status(200).json({ message: 'All notifications removed successfully.' });
+    } catch (error) {
+      console.error('Error removing notifications:', error);
+      res.status(500).json({ message: 'Internal server error.' });
+    }
+  }

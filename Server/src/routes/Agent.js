@@ -4,6 +4,12 @@ const agentController = require('../controllers/AgentController');
 const upload = require('../middleware/multer');
 const authenticateToken = require('../middleware/auth').authenticateToken;
 
+// Counts
+router.get('/countProperties', authenticateToken, agentController.countProperties);
+router.get('/countAppointments', authenticateToken, agentController.countScheduledAppointments);
+router.get('/countSold', authenticateToken, agentController.getStatusSold);
+router.get('/getRequests', authenticateToken, agentController.getRequests);
+
 // Create a property
 router.post('/createProperty',authenticateToken, upload.array("imageUrl", 4),agentController.createProperty);
 // Update a property

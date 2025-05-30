@@ -5,7 +5,7 @@ import Select from "../ui/Select";
 import ImageUploadPreview from "../ui/imageInput";
 import toast from "react-hot-toast";
 import axios from "axios";    
-const PropertyModal = ({ onClose }) => {
+const PropertyModal = ({ onClose, onPropertyAdded }) => {
 
     const [formData, setFormData] = useState({
         title: "",
@@ -54,6 +54,8 @@ const PropertyModal = ({ onClose }) => {
     { headers: { Authorization: `Bearer ${token}` } }
   );
 
+    onPropertyAdded(response.data);
+    
     toast.success("Property created successfully!");
     console.log("Property created:", response.data);
     onClose(); 

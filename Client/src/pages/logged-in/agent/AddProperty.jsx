@@ -1,9 +1,7 @@
-
 import PropertyTable from "../../../components/widgets/PropertyTable";
 import PropertyModal from "../../../components/forms/AddPropModal";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import Pagination from "../../../components/ui/Pagniations";
 import useCheckRole from "../../../context/checkRole";
 import { FiSearch } from "react-icons/fi";
 
@@ -41,11 +39,19 @@ useEffect(() => {
     fetchMyProperties();
   }, []);
 
+  const handlePropertyAdded = (newProperty) => {
+    setProperties((prevProps) => [newProperty, ...prevProps]);
+    setShowModal(false);
+  };
+
   const amountOfProperties = properties.length;
 
-  const filteredProperties = properties.filter((property) =>
+  const filteredProperties = properties.filter(
+  (property) =>
+    property.title &&
     property.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+);
+
 
 
   return (
@@ -91,7 +97,7 @@ useEffect(() => {
                 <PropertyTable properties={filteredProperties} />
 
                 <div className="w-full flex justify-center">
-                    {showModal && <PropertyModal onClose={() => setShowModal(false)} />}
+                    {showModal && <PropertyModal onClose={() => setShowModal(false)} onPropertyAdded={handlePropertyAdded} />}
                     
 
                 </div>

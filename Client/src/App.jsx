@@ -14,6 +14,8 @@ import PropertyDetails from './pages/logged-in/user/PropertyDetails';
 import Requests from './pages/logged-in/agent/Requests';
 import AgentDetails from './pages/logged-in/user/AgentsDetails';
 import UnauthorizedPage from './pages/Unathorized';
+import EditProfile from './pages/logged-in/EditProfile';
+
 function App() {
   return (
     <BrowserRouter>
@@ -35,6 +37,8 @@ function App() {
           <Route path="/user/properties/:id" element={<PropertyDetails />} />
           <Route path="agent-details" element={<AgentDetails />} />
           <Route path="notifications" element={<Notifications />} />
+          <Route path="edit-profile" element={<EditProfile />} />
+
         </Route>
         <Route path="/agent" element={<AgentLayout />}>
           <Route path="dashboard" element={<AgentDasboard />} />

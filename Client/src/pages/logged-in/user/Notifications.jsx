@@ -1,70 +1,127 @@
-import { useState } from "react";
-import { FaCheck, FaTimes, FaHome, FaExclamationCircle } from "react-icons/fa";
-import Sidebar from "../../../components/Sidebar";
+import { useState, useEffect } from "react";
+import { FaCheck, FaTimes, FaHome } from "react-icons/fa";
 import Topbar from "../../../components/Topbar";
 import useCheckRole from "../../../context/checkRole";
-
-// Sample data for notifications (focused on specific actions)
-const notificationsData = [
-  {
-    id: 1,
-    title: "New Property Added",
-    message: "A new apartment in Ulpiana is now available for rent.",
-    time: "2 mins ago",
-    category: "New Property",
-    status: "info", // Can be "info", "success", or "danger"
-    action: "/view-property/1",
-  },
-  {
-    id: 2,
-    title: "Client Request Accepted",
-    message: "Your request for the 'Luxury Condo' has been accepted.",
-    time: "30 mins ago",
-    category: "Request Accepted",
-    status: "success",
-    action: "/client-details/2",
-  },
-  {
-    id: 3,
-    title: "Client Request Cancelled",
-    message: "Your request for the 'Cozy Loft' has been cancelled.",
-    time: "1 hour ago",
-    category: "Request Cancelled",
-    status: "danger",
-    action: "/client-details/3",
-  },
-  // Add more notification items as required
-];
+import axios from "axios";
 
 const NotificationsPage = () => {
-  useCheckRole(['buyer', 'admin', 'agent'], '/login');
-  const [notifications, setNotifications] = useState(notificationsData);
+  useCheckRole(["buyer", "admin", "agent"], "/login");
 
-  const markAsRead = (id) => {
-    setNotifications(notifications.map((n) =>
-      n.id === id ? { ...n, read: true } : n
-    ));
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+        useEffect(() => {
+          const fetchNotifications = async () => {
+            try {
+              const token = localStorage.getItem("token");
+              const response = await axios.get("http://localhost:5000/api/notifications/getNotifs", {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              });
+
+              console.log("Fetched notifications:", response.data);
+
+            const formatted = response.data.map((notif) => {
+            let category = "Notification";
+            let title = "You have a new notification.";
+            let message = "Check your dashboard for details.";
+            let action = "#";
+
+        if (notif.type === "new_listing" && notif.newListing) {
+          category = "New Property";
+          title = "New Property Listing";
+          message = `New listing in ${notif.newListing.city} (${notif.newListing.listingType})`;
+          action = `properties/${notif.newListing.propertyId}`;
+        } else if (notif.type === "request_accepted") {
+          category = "Request Accepted";
+          title = "Your Request Was Accepted";
+          message = "Congratulations! Your request was accepted.";
+        } else if (notif.type === "request_cancelled") {
+          category = "Request Cancelled";
+          title = "Your Request Was Cancelled";
+          message = "Unfortunately, your request was cancelled.";
+        }
+
+        return {
+          id: notif.id,
+          read: notif.is_read,
+          category,
+          title,
+          message,
+          time: new Date(notif.createdAt).toLocaleString(),
+          action,
+        };
+    });
+
+        setNotifications(formatted);
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNotifications();
+  }, []);
+
+ const toggleRead = async (id, currentReadStatus) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(
+        "http://localhost:5000/api/notifications/updateReadStatus",
+        { id, read: !currentReadStatus },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      setNotifications((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, read: !n.read } : n))
+      );
+    } catch (error) {
+      console.error("Error updating read status:", error);
+    }
   };
 
-  const toggleRead = (id) => {
-    setNotifications(notifications.map((n) =>
-      n.id === id ? { ...n, read: !n.read } : n
-    ));
+
+ const markAllAsRead = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(
+        "http://localhost:5000/api/notifications/markAllAsRead",
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+    } catch (error) {
+      console.error("Error marking all as read:", error);
+    }
   };
 
-  const clearAll = () => {
-    setNotifications([]);
-  };
-
-  const markAllAsRead = () => {
-    setNotifications(notifications.map((n) => ({ ...n, read: true })));
+  const clearAll = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(
+        "http://localhost:5000/api/notifications/removeNotification",
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setNotifications([]);
+    } catch (error) {
+      console.error("Error clearing notifications:", error);
+    }
   };
 
   return (
     <div className="flex h-lvh">
       <div className="w-full">
         <Topbar />
-        <div className="bg-[#f6f6f6] h-[88%] px-10 py-6">
+        <div className="bg-[#f6f6f6] h-[88%] px-10 py-6 overflow-y-auto">
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-2xl font-semibold">Notifications</h1>
             <div className="space-x-4 flex items-center">
@@ -83,46 +140,58 @@ const NotificationsPage = () => {
             </div>
           </div>
 
-          {/* Notification List */}
-          <div className="space-y-4">
-            {notifications.map((notification) => (
-              <div
-                key={notification.id}
-                className={`p-4 rounded-xl shadow-sm transition ${notification.read ? "bg-gray-100" : "bg-white border-l-4 border-blue-500"}`}
-              >
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-3">
-                    {/* Icon based on the notification type */}
-                    {notification.category === "New Property" && <FaHome size={20} className="text-blue-500" />}
-                    {notification.category === "Request Accepted" && <FaCheck size={20} className="text-green-500" />}
-                    {notification.category === "Request Cancelled" && <FaTimes size={20} className="text-red-500" />}
-
-                    <div>
-                      <h2 className="font-semibold">{notification.title}</h2>
-                      <p className="text-gray-600 text-sm">{notification.message}</p>
+          {loading ? (
+            <p className="text-gray-600 text-center mt-20">Loading notifications...</p>
+          ) : notifications.length === 0 ? (
+            <p className="text-gray-600 text-center mt-20">No notifications to show.</p>
+          ) : (
+            <div className="space-y-4">
+              {notifications.map((notification) => (
+                <div
+                  key={notification.id}
+                  className={`p-4 rounded-xl shadow-sm transition ${
+                    notification.read ? "bg-gray-100" : "bg-white border-l-4 border-blue-500"
+                  }`}
+                >
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-3">
+                      {notification.category === "New Property" && (
+                        <FaHome size={20} className="text-blue-500" />
+                      )}
+                      {notification.category === "Request Accepted" && (
+                        <FaCheck size={20} className="text-green-500" />
+                      )}
+                      {notification.category === "Request Cancelled" && (
+                        <FaTimes size={20} className="text-red-500" />
+                      )}
+                      <div>
+                        <h2 className="font-semibold">{notification.title}</h2>
+                        <p className="text-gray-600 text-sm">{notification.message}</p>
+                      </div>
                     </div>
+                    <span className="text-xs text-gray-400">{notification.time}</span>
                   </div>
-                  <span className="text-xs text-gray-400">{notification.time}</span>
+                  <div className="flex justify-between items-center mt-3">
+                    <button
+                      onClick={() => toggleRead(notification.id, notification.read)}
+                      className={`text-sm font-medium ${
+                        notification.read ? "text-gray-400" : "text-blue-500"
+                      } hover:underline`}
+                    >
+                      
+                      {notification.read ? "Mark as Unread" : "Mark as Read"}
+                    </button>
+                    <a
+                      href={notification.action}
+                      className="text-sm font-medium text-blue-500 hover:underline"
+                    >
+                      View Details
+                    </a>
+                  </div>
                 </div>
-
-                {/* Actions */}
-                <div className="flex justify-between items-center mt-3">
-                  <button
-                    onClick={() => toggleRead(notification.id)}
-                    className={`text-sm font-medium ${notification.read ? "text-gray-400" : "text-blue-500"} hover:underline`}
-                  >
-                    {notification.read ? "Mark as Unread" : "Mark as Read"}
-                  </button>
-                  <a
-                    href={notification.action}
-                    className="text-sm font-medium text-blue-500 hover:underline"
-                  >
-                    View Details
-                  </a>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

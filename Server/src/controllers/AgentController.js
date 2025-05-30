@@ -1,4 +1,4 @@
-const { Property, PropertyLocation, PropertyFeature, PropertyImage, sequelize, Agent } = require('../models');
+const { Property, PropertyLocation, NewListing, Notification,PropertyFeature, PropertyImage, ClientRequest, Appointment, sequelize, Agent, User } = require('../models');
 console.log('PropertyModel', Property);
 console.log('PropertyLocation', PropertyLocation);
 console.log('PropertyFeaturesModel', PropertyFeature);
@@ -40,6 +40,21 @@ const createProperty = async (req, res) => {
 
     await PropertyImage.bulkCreate(imageRecords);
 
+    const users = await User.findAll();
+
+    for (const user of users) {
+      const notification = await Notification.create({
+        userId: user.id,
+        type: 'new_listing',
+        is_read: false,
+        newListingId: propertyId
+      });
+
+      await NewListing.create({
+        propertyId,
+        notif_id: notification.id
+      });
+    }
 
     return res.status(201).json({
       message: 'Property created successfully',
@@ -54,6 +69,84 @@ const createProperty = async (req, res) => {
     });
   }
 };
+
+const countProperties = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    const agent = await Agent.findOne({ where: { userId } });
+    const agentId = agent?.id;
+
+    const propertyCount = await Property.count({
+      where: { agentId }
+    }); 
+
+    return res.status(200).json({ count: propertyCount });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error counting properties', error });
+  }
+};
+
+const getStatusSold = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    const agent = await Agent.findOne({ where: { userId } });
+    const agentId = agent?.id;
+
+    const soldProperties = await Property.count({
+      where: { agentId, status: 'sold' }
+    });
+    return res.status(200).json({ count: soldProperties });
+  } catch (error) {
+    console.error('Error counting sold properties:', error);
+    return res.status(500).json({ message: 'Error counting sold properties', error });
+  }
+};
+
+const getRequests = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    const agent = await Agent.findOne({ where: { userId } });
+    const agentId = agent?.id;
+
+    if (!agentId) {
+      return res.status(404).json({ message: 'Agent not found' });
+    }
+
+    const requests = await ClientRequest.count({
+      where: { agentId, status: 'pending' },
+    });
+
+    if (!requests.length) {
+      return res.status(404).json({ message: 'No pending requests found' });
+    }
+
+    return res.status(200).json(requests);
+  } catch (error) {
+    console.error('Error fetching property requests:', error);
+    return res.status(500).json({ message: 'Internal server error', error });
+  }
+}
+
+const countScheduledAppointments = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    const agent = await Agent.findOne({ where: { userId } });
+    const agentId = agent?.id;
+
+    if (!agentId) {
+      return res.status(404).json({ message: 'Agent not found' });
+    }
+
+    const appointmentsCount = await Appointment.count({
+      where: { agentId, status: 'scheduled' },
+    });
+
+    return res.status(200).json({ count: appointmentsCount });
+  } catch (error) {
+    console.error('Error counting scheduled appointments:', error);
+    return res.status(500).json({ message: 'Error counting scheduled appointments', error });
+  }
+}
 
 const editProperty = async (req, res) => {
     const { id } = req.params;
@@ -146,4 +239,8 @@ module.exports = {
     deleteProperty,
     editProperty,
     getAllPropertiesByAgent,
+    countProperties,
+    getStatusSold,
+    getRequests,
+    countScheduledAppointments
 }

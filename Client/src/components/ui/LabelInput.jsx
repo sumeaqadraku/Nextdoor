@@ -10,7 +10,6 @@ const FormInput = ({ label, placeholder,type, value, onChange, name, width = "w-
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        required
         className="bg-[#F6F6F6] p-2 px-3 text-[17px] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
     </div>
