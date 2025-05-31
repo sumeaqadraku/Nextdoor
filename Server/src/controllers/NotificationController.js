@@ -24,16 +24,22 @@ exports.getNotifications = async (req, res) => {
               ]
             }
           ]
-        },
-        {
-          model: ClientRequest,
-          as: 'clientRequest'
         }
       ],
       order: [['createdAt', 'DESC']]
     });
 
-    const formatted = notifications.map(n => {
+    const requests = await ClientRequest.findAll({
+      where: { userId },
+      include: [{
+        model: Notification,
+        as: 'notification',
+        attributes: ['id', 'is_read', 'createdAt']
+      }],
+      order: [[{ model: Notification, as: 'notification' }, 'createdAt', 'DESC']]
+    });
+
+    const formattedNotifications = notifications.map(n => {
     return {
       id: n.id,
       type: n.type,
@@ -43,14 +49,30 @@ exports.getNotifications = async (req, res) => {
         propertyId: n.newListing.property?.id,
         listingType: n.newListing.property?.listingTypes,
         city: n.newListing.property?.location?.city
-      } : null,
-      clientRequest: n.clientRequest ? {
-        id: n.clientRequest.id,
       } : null
     };
   });
 
-    return res.status(200).json(formatted);
+   const formattedRequests = requests
+  .filter((r) => r.notification) // Ensure only requests with notifications are formatted
+  .map((r) => ({
+    id: r.notification.id, // Always use Notification.id
+    type: 'client_request',
+    is_read: r.notification.is_read,
+    createdAt: r.notification.createdAt,
+    clientRequest: {
+      id: r.id,
+      approved: r.approved,
+    }
+  }));
+
+    const combinedFormatted = [...formattedNotifications, ...formattedRequests].sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
+
+
+
+    return res.status(200).json(combinedFormatted);
   } catch (error) {
     console.error('Error fetching notifications:', error);
     return res.status(500).json({ message: 'Internal server error.' });
@@ -66,12 +88,25 @@ exports.updateReadStatus = async (req, res) => {
       return res.status(400).json({ message: 'Notification ID and read status are required.' });
     }
 
-    const notification = await Notification.findOne({ where: { id, userId } });
+    // Fetch the notification with possible client request association
+    const notification = await Notification.findOne({
+      where: { id },
+      include: [{ model: ClientRequest, as: 'clientRequest' }],
+    });
 
     if (!notification) {
-      return res.status(404).json({ message: 'Notification not found or access denied.' });
+      return res.status(404).json({ message: 'Notification not found.' });
     }
 
+      const isAuthorized =
+    notification.userId === userId ||
+    (notification.clientRequest && notification.clientRequest.userId === userId);
+
+  if (!isAuthorized) {
+    return res.status(403).json({ message: 'You are not authorized to update this notification.' });
+  }
+
+    // Allow update
     notification.is_read = read;
     await notification.save();
 
@@ -81,6 +116,7 @@ exports.updateReadStatus = async (req, res) => {
     return res.status(500).json({ message: 'Internal server error.' });
   }
 };
+
 
  exports.markAllNotificationsAsRead = async (req, res) => {
     try {

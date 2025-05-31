@@ -33,14 +33,22 @@ const NotificationsPage = () => {
           title = "New Property Listing";
           message = `New listing in ${notif.newListing.city} (${notif.newListing.listingType})`;
           action = `properties/${notif.newListing.propertyId}`;
-        } else if (notif.type === "request_accepted") {
-          category = "Request Accepted";
-          title = "Your Request Was Accepted";
-          message = "Congratulations! Your request was accepted.";
-        } else if (notif.type === "request_cancelled") {
-          category = "Request Cancelled";
-          title = "Your Request Was Cancelled";
-          message = "Unfortunately, your request was cancelled.";
+        } else if (notif.type === "client_request" && notif.clientRequest) {
+          const status = notif.clientRequest.approved;
+
+          if (status === "approved") {
+            category = "Request Accepted";
+            title = "Your Request Was Accepted";
+            message = "Congratulations! Your request was accepted.";
+          } else if (status === "declined") {
+            category = "Request Cancelled";
+            title = "Your Request Was Cancelled";
+            message = "Unfortunately, your request was cancelled.";
+          } else {
+            category = "Request Update";
+            title = "Your Request Was Reviewed";
+            message = `Your request status is: ${status}`;
+          }
         }
 
         return {

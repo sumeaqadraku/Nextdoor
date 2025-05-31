@@ -15,10 +15,12 @@ const appointmentRoutes = require('./src/routes/Appointments');
 const agentRoutes = require('./src/routes/Agent');
 const savedRoutes = require('./src/routes/Saved');
 const requestRoutes = require('./src/routes/Requests');
+const buyerRoutes = require('./src/routes/Buyer');
 
 require('dotenv').config();
 
 app.use('/api/auth', authRoutes);
+app.use('/api/buyers', buyerRoutes);
 app.use('/api/requests', requestRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/saved', savedRoutes);

@@ -35,7 +35,7 @@ function App() {
           <Route path="agents" element={<Agents />} />
           <Route path="saved" element={<SavedItems />} />
           <Route path="/user/properties/:id" element={<PropertyDetails />} />
-          <Route path="agent-details" element={<AgentDetails />} />
+          <Route path="/user/agents/:id" element={<AgentDetails />} />
           <Route path="notifications" element={<Notifications />} />
           <Route path="edit-profile" element={<EditProfile />} />
 
