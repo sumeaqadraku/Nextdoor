@@ -2,6 +2,35 @@ const { Appointment, User, Property } = require('../models');
 
 module.exports = {
 
+  async acreateAppointment(req, res) {
+  try {
+    const { date, propertyId, note } = req.body;
+
+    const userId = req.user?.id
+    console.log(userId)
+
+    if (!date || !userId || !propertyId) {
+      return res.status(400).json({ message: 'Date, userId, and propertyId are required.' });
+    }
+
+    const appointment = await Appointment.create({
+      date,
+      userId,
+      propertyId,
+      note: note || null
+    });
+
+    return res.status(201).json({
+      message: 'Appointment created successfully.',
+      appointment
+    });
+  } catch (error) {
+    console.error('Error creating appointment:', error);
+    return res.status(500).json({ message: 'Internal server error.' });
+  }
+},
+
+
   // Get all appointments
   async getAllAppointments(req, res) {
     try {

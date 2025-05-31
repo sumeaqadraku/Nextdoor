@@ -16,7 +16,7 @@ const MapComponent = ({longitude,latitude,address}) => {
   const center = [lat, lng];
 
   return (
-    <MapContainer center={center} zoom={12} style={{ height: "300px", width: "100%" }}>
+    <MapContainer center={center} zoom={12} style={{ height: "300px", width: "100%", zIndex: 0 }}>
       {/* OpenStreetMap Tiles */}
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

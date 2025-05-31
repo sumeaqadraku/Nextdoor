@@ -3,7 +3,7 @@ const router = express.Router();
 const propertyController = require('../controllers/PropertyController');
 
 router.get('/', propertyController.getFilteredProperties);
-router.get('/', propertyController.getHomeProperties);
+router.get('/all', propertyController.getAllProperties);
 router.get('/:id', propertyController.getPropertyById);
 
 

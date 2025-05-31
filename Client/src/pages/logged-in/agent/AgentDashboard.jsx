@@ -47,10 +47,10 @@ const AgentDashboard = () => {
       const headers = { Authorization: `Bearer ${token}` };
 
       const [propsRes, soldRes, appointRes, reqsRes] = await Promise.all([
-        axios.get("http://localhost:5000/api/agent/countProperties", { headers }),
-        axios.get("http://localhost:5000/api/agent/countSold", { headers }),
-        axios.get("http://localhost:5000/api/agent/countAppointments", { headers }),
-        axios.get("http://localhost:5000/api/agent/getRequests", { headers }),
+        axios.get("http://localhost:5000/api/agents/countProperties", { headers }),
+        axios.get("http://localhost:5000/api/agents/countSold", { headers }),
+        axios.get("http://localhost:5000/api/agents/countAppointments", { headers }),
+        axios.get("http://localhost:5000/api/agents/getRequests", { headers }),
       ]);
 
       setStats({

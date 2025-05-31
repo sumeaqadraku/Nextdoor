@@ -10,11 +10,14 @@ import View2 from "../../../assets/images/view2.jpg";
 import View3 from "../../../assets/images/view3.jpg";
 import View4 from "../../../assets/images/view4.jpg";
 import useCheckRole from "../../../context/checkRole";
+import BookingModal from "../../../components/forms/BookingModal";
 
 const PropertyDetails = () => {
     useCheckRole(['buyer', 'admin', 'agent'], '/login');
     const { id } = useParams();
     const [propertyDetails, setPropertyDetails] = useState(null);
+    const [bookingModal, setBookingModal] = useState(false);
+
     useEffect(() => {
         const fetchPropertyDetails = async () => {
             try {
@@ -125,16 +128,25 @@ const PropertyDetails = () => {
                             </div>
                         </div>
 
+
                         {/* Map */}
-                        <div className="mt-8 px-2">
+                        <div className="mt-8 px-2 z-0">
                             <h2 className="text-xl md:text-2xl font-bold mb-4">Location in map:</h2>
                             <MapComponent latitude={propertyDetails.location.latitude} longitude={propertyDetails.location.latitude} address={propertyDetails.location.address}/>
                         </div>
 
                         {/* CTA */}
                         <div className="flex justify-center md:justify-start mt-8 px-2">
-                            <button className="w-36 md:w-44 bg-[#008CB3] h-10 rounded-lg text-white text-sm font-medium">Book It</button>
+                            <button
+                            onClick={() => setBookingModal(true)}
+                             className="w-36 md:w-44 bg-[#008CB3] h-10 rounded-lg text-white text-sm font-medium">Book It</button>
                         </div>
+                        {/* Booking Modal */}
+                        <BookingModal
+                            isOpen={bookingModal}
+                            onClose={() => setBookingModal(false)}
+                            propertyId={id}
+                            />
                     </div>
                 </div>
             </div>

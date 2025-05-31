@@ -1,9 +1,42 @@
 
 import useCheckRole from "../../../context/checkRole";
 import RequestsMailPanel from "../../../components/widgets/RequestsTable";
+import { useEffect,useState } from "react";
+import axios from "axios";
 
 const Request = () => {
     useCheckRole(['buyer', 'admin', 'agent'], '/login');
+
+    const [requests, setRequests] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchBookingRequests = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+
+            const token = localStorage.getItem('token');
+
+            const response = await axios.get('http://localhost:5000/api/notifications', {
+                headers: {
+                    Authorization:  `Bearer ${token} `
+                }
+            });
+            setRequests(response.data);
+        } catch (err) {
+            console.error('Failed to fetch booking requests:', err);
+            setError('Failed to load booking requests.');
+        } finally {
+            setLoading(false);
+        }
+        };
+
+        fetchBookingRequests();
+    }, []);
+
+
     return(
         <div className="flex h-lvh bg-gray-100">
             <main className="flex-grow overflow-auto">
@@ -20,10 +53,11 @@ const Request = () => {
                 <div className="px-10 w-full mt-5 mb-3 flex gap-1">
                     <h1 className="text-xl font-medium">All Requests: </h1>
                     <div className="bg-gray-300 w-7 flex items-center justify-center rounded-full">
-                        <h1>2</h1>
+                        <h1>{requests.length}</h1>
                     </div>
+                    {loading && <p>Loading requests...</p>}
                 </div>
-                <RequestsMailPanel/>
+                <RequestsMailPanel requestss={requests}/>
             </main>
         </div>
     );

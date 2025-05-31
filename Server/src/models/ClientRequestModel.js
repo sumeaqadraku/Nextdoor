@@ -5,28 +5,26 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true,
     },
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     message: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
     approved: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
+      type: DataTypes.ENUM('requested','approved','declined'),
+      defaultValue: 'requested',
     },
     notif_id: {
       type: DataTypes.INTEGER, 
       allowNull: false,
     },
     userId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: { model: 'users', key: 'id' },
-        onDelete: 'CASCADE',
-      },
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    propertyId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
   }, {
     tableName: 'client_requests',
     timestamps: true,
@@ -36,6 +34,14 @@ module.exports = (sequelize, DataTypes) => {
     ClientRequest.belongsTo(models.Notification, {
       foreignKey: 'notif_id',
       as: 'notification',
+    });
+    ClientRequest.belongsTo(models.User, {
+      foreignKey: 'userId',
+      as: 'user',
+    });
+    ClientRequest.belongsTo(models.Property, {
+      foreignKey: 'propertyId',
+      as: 'property',
     });
   };
 

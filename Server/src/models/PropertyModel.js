@@ -48,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
       as: 'images',
     });
 
-    Property.belongsTo(models.User, {
+    Property.belongsTo(models.Agent, {
       foreignKey: 'agentId',
       as: 'agent',
     });

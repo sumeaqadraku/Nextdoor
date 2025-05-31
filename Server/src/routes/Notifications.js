@@ -4,8 +4,14 @@ const notificationController = require('../controllers/NotificationController');
 const authenticateToken = require('../middleware/auth').authenticateToken;
 
 // Get all notifications for a user
-console.log(notificationController.getNotifications);
+
+
+router.get('/', authenticateToken, notificationController.getAgentBookingRequests);
+
 router.get('/getNotifs', authenticateToken, notificationController.getNotifications);
+
+router.put('/decline',notificationController.declineBookingRequest);
+router.put('/accept', authenticateToken, notificationController.acceptBookingRequest)
 
 router.post('/updateReadStatus', authenticateToken, notificationController.updateReadStatus);
 

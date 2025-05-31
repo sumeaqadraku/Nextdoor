@@ -1,4 +1,4 @@
-const { Notification, NewListing, ClientRequest, Property, PropertyLocation } = require('../models');
+const { Notification, NewListing, ClientRequest,User, Property, PropertyLocation } = require('../models');
 
 exports.getNotifications = async (req, res) => {
   try {
@@ -128,3 +128,105 @@ exports.updateReadStatus = async (req, res) => {
       res.status(500).json({ message: 'Internal server error.' });
     }
   }
+
+exports.getAgentBookingRequests = async (req, res) => {
+  try {
+    const agentUserId = req.user?.id;
+
+    if (!agentUserId) {
+      return res.status(401).json({ message: 'Unauthorized. Agent user ID is missing.' });
+    }
+
+    const notifications = await Notification.findAll({
+      where: {
+        userId: agentUserId,
+        type: 'booking_request'
+      },
+      include: [
+        {
+          model: ClientRequest,
+          as: 'clientRequest',
+          attributes: ['id', 'message', 'propertyId', 'userId', 'approved'],
+          where: {
+            approved: 'requested'
+          },
+          include: [
+            {
+              model: User,
+              as: 'user',
+              attributes: ['id', 'username', 'avatarUrl']
+            }
+          ]
+        }
+      ],
+      order: [['createdAt', 'DESC']]
+    });
+
+    const formatted = notifications
+      .filter(n => n.clientRequest && n.clientRequest.user)
+      .map(n => ({
+        message: n.clientRequest.message,
+        propertyId: n.clientRequest.propertyId,
+        id: n.clientRequest.user.id,
+        clientRequestId: n.clientRequest.id,
+        notificationId: n.id,
+        approved: n.clientRequest.approved,
+        username: n.clientRequest.user.username,
+        avatarUrl: n.clientRequest.user.avatarUrl
+      }));
+
+    if (!formatted.length) {
+      return res.status(404).json({ message: 'No client booking requests found.' });
+    }
+
+    return res.status(200).json(formatted);
+
+  } catch (error) {
+    console.error('Error fetching booking requests:', error);
+    return res.status(500).json({ message: 'Server error while fetching booking requests.' });
+  }
+};
+
+
+exports.declineBookingRequest = async (req, res) => {
+  try {
+    const { clientRequestId} = req.body;
+    console.log(clientRequestId);
+
+    if (!clientRequestId) {
+      return res.status(400).json({ message: 'ClientRequestID are required.' });
+    }
+
+    await ClientRequest.update(
+      { approved: 'declined' },
+      { where: { id: clientRequestId } }
+    );
+
+    return res.status(200).json({ message: 'Client request declined  successfully.' });
+  } catch (error) {
+    console.error('Error updating booking request:', error);
+    return res.status(500).json({ message: 'Server error while updating booking request.' });
+  }
+};
+
+exports.acceptBookingRequest = async (req, res) => {
+  try {
+    const { clientRequestId} = req.body;
+    console.log(clientRequestId);
+
+    if (!clientRequestId) {
+      return res.status(400).json({ message: 'ClientRequestID are required.' });
+    }
+
+    await ClientRequest.update(
+      { approved: 'approved' },
+      { where: { id: clientRequestId } }
+    );
+
+    return res.status(200).json({ message: 'Client request declined  successfully.' });
+  } catch (error) {
+    console.error('Error updating booking request:', error);
+    return res.status(500).json({ message: 'Server error while updating booking request.' });
+  }
+};
+

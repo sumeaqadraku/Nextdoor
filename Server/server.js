@@ -14,10 +14,12 @@ const notificationRoutes = require('./src/routes/Notifications');
 const appointmentRoutes = require('./src/routes/Appointments');
 const agentRoutes = require('./src/routes/Agent');
 const savedRoutes = require('./src/routes/Saved');
+const requestRoutes = require('./src/routes/Requests');
+
 require('dotenv').config();
 
 app.use('/api/auth', authRoutes);
-
+app.use('/api/requests', requestRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/saved', savedRoutes);
 app.use('/api/agents', agentRoutes);

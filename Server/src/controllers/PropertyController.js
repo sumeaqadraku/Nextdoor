@@ -14,49 +14,6 @@ exports.getAllProperties = async (req, res) => {
   }
 };
 
-exports.getHomeProperties = async (req, res) => {
-  try {
-    const properties = await Property.findAll({
-      attributes: ['id', 'title', 'price'],
-      include: [
-        {
-          model: PropertyFeature,
-          as: 'features',
-          attributes: ['size', 'bedrooms']
-        },
-        {
-          model: PropertyLocation,
-          as: 'location',
-          attributes: ['city']
-        },
-        {
-          model: PropertyImage,
-          as: 'images',
-          attributes: ['imageUrl'],
-          where: {
-            isPrimary: true
-          },
-        }
-      ],
-      order: [['createdAt', 'DESC']]
-    });
-
-    const formatted = properties.map(p => ({
-      id: p.id,
-      title: p.title,
-      size: p.features?.size || null,
-      bedrooms: p.features?.bedrooms || null,
-      city: p.location?.city || null,
-      price: p.price,
-      imageUrl: Array.isArray(p.images) && p.images.length > 0 ? p.images[0].imageUrl : null
-    }));
-
-    res.json(formatted);
-
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
 
 // GET single property
 exports.getPropertyById = async (req, res) => {
@@ -124,10 +81,7 @@ exports.getFilteredProperties = async (req, res) => {
         {
           model: PropertyImage,
           as: 'images',
-          attributes: ['imageUrl'],
-          where: {
-            isPrimary: true
-          },
+          
         }
       ],
       order: [['createdAt', 'DESC']],

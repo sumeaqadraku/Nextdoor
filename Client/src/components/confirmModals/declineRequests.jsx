@@ -32,7 +32,7 @@ const DeclineRequest = ({ open, onClose, onConfirm, request }) => {
             <h2 className="text-lg font-semibold">Decline this request</h2>
             <p className="text-sm text-gray-600">
               Are you sure you want to decline{" "}
-              <span className="font-medium text-red-600">{request.client}</span>?
+              <span className="font-medium text-red-600">{request.username}</span>?
             </p>
             <div className="flex justify-end gap-3">
               <button
@@ -43,7 +43,7 @@ const DeclineRequest = ({ open, onClose, onConfirm, request }) => {
               </button>
               <button
                 onClick={() => {
-                  onConfirm(request.id);
+                  onConfirm(request.clientRequestId);
                   onClose()
                 }}
                 className="px-4 py-1 rounded-md bg-red-500 text-white hover:bg-red-600"

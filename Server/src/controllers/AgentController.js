@@ -16,7 +16,11 @@ const createProperty = async (req, res) => {
     } = req.body;
 
     const agent = await Agent.findOne({ where: { userId } });
+    
     const agentId = agent?.id;
+    if (!agentId) {
+    return res.status(400).json({ message: "Agent not found for the user" });
+}
     console.log('Agent ID:', agentId);
 
     const newProperty = await Property.create({
@@ -89,11 +93,13 @@ const countProperties = async (req, res) => {
 const getStatusSold = async (req, res) => {
   try {
     const userId = req.user?.id;
-    const agent = await Agent.findOne({ where: { userId } });
-    const agentId = agent?.id;
+
+    const agent = await Agent.findOne({where: {userId}});
+
+    const agentId = agent?.id
 
     const soldProperties = await Property.count({
-      where: { agentId, status: 'sold' }
+      where: { agentId, status: 'active' }
     });
     return res.status(200).json({ count: soldProperties });
   } catch (error) {
@@ -105,40 +111,45 @@ const getStatusSold = async (req, res) => {
 const getRequests = async (req, res) => {
   try {
     const userId = req.user?.id;
-    const agent = await Agent.findOne({ where: { userId } });
-    const agentId = agent?.id;
 
-    if (!agentId) {
-      return res.status(404).json({ message: 'Agent not found' });
+    if (!userId) {
+      return res.status(404).json({ message: 'User ID missing or agent not found' });
     }
 
-    const requests = await ClientRequest.count({
-      where: { agentId, status: 'pending' },
+    // Get notifications for this user with their associated ClientRequest
+    const notifications = await Notification.findAll({
+      where: { userId },
+      include: {
+        model: ClientRequest,
+        as: 'clientRequest',
+        where: { approved: 'approved' },
+        required: true
+      }
     });
 
-    if (!requests.length) {
+    console.log(notifications.length)
+
+    if (!notifications.length) {
       return res.status(404).json({ message: 'No pending requests found' });
     }
 
-    return res.status(200).json(requests);
+    return res.status(200).json({ count: notifications.length });
   } catch (error) {
     console.error('Error fetching property requests:', error);
     return res.status(500).json({ message: 'Internal server error', error });
   }
-}
+};
 
 const countScheduledAppointments = async (req, res) => {
   try {
     const userId = req.user?.id;
-    const agent = await Agent.findOne({ where: { userId } });
-    const agentId = agent?.id;
 
-    if (!agentId) {
+    if (!userId) {
       return res.status(404).json({ message: 'Agent not found' });
     }
 
     const appointmentsCount = await Appointment.count({
-      where: { agentId, status: 'scheduled' },
+      where: { userId, status: 'Scheduled' },
     });
 
     return res.status(200).json({ count: appointmentsCount });
