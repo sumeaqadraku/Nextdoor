@@ -20,6 +20,7 @@ import AdminLayout from './components/AdminLayout';
 import UsersTable from "./pages/logged-in/admin/UsersTable";
 import AgentsTable from "./pages/logged-in/admin/AgentsTable";
 import AppointmentsTable from "./pages/logged-in/admin/AppointmentsTable";
+import AgentReviews from "./components/widgets/AgentReviews"; // Path-i i saktë
 
 function App() {
   return (
@@ -27,7 +28,7 @@ function App() {
       <Toaster
         position="bottom-right"
         toastOptions={{
-          duration: 3000,
+          duration:3000,
           style: { background: "#333", color: "#fff" }
         }}
       />
@@ -49,6 +50,7 @@ function App() {
           <Route path="dashboard" element={<AgentDasboard />} />
           <Route path="management" element={<AddProperty />} />
           <Route path="requests" element={<Requests />} />
+          <Route path="reviews/:agentId" element={<AgentReviews />} />
         </Route>
 
         <Route path="/admin" element={<AdminLayout />}>
@@ -57,9 +59,6 @@ function App() {
           <Route path="agents" element={<AgentsTable />} />
           <Route path="appointments" element={<AppointmentsTable />} />
         </Route>
-        
-        
-      
 
         <Route path="/unauthorized" element={<UnauthorizedPage />} />
         <Route path="/" element={<LoginPage />} />
