@@ -74,6 +74,32 @@ const createProperty = async (req, res) => {
   }
 };
 
+const updatePropertyStatus = async (req, res) => {
+  try {
+    const propertyId = req.params.id;
+    const { status } = req.body;
+
+    const property = await Property.findByPk(propertyId);
+
+    if (!property) {
+      return res.status(404).json({ message: 'Property not found' });
+    }
+
+    property.status = status;
+    await property.save();
+
+    res.status(200).json({
+      message: 'Status updated successfully',
+      property,
+    });
+  } catch (error) {
+    console.error('Update status error:', error);
+    res.status(500).json({ message: 'Server error while updating status' });
+  }
+};
+
+
+
 const countProperties = async (req, res) => {
   try {
     const userId = req.user?.id;
@@ -253,5 +279,6 @@ module.exports = {
     countProperties,
     getStatusSold,
     getRequests,
-    countScheduledAppointments
+    countScheduledAppointments,
+    updatePropertyStatus
 }

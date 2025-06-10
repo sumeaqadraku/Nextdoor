@@ -1,11 +1,13 @@
+
 const Topbar = ({ 
-  name, 
   searchPlaceholder = "Search...", 
   onSearchChange, 
   onLocationChange, 
   showLocationFilter = true 
 }) => {
-  return (
+const user = JSON.parse(localStorage.getItem('userData'));
+
+  return (    
     <div className="w-full h-[12%] flex items-center justify-between px-10">
       <div className="flex w-[50%] items-center gap-10">
         <input
@@ -28,8 +30,8 @@ const Topbar = ({
       </div>
 
       <div className="flex items-center gap-3">
-        <div className="bg-gray-100 size-10 rounded-full"></div>
-        <h1 className="font-semibold">{name}</h1>
+        <img className="bg-gray-100 size-10 rounded-full" src={user.avatarUrl}/>
+        <h1 className="font-semibold">{user.username}</h1>
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import AgentsWidget from "../../../components/widgets/AgentsWidget";
 import useCheckRole from "../../../context/checkRole";
 import Pagination from "../../../components/ui/Pagniations";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "../../../context/axiosInstance";
 import { Link } from "react-router-dom"
 
 const Agents = () => {
@@ -12,14 +12,14 @@ const Agents = () => {
 
   const [agentsData, setAgentsData] = useState([]);
   const [loading, setLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
   
 
   useEffect(() => {
     const fetchAgents = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/buyers'); 
+        const res = await axiosInstance.get('/buyers'); 
         setAgentsData(res.data);
       } catch (error) {
         console.error("Failed to fetch agents:", error);

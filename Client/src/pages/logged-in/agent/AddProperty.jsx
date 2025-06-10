@@ -1,6 +1,6 @@
 import PropertyTable from "../../../components/widgets/PropertyTable";
 import PropertyModal from "../../../components/forms/AddPropModal";
-import axios from "axios";
+import axiosInstance from "../../../context/axiosInstance";
 import { useEffect, useState } from "react";
 import useCheckRole from "../../../context/checkRole";
 import { FiSearch } from "react-icons/fi";
@@ -18,7 +18,7 @@ useEffect(() => {
         const token = localStorage.getItem("token");
         if (!token) throw new Error("No access token");
 
-        const response = await axios.get("http://localhost:5000/api/agents/my-properties", {
+        const response = await axiosInstance.get("/agents/my-properties", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

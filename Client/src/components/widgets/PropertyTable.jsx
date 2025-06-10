@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import View1 from "../../assets/images/view1.jpg";
 import RemovePropertyModal from "../../components/confirmModals/removeProp";
 import EditPropertyModal from "../forms/EditPropertyModal";
-import axios from "axios";
+import axiosInstance from "../../context/axiosInstance";
 import toast from "react-hot-toast";
 import Pagination from "../../components/ui/Pagniations";
 
@@ -30,7 +30,7 @@ const PropertyTable = ({ properties: propProperties }) => {
 
   const handleRemove = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/agents/deleteProperty/${id}`);
+      await axiosInstance.delete(`/agents/deleteProperty/${id}`);
       setProperties((prev) => prev.filter((p) => p.id !== id));
       toast.success(`Property ${id} deleted successfully.`);
     } catch (error) {
@@ -38,6 +38,29 @@ const PropertyTable = ({ properties: propProperties }) => {
       toast.error(`Failed to delete property ${id}.`);
     }
   };
+
+    const handleStatusChange = async (id, newStatus) => {
+      try {
+        const response = await axiosInstance.patch(`/agents/updatePropertyStatus/${id}`, {
+          status: newStatus,
+        });
+
+        // Update local state after successful API response
+        setProperties((prev) =>
+          prev.map((property) =>
+            property.id === id ? { ...property, status: newStatus } : property
+          )
+        );
+
+        console.log(`Status for property ${id} updated to ${newStatus}`);
+        toast.success(`Status updated to "${newStatus}"`);
+      } catch (error) {
+        console.error("Error updating status:", error);
+        toast.error("Failed to update status");
+      }
+    };
+
+
 
   return (
     <>
@@ -64,15 +87,40 @@ const PropertyTable = ({ properties: propProperties }) => {
                   </div>
                   <span>{item.title}</span>
                 </td>
-                <td className="px-4 py-3">
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                      statusColors[item.status] || "bg-gray-200 text-gray-600"
-                    }`}
-                  >
-                    {item.status}
-                  </span>
+               <td className="px-4 py-3">
+                  <div className="relative inline-block w-32">
+                    <select
+                      value={item.status}
+                      onChange={(e) => handleStatusChange(item.id, e.target.value)}
+                      className={`w-full appearance-none px-4 py-1 pr-8 rounded-full text-xs font-semibold focus:outline-none transition duration-150 ease-in-out cursor-pointer ${
+                        statusColors[item.status] || "bg-gray-200 text-gray-600"
+                      }`}
+                    >
+                      {["Active", "Rented", "Sold"].map((status) => (
+                        <option key={status} value={status}>
+                          {status}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-gray-600">
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </div>
+                  </div>
                 </td>
+
                 <td className="px-4 py-3">{item.owner}</td>
                 <td className="px-4 py-3">{new Date(item.createdAt).toLocaleDateString()}</td>
                 <td className="px-4 py-3 space-x-2">

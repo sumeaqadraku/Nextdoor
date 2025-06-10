@@ -3,7 +3,7 @@ import LogoImage from '../assets/images/Logo.png';
 import KeysImage from '../assets/images/keys.jpg';
 import GmailImage from '../assets/images/gmail.png';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import axios from 'axios';
+import axiosInstance from '../context/axiosInstance';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
@@ -70,12 +70,17 @@ const LoginPage = () => {
       setIsLoading(true);
       try {
         
-        const response = await axios.post('http://localhost:5000/api/auth/login', formData);
+        const response = await axiosInstance.post('auth/login', formData);
         const { token, user} = response.data;
 
         localStorage.setItem('token', token);
+        if (user.avatarUrl) {
+          user.avatarUrl = `http://localhost:5000/${user.avatarUrl.replace(/\\/g, '/')}`;
+        }
+
         localStorage.setItem('userData', JSON.stringify(user));
-        
+
+
         switch (user.role) {
           case 'buyer':
             navigate('/user/home');

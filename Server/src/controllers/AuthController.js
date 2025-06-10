@@ -53,7 +53,7 @@ const login = async (req, res) => {
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(401).json({ message: 'Invalid credentials' });
 
-    const payload = { id: user.id, email: user.email, username: user.username, role: user.role };
+    const payload = { id: user.id, email: user.email, username: user.username, role: user.role, avatarUrl: user.avatarUrl };
 
     const accessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '15m' });
     const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
@@ -71,7 +71,8 @@ const login = async (req, res) => {
         id: user.id,
         email: user.email,
         username: user.username,
-        role: user.role
+        role: user.role,
+        avatarUrl: user.avatarUrl
       }
     });
 
@@ -91,7 +92,8 @@ const refreshAccessToken = (req, res) => {
       id: decoded.id,
       email: decoded.email,
       username: decoded.username,
-      role: decoded.role
+      role: decoded.role,
+      avatarUrl: decoded.avatarUrl
     }, process.env.JWT_SECRET, { expiresIn: '15m' });
 
     res.json({ token: newAccessToken });
@@ -116,8 +118,6 @@ const logout = (req, res) => {
     return res.status(500).json({ message: 'Failed to log out' });
   }
 };
-
-
 
 
 module.exports = {

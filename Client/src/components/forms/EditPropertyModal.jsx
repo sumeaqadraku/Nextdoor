@@ -4,7 +4,7 @@ import FormInput from "../ui/LabelInput";
 import ImageUploadPreview from "../ui/imageInput";
 import Select from "../ui/Select";
 import toast from "react-hot-toast";
-import axios from "axios";
+import axiosInstance from "../../context/axiosInstance";
 
 const EditPropertyModal = ({ onClose}) => {
   const [formData, setFormData] = useState({
@@ -47,7 +47,7 @@ const EditPropertyModal = ({ onClose}) => {
       }
     }
 
-    const response = await axios.put("http://localhost:5000/api/agents/editProperty/2", form);
+    const response = await axiosInstance.put("/agents/editProperty/2", form);
 
     toast.success("Property updated successfully!");
     console.log("Property updated:", response.data);

@@ -1,4 +1,3 @@
-//Get all users
 const{ User } = require('../models');
 
 exports.getAllUsers = async (req, res) => {
@@ -10,7 +9,6 @@ exports.getAllUsers = async (req, res) => {
   }
   };
 
-  //Get user by id methodd 
   exports.getUserById = async (req, res) => {
     try {
       const user = await User.findByPk(req.params.id);
@@ -26,6 +24,7 @@ exports.getAllUsers = async (req, res) => {
     const user = await User.findByPk(req.user.id, {
       attributes: ['id', 'username', 'email', 'role', 'avatarUrl', 'phoneNumber'],
     });
+    console.log(user);
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });

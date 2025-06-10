@@ -20,14 +20,6 @@ const useCheckRole = (allowedRoles = [], redirectPath = '/login') => {
       return;
     }
 
-    const decodedToken = jwtDecode(storedToken);
-    if (decodedToken.exp * 1000 < Date.now()) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('userData');
-      navigate('/login', { replace: true });
-      return;
-    }
-
     const user = JSON.parse(storedUser);
     const userRole = user?.role;
 

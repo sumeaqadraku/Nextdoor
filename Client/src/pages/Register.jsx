@@ -4,7 +4,7 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import LogoImage from '../assets/images/Logo.png';
 import KeysImage from '../assets/images/keys.jpg';
 import GmailImage from '../assets/images/gmail.png';
-import axios from 'axios';
+import axiosInstance from '../context/axiosInstance';
 
 // Validimi i email-it
 const validateEmail = (email) => {
@@ -75,7 +75,7 @@ const RegisterPage = () => {
   
   try {
     console.log('Submitting registration form:', formData);
-    const response = await axios.post('http://localhost:5000/api/auth/register', formData);
+    const response = await axiosInstance.post('auth/register', formData);
     console.log('Registration success:', response.data);
   } catch (error) {
     console.error('Error during registration:', error.response?.data || error.message);

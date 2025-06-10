@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import ReviewsSection from "../../../components/widgets/Reviews";
 import useCheckRole from "../../../context/checkRole";
 import { FaStar } from "react-icons/fa";
-import axios from "axios";
+import axiosInstance from "../../../context/axiosInstance";
 import { useNavigate } from 'react-router-dom';
 
 
@@ -24,8 +24,8 @@ const AgentDetails = () => {
     try {
         setLoading(true);
         const [agentRes, propsRes] = await Promise.all([
-        axios.get(`http://localhost:5000/api/buyers/${id}`),
-        axios.get(`http://localhost:5000/api/buyers/props/${id}`)
+        axiosInstance.get(`/buyers/${id}`),
+        axiosInstance.get(`/buyers/props/${id}`)
         ]);
         setAgent(agentRes.data);
         setProperties(propsRes.data || []);

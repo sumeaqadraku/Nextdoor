@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import axiosInstance from "../../context/axiosInstance";
 import { motion, AnimatePresence } from "framer-motion";
 
 const backdrop = {
@@ -27,8 +27,8 @@ const BookingModal = ({ isOpen, onClose, onConfirm, propertyId }) => {
       setLoading(true);
       const token = localStorage.getItem("token");
 
-      const response = await axios.post(
-        `http://localhost:5000/api/requests/makeABooking`, // Make sure this matches your route
+      const response = await axiosInstance.post(
+        `/requests/makeABooking`, // Make sure this matches your route
         { message, propertyId },
         {
           headers: {

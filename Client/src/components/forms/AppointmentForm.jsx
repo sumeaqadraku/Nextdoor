@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import FormInput from "../ui/LabelInput";
 import toast from "react-hot-toast";
-import axios from "axios";
+import axiosInstance from "../../context/axiosInstance";
 
 const AppointmentModal = ({ onClose, propertyId, clientRequestId }) => {
   const [formData, setFormData] = useState({
@@ -27,7 +27,7 @@ const AppointmentModal = ({ onClose, propertyId, clientRequestId }) => {
     try {
       const token = localStorage.getItem('token')
 
-      await axios.post("http://localhost:5000/api/appointments/create", {
+      await axiosInstance.post("/appointments/create", {
         date: dateISO,
         propertyId,
         note: formData.note
@@ -39,7 +39,7 @@ const AppointmentModal = ({ onClose, propertyId, clientRequestId }) => {
 
 
        if (clientRequestId) {
-      await axios.put("http://localhost:5000/api/notifications/accept", {
+      await axiosInstance.put("/notifications/accept", {
         clientRequestId
       }, {
         headers: {

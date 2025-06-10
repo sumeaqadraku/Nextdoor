@@ -2,7 +2,7 @@
 import useCheckRole from "../../../context/checkRole";
 import RequestsMailPanel from "../../../components/widgets/RequestsTable";
 import { useEffect,useState } from "react";
-import axios from "axios";
+import axiosInstance from "../../../context/axiosInstance";
 
 const Request = () => {
     useCheckRole(['buyer', 'admin', 'agent'], '/login');
@@ -19,7 +19,7 @@ const Request = () => {
 
             const token = localStorage.getItem('token');
 
-            const response = await axios.get('http://localhost:5000/api/notifications', {
+            const response = await axiosInstance.get('/notifications', {
                 headers: {
                     Authorization:  `Bearer ${token} `
                 }

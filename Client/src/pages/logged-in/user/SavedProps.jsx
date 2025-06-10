@@ -13,11 +13,22 @@ const SavedItems = () => {
       const fetchSavedData = async () => {
         try {
           const user = JSON.parse(localStorage.getItem('userData'))
+          console.log(user)
           const userId = user.id;
           
           const response = await axios.get(`http://localhost:5000/api/saved/fetch/${userId}`);
-          setSavedItems(response.data);
-          console.log(response.data);
+          const updatedProperties = response.data.map(property => {
+            const normalizedImageUrl = property.imageUrl
+              ? `http://localhost:5000${property.imageUrl.replace(/\\/g, '/')}`
+              : '';
+
+              console.log(normalizedImageUrl)
+            return {
+              ...property,
+              imageUrl: normalizedImageUrl,
+            };
+          });
+          setSavedItems(updatedProperties);
         } catch (error) {
           console.error("Error fetching property data:", error);
         }

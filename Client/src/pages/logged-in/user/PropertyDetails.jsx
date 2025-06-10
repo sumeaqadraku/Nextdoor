@@ -3,7 +3,7 @@ import MapComponent from "../../../components/widgets/MapComponent";
 import { useParams } from "react-router-dom";
 import {  use, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import axios from "axios";
+import axiosInstance from "../../../context/axiosInstance";
 import Logo from "../../../assets/images/logo.png";
 import View1 from "../../../assets/images/view1.jpg";
 import View2 from "../../../assets/images/view2.jpg";
@@ -17,11 +17,14 @@ const PropertyDetails = () => {
     const { id } = useParams();
     const [propertyDetails, setPropertyDetails] = useState(null);
     const [bookingModal, setBookingModal] = useState(false);
+    const baseUrl = "http://localhost:5000";
+
+
 
     useEffect(() => {
         const fetchPropertyDetails = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/api/properties/${id}`);
+                const response = await axiosInstance.get(`/properties/${id}`);
                 setPropertyDetails(response.data);
                 console.log(response.data);
             } catch (error) {
@@ -35,7 +38,7 @@ const PropertyDetails = () => {
     const handleSaveProperty = async () => {
         try {   
             const token = localStorage.getItem('token');
-            await axios.post(`http://localhost:5000/api/saved/save/${id}`,{},{
+            await axiosInstance.post(`/saved/save/${id}`,{},{
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -80,17 +83,25 @@ const PropertyDetails = () => {
 
                         {/* Image Grid */}
                         <div className="flex flex-col md:flex-row gap-4 bg-gray-100 p-2 rounded-lg">
+                            {/* Primary image section */}
                             <div className="w-full md:w-2/3 h-52 md:h-[380px] bg-gray-300 flex items-center overflow-hidden justify-center text-white text-lg font-bold rounded-md">
-                                <img className="w-full h-full object-fit" src={View1} alt="" />
+                                <img
+                                className="w-full h-full object-cover"
+                                src={`${baseUrl}${propertyDetails.images[0]?.imageUrl.replace(/\\/g, '/')}` || "/placeholder.jpg"}
+                                alt="Primary"
+                                />
                             </div>
+
+                            {/* Thumbnails section */}
                             <div className="w-full md:w-1/3 grid grid-cols-2 grid-rows-2 gap-3">
-                                {[View2, View3, View4].map((num) => (
-                                    <div key={num} className="bg-gray-300 flex items-center overflow-hidden justify-center h-28 md:h-[180px] rounded-md">
-                                        <img className="w-full h-full object-fit" src={num} alt="" />
-                                    </div>
+                                {propertyDetails.images.slice(1, 5).map((img) => (
+                                <div key={img.id} className="bg-gray-300 flex items-center overflow-hidden justify-center h-28 md:h-[180px] rounded-md">
+                                    <img className="w-full h-full object-cover" src={`${baseUrl}${img.imageUrl.replace(/\\/g, '/')}`} alt={`Image ${img.id}`} />
+                                </div>
                                 ))}
                             </div>
-                        </div>
+                            </div>
+
 
                         {/* Title and Price */}
                         <div className="flex justify-between items-center mt-6 px-2">

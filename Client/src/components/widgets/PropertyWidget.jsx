@@ -30,7 +30,7 @@ const PropertyWidget = ({ id, title, size, bedrooms, city , price, imageUrl, onR
 
       <div className="bg-gray-50 m-3 w-[35%] rounded-xl overflow-hidden">
         <img
-          src={apartament1}
+          src={imageUrl}
           alt="first property"
           className="w-full h-full object-cover"
         />

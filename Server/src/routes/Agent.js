@@ -16,6 +16,8 @@ router.post('/createProperty',authenticateToken, upload.array("imageUrl", 4),age
 router.put('/editProperty/:id',upload.array("imageUrl",4), agentController.editProperty);
 // Delete a property
 router.delete('/deleteProperty/:id', agentController.deleteProperty);
+
+router.patch('/updatePropertyStatus/:id', agentController.updatePropertyStatus);
 // Get all properties by user ID
 router.get('/my-properties', authenticateToken, agentController.getAllPropertiesByAgent);
 

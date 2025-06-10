@@ -67,6 +67,12 @@ module.exports = (sequelize, DataTypes) => {
     foreignKey: 'propertyId',
     as: 'appointments'
   });
+
+  Property.hasMany(models.SavedProperty, {
+  foreignKey: 'propertyId',
+  as: 'savedproperty',
+  });
+
   };
 
   return Property;

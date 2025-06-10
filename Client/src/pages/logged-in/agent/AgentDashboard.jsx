@@ -20,7 +20,7 @@ import {
   Legend,
 } from "chart.js";
 import useCheckRole  from "../../../context/checkRole";
-import axios from "axios";
+import axiosInstance from "../../../context/axiosInstance";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -47,20 +47,21 @@ const AgentDashboard = () => {
       const headers = { Authorization: `Bearer ${token}` };
 
       const [propsRes, soldRes, appointRes, reqsRes] = await Promise.all([
-        axios.get("http://localhost:5000/api/agents/countProperties", { headers }),
-        axios.get("http://localhost:5000/api/agents/countSold", { headers }),
-        axios.get("http://localhost:5000/api/agents/countAppointments", { headers }),
-        axios.get("http://localhost:5000/api/agents/getRequests", { headers }),
+        axiosInstance.get("/agents/countProperties", { headers }),
+        axiosInstance.get("/agents/countSold", { headers }),
+        axiosInstance.get("/agents/countAppointments", { headers }),
+        axiosInstance.get("/agents/getRequests", { headers }),
       ]);
+      
+      console.log(propsRes.data)
 
       setStats({
-        listings: propsRes.data.count,
-        sold: soldRes.data.count,
-        appointments: appointRes.data.count,
-        leads: reqsRes.data.requests.length,
-        meetings: appointRes.data.count, // Simplified assumption
-        revenue: `$${soldRes.data.count * 100000}`, // Hypothetical revenue
-      });
+      listings: propsRes.data.count || 0,
+      sold: soldRes.data.count || 0,
+      appointments: appointRes.data.count || 0,
+      leads: reqsRes.data.count || 0,
+      
+    });
     } catch (err) {
       console.error("Dashboard API error", err);
     }

@@ -4,7 +4,7 @@ import { FiUser } from "react-icons/fi";
 import AppointmentModal from "../forms/AppointmentForm";
 import DeclineRequest from "../confirmModals/declineRequests";
 import toast from "react-hot-toast";
-import axios from "axios";
+import axiosInstance from "../../context/axiosInstance";
 
 export default function RequestsMailPanel( {requestss}) {
 
@@ -28,7 +28,7 @@ export default function RequestsMailPanel( {requestss}) {
   const handleRemove = async (clientRequestId) => {
   try {
 
-    await axios.put('http://localhost:5000/api/notifications/decline', {clientRequestId});
+    await axiosInstance.put('/notifications/decline', {clientRequestId});
 
     setRequests((prev) => prev.filter((p) => p.clientRequestId !== clientRequestId));
     

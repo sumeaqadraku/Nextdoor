@@ -4,7 +4,7 @@ import FormInput from "../ui/LabelInput";
 import Select from "../ui/Select";
 import ImageUploadPreview from "../ui/imageInput";
 import toast from "react-hot-toast";
-import axios from "axios";    
+import axiosInstance from "../../context/axiosInstance";   
 const PropertyModal = ({ onClose, onPropertyAdded }) => {
 
     const [formData, setFormData] = useState({
@@ -50,7 +50,7 @@ const PropertyModal = ({ onClose, onPropertyAdded }) => {
 
     const token = localStorage.getItem("token");
 
-   const response = await axios.post('http://localhost:5000/api/agents/createProperty',form,
+   const response = await axiosInstance.post('/agents/createProperty',form,
     { headers: { Authorization: `Bearer ${token}` } }
   );
 

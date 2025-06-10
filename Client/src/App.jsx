@@ -16,6 +16,7 @@ import AgentDetails from './pages/logged-in/user/AgentsDetails';
 import UnauthorizedPage from './pages/Unathorized';
 import EditProfile from './pages/logged-in/EditProfile';
 
+
 function App() {
   return (
     <BrowserRouter>
@@ -46,7 +47,6 @@ function App() {
           <Route path="requests" element={<Requests />} />
         </Route>
 
-        {/* Opsionale: Një rrugë default për faqen kryesore ose ridrejtim */}
         <Route path="/unauthorized" element={<UnauthorizedPage />} />
         <Route path="/" element={<LoginPage />} />
       </Routes>

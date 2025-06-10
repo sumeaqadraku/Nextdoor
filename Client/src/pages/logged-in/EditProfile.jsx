@@ -2,8 +2,12 @@ import React, { useState, useEffect } from "react";
 import FormInput from "../../components/ui/LabelInput";
 import axios from "axios";
 import toast from "react-hot-toast";
+import useCheckRole  from "../../context/checkRole";
+
 
 const EditProfile = () => {
+  useCheckRole(['buyer','agent','admin'],'/login')
+  
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -11,6 +15,7 @@ const EditProfile = () => {
     avatar: null,
     avatarPreview: "",
   });
+
   const [loading, setLoading] = useState(true);
 
   const handleChange = (e) => {
@@ -28,7 +33,7 @@ const EditProfile = () => {
           },
         });
 
-        const { username, email, phoneNumber, avatarUrl } = response.data;
+        const {id, username, email, role, phoneNumber, avatarUrl } = response.data;
 
         setFormData({
           username: username || "",
@@ -39,6 +44,20 @@ const EditProfile = () => {
             ? `http://localhost:5000/${avatarUrl.replace(/\\/g, "/")}`
             : "",
         });
+
+      localStorage.setItem(
+        'userData',
+        JSON.stringify({
+          id,
+          username,
+          email,
+          role,
+          phoneNumber,
+          avatarUrl: avatarUrl
+            ? `http://localhost:5000/${avatarUrl.replace(/\\/g, "/")}`
+            : "",
+        })
+      );
       } catch (error) {
         toast.error("Failed to load user profile.");
         console.error("Profile fetch error:", error.response || error.message);
@@ -84,12 +103,23 @@ const EditProfile = () => {
       );
 
       toast.success("Profile updated successfully!");
-      // Refresh avatar preview with new URL if backend returns it
-      const { avatarUrl: newAvatarUrl } = response.data;
+
+      const { avatarUrl: newAvatarUrl, username, email, phoneNumber } = response.data;
+
       if (newAvatarUrl) {
+        const fullUrl = `http://localhost:5000/${newAvatarUrl.replace(/\\/g, "/")}`;
+        const updatedUser = {
+          username,
+          email,
+          phoneNumber,
+          avatarUrl: fullUrl,
+        };
+
+        localStorage.setItem("userData", JSON.stringify(updatedUser));
+
         setFormData((prev) => ({
           ...prev,
-          avatarPreview: `http://localhost:5000/${newAvatarUrl.replace(/\\/g, "/")}`,
+          avatarPreview: fullUrl,
           avatar: null,
         }));
       }
@@ -106,91 +136,87 @@ const EditProfile = () => {
   }
 
   return (
-
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-         <div className="max-w-2xl mx-auto p-6 sm:p-8  bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-        Edit Profile
-      </h2>
+      <div className="max-w-2xl mx-auto p-6 sm:p-8 bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Edit Profile</h2>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-8">
-        <div className="flex justify-center">
-          <div className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow bg-white/30 backdrop-blur-sm">
-            <img
-              src={formData.avatarPreview || ""}
-              alt="Profile Avatar"
-              className="w-full h-full object-cover"
-            />
-            <label className="absolute bottom-0 right-0 bg-gradient-to-tr from-blue-600 to-indigo-500 text-white p-1.5 rounded-full cursor-pointer hover:scale-105 transition">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleAvatarChange}
-                className="hidden"
+        <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+          <div className="flex justify-center">
+            <div className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow bg-white/30 backdrop-blur-sm">
+              <img
+                src={formData.avatarPreview || ""}
+                alt="Profile Avatar"
+                className="w-full h-full object-cover"
               />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15.232 5.232l3.536 3.536M9 13l-4 4m0 0l4-4m-4 4h6"
+              <label className="absolute bottom-0 right-0 bg-gradient-to-tr from-blue-600 to-indigo-500 text-white p-1.5 rounded-full cursor-pointer hover:scale-105 transition">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleAvatarChange}
+                  className="hidden"
                 />
-              </svg>
-            </label>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15.232 5.232l3.536 3.536M9 13l-4 4m0 0l4-4m-4 4h6"
+                  />
+                </svg>
+              </label>
+            </div>
           </div>
-        </div>
 
-        <div className="flex flex-wrap gap-4 justify-between">
-          <FormInput
-            label="Username"
-            placeholder="Username"
-            type="text"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            width="w-full sm:w-[48%]"
-          />
-          <FormInput
-            label="Email"
-            placeholder="Email address"
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            width="w-full sm:w-[48%]"
-          />
-          <FormInput
-            label="Phone"
-            placeholder="Phone number"
-            type="tel"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            width="w-full sm:w-[48%]"
-          />
-        </div>
+          <div className="flex flex-wrap gap-4 justify-between">
+            <FormInput
+              label="Username"
+              placeholder="Username"
+              type="text"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              width="w-full sm:w-[48%]"
+            />
+            <FormInput
+              label="Email"
+              placeholder="Email address"
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              width="w-full sm:w-[48%]"
+            />
+            <FormInput
+              label="Phone"
+              placeholder="Phone number"
+              type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              width="w-full sm:w-[48%]"
+            />
+          </div>
 
-        <div className="flex justify-end">
-          <button
-            type="submit"
-            disabled={loading}
-            className={`bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-2.5 rounded-lg shadow-md font-medium text-sm hover:brightness-110 transition ${
-              loading ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-          >
-            Save
-          </button>
-        </div>
-      </form>
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              disabled={loading}
+              className={`bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-2.5 rounded-lg shadow-md font-medium text-sm hover:brightness-110 transition ${
+                loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+            >
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-    </div>
-    
   );
 };
 

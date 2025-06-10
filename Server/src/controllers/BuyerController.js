@@ -89,14 +89,23 @@ exports.getAgentProperties = async (req, res) => {
 
     const userId = parseInt(req.params.id, 10);
 
+    const agent = await Agent.findOne({ where: {userId: userId}});
+
+    if (!agent) {
+      return res.status(404).json({ message: "Agent not found." });
+    }
+
+    const agentId = agent.id;
+
+    // ✅ Fetch properties for this agent
     const properties = await Property.findAll({
-      where: { agentId: userId },
+      where: { agentId },
       attributes: ['id', 'title'],
       include: [
         {
           model: PropertyImage,
           as: 'images',
-        }
+        },
       ],
     });
 

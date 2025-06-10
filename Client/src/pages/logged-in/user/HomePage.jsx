@@ -2,14 +2,16 @@ import { useState,useEffect } from "react";
 import Topbar from "../../../components/Topbar";
 import PropertyWidget from "../../../components/widgets/PropertyWidget";
 import Pagination from "../../../components/ui/Pagniations";
-import axios from "axios";
+import axiosInstance from "../../../context/axiosInstance";
 import { Link } from "react-router-dom";
 import PropertyTypeSelector from "../../../components/ui/RadioType";
 import useCheckRole  from "../../../context/checkRole";
 
 
+
 const HomePage = () => {
   useCheckRole(['buyer', 'admin', 'agent'], '/login');
+
   const [propertyType, setPropertyType] = useState("");
   const [priceFilter, setPriceFilter] = useState("");
   const [roomFilter, setRoomFilter] = useState("");
@@ -21,6 +23,7 @@ const HomePage = () => {
  
   useEffect(() => {
   const fetchPropertyData = async () => {
+
     try {
       const hasFilters =
         propertyType || priceFilter || roomFilter || otherFilter || searchTerm || locationFilter;
@@ -34,10 +37,23 @@ const HomePage = () => {
         ...(locationFilter && { location: locationFilter }),
       };
 
-      const endpoint = "http://localhost:5000/api/properties";
+      const endpoint = "/properties";
 
-      const response = await axios.get(endpoint, { params });
-      setPropertyData(response.data);
+      const response = await axiosInstance.get(endpoint, { params });
+
+      // Normalize image URLs and update property data
+      const updatedProperties = response.data.map(property => {
+        const normalizedImageUrl = property.imageUrl
+          ? `http://localhost:5000${property.imageUrl.replace(/\\/g, '/')}`
+          : '';
+
+          console.log(normalizedImageUrl)
+        return {
+          ...property,
+          imageUrl: normalizedImageUrl,
+        };
+      });
+      setPropertyData(updatedProperties);
     } catch (error) {
       console.error("Error fetching property data:", error);
     }
@@ -55,14 +71,13 @@ const HomePage = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentProperties = PropertyData.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(PropertyData.length / itemsPerPage);
-  const user = JSON.parse(localStorage.getItem('userData'))
  
 
 
   return (
     <div className="flex h-lvh">
       <div className="w-full">
-        <Topbar name={user.username} onSearchChange={setSearchTerm} onLocationChange={setLocationFilter} />
+        <Topbar onSearchChange={setSearchTerm} onLocationChange={setLocationFilter} />
         <div className="w-full h-[88%] bg-[rgb(246,246,246)]">
           <div className="w-full flex justify-between py-3 px-10">
             

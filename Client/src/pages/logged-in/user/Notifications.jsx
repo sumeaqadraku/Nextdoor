@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { FaCheck, FaTimes, FaHome } from "react-icons/fa";
 import Topbar from "../../../components/Topbar";
 import useCheckRole from "../../../context/checkRole";
-import axios from "axios";
+import axiosInstance from "../../../context/axiosInstance";
 
 const NotificationsPage = () => {
   useCheckRole(["buyer", "admin", "agent"], "/login");
@@ -14,7 +14,7 @@ const NotificationsPage = () => {
           const fetchNotifications = async () => {
             try {
               const token = localStorage.getItem("token");
-              const response = await axios.get("http://localhost:5000/api/notifications/getNotifs", {
+              const response = await axiosInstance.get("/notifications/getNotifs", {
                 headers: {
                   Authorization: `Bearer ${token}`,
                 },
@@ -76,8 +76,8 @@ const NotificationsPage = () => {
  const toggleRead = async (id, currentReadStatus) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.post(
-        "http://localhost:5000/api/notifications/updateReadStatus",
+      await axiosInstance.post(
+        "/notifications/updateReadStatus",
         { id, read: !currentReadStatus },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -97,7 +97,7 @@ const NotificationsPage = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        "http://localhost:5000/api/notifications/markAllAsRead",
+        "/notifications/markAllAsRead",
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -112,8 +112,8 @@ const NotificationsPage = () => {
   const clearAll = async () => {
     try {
       const token = localStorage.getItem("token");
-      await axios.post(
-        "http://localhost:5000/api/notifications/removeNotification",
+      await axiosInstance.post(
+        "/notifications/removeNotification",
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -128,7 +128,7 @@ const NotificationsPage = () => {
   return (
     <div className="flex h-lvh">
       <div className="w-full">
-        <Topbar />
+        <Topbar showLocationFilter={false} />
         <div className="bg-[#f6f6f6] h-[88%] px-10 py-6 overflow-y-auto">
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-2xl font-semibold">Notifications</h1>
