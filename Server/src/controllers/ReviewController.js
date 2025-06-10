@@ -70,6 +70,33 @@ exports.getReviewById = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+exports.getAgentReviews = async (req, res) => {
+  try {
+    const { agentId } = req.params;
+
+    // Kontrollo nëse agentId është valid
+    if (!agentId) {
+      return res.status(400).json({ message: 'Agent ID is required' });
+    }
+
+    // Merr të gjitha reviews për agjentin e specifikuar
+    const reviews = await Review.findAll({
+      where: { agentId },
+      include: [{ model: User, as: 'user', attributes: ['username'] }],
+    });
+
+    // Kontrollo nëse ka reviews
+    if (!reviews || reviews.length === 0) {
+      return res.status(404).json({ message: 'No reviews found for this agent' });
+    }
+
+    res.json(reviews);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch reviews for agent' });
+  }
+};
+
 
 exports.updateReview = async (req, res) => {
   try {
