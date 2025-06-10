@@ -15,7 +15,8 @@ import Requests from './pages/logged-in/agent/Requests';
 import AgentDetails from './pages/logged-in/user/AgentsDetails';
 import UnauthorizedPage from './pages/Unathorized';
 import EditProfile from './pages/logged-in/EditProfile';
-
+import AdminDashboard from './pages/logged-in/admin/AdminDashboard';
+import AdminLayout from './components/AdminLayout';
 
 function App() {
   return (
@@ -35,16 +36,20 @@ function App() {
           <Route path="home" element={<HomePage />} />
           <Route path="agents" element={<Agents />} />
           <Route path="saved" element={<SavedItems />} />
-          <Route path="/user/properties/:id" element={<PropertyDetails />} />
-          <Route path="/user/agents/:id" element={<AgentDetails />} />
+          <Route path="properties/:id" element={<PropertyDetails />} />
+          <Route path="agents/:id" element={<AgentDetails />} />
           <Route path="notifications" element={<Notifications />} />
           <Route path="edit-profile" element={<EditProfile />} />
-
         </Route>
+
         <Route path="/agent" element={<AgentLayout />}>
           <Route path="dashboard" element={<AgentDasboard />} />
           <Route path="management" element={<AddProperty />} />
           <Route path="requests" element={<Requests />} />
+        </Route>
+
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route path="dashboard" element={<AdminDashboard />} />
         </Route>
 
         <Route path="/unauthorized" element={<UnauthorizedPage />} />
@@ -55,4 +60,3 @@ function App() {
 }
 
 export default App;
-

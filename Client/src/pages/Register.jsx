@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import LogoImage from '../assets/images/Logo.png';
 import KeysImage from '../assets/images/keys.jpg';
-import GmailImage from '../assets/images/gmail.png';
+import GmailImage from '../assets/images/gmail.png';``
 import axiosInstance from '../context/axiosInstance';
 
 // Validimi i email-it
@@ -168,6 +168,7 @@ const RegisterPage = () => {
                 <option value="">Pick your role...</option>
                 <option value="buyer">Buyer</option>  
                 <option value="agent">Agent</option>
+                <option value="admin">Admin</option>
               </select>
               {errors.role && <span className="text-red-500 text-xs mt-1">{errors.role}</span>}
             </div>

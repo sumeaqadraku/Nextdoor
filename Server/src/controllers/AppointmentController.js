@@ -2,7 +2,7 @@ const { Appointment, User, Property } = require('../models');
 
 module.exports = {
 
-  async acreateAppointment(req, res) {
+  async createAppointment(req, res) {
   try {
     const { date, propertyId, note } = req.body;
 

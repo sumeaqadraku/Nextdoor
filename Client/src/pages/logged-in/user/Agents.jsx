@@ -14,8 +14,6 @@ const Agents = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
-  
-
   useEffect(() => {
     const fetchAgents = async () => {
       try {

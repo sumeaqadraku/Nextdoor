@@ -87,6 +87,7 @@ const LoginPage = () => {
             break;
           case 'admin':
             navigate('/admin/dashboard');
+            break;
           case 'agent':
             navigate('/agent/dashboard');
             break;
