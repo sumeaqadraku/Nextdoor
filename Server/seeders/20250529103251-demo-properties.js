@@ -1,5 +1,4 @@
-const faker = require('faker');
-
+const { faker } = require('@faker-js/faker');
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const properties = [

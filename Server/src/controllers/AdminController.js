@@ -1,5 +1,4 @@
-
-const { Buyer, Agent, Appointments } = require('../models');
+const { Buyer, Agent, Appointment, User } = require('../models');
 
 exports.getStats = async (req, res) => {
   try {
@@ -11,6 +10,7 @@ exports.getStats = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
 exports.getAllUsers = async (req, res) => {
   console.log("getAllUsers called"); // Add this line
   try {
@@ -21,6 +21,7 @@ exports.getAllUsers = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
 exports.deleteUser = async (req, res) => {
   try {
     const deleted = await User.destroy({ where: { id: req.params.id } });
@@ -30,8 +31,6 @@ exports.deleteUser = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
-const { Agent } = require('../models');
 
 // List all agents
 exports.getAllAgents = async (req, res) => {
@@ -53,7 +52,6 @@ exports.deleteAgent = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-const { Appointment } = require('../models');
 
 // List all appointments
 exports.getAllAppointments = async (req, res) => {
@@ -74,5 +72,5 @@ exports.deleteAppointment = async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-};
 
+};

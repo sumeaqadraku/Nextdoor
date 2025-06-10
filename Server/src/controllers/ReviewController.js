@@ -1,51 +1,53 @@
+const { Review, User } = require('../models');
 
 exports.createReview = async (req, res) => {
   try {
-    const { rating, comment, userId, propertyId } = req.body;
+    const { rating, comment, title, userId, propertyId, agentId } = req.body;
 
-    
-    if (!rating || !userId || !propertyId) {
-      return res.status(400).json({ message: 'Rating, userId and propertyId are required' });
+    if (!rating || !userId || !title || (!propertyId && !agentId)) {
+      return res.status(400).json({ message: 'Rating, userId, title, and either propertyId or agentId are required' });
+    }
+    if (propertyId && agentId) {
+      return res.status(400).json({ message: 'Provide either propertyId or agentId, not both' });
     }
 
-    const review = await Review.create({ rating, comment, userId, propertyId });
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    if (agentId) {
+      const agent = await User.findByPk(agentId);
+      if (!agent || agent.role !== 'agent') {
+        return res.status(404).json({ message: 'Agent not found or not an agent' });
+      }
+    }
+
+    const review = await Review.create({ rating, comment, title, userId, propertyId, agentId });
     res.status(201).json(review);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-
-
-exports.updateReview = async (req, res) => {
-  try {
-    const reviewId = req.params.id;
-    const { rating, comment } = req.body;
-
-    // Find the review
-    const review = await Review.findByPk(reviewId);
-
-    if (!review) {
-      return res.status(404).json({ message: 'Review not found' });
-    }
-
-    // Update the fields
-    if (rating !== undefined) review.rating = rating;
-    if (comment !== undefined) review.comment = comment;
-
-    await review.save();
-
-    res.json({ message: 'Review updated successfully', review });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-
-
 exports.getAllReviews = async (req, res) => {
   try {
-    const reviews = await Review.findAll();
+    const { agentId, propertyId } = req.query;
+    let reviews;
+    if (agentId) {
+      reviews = await Review.findAll({
+        where: { agentId },
+        include: [{ model: User, as: 'user', attributes: ['username'] }],
+      });
+    } else if (propertyId) {
+      reviews = await Review.findAll({
+        where: { propertyId },
+        include: [{ model: User, as: 'user', attributes: ['username'] }],
+      });
+    } else {
+      reviews = await Review.findAll({
+        include: [{ model: User, as: 'user', attributes: ['username'] }],
+      });
+    }
     res.json(reviews);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -54,11 +56,37 @@ exports.getAllReviews = async (req, res) => {
 
 exports.getReviewById = async (req, res) => {
   try {
-    const review = await Review.findByPk(req.params.id);
+    const review = await Review.findByPk(req.params.id, {
+      include: [
+        { model: User, as: 'user', attributes: ['username'] },
+        { model: User, as: 'agent', attributes: ['username'] },
+      ],
+    });
     if (!review) {
       return res.status(404).json({ message: 'Review not found' });
     }
     res.json(review);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.updateReview = async (req, res) => {
+  try {
+    const reviewId = req.params.id;
+    const { rating, comment, title } = req.body;
+
+    const review = await Review.findByPk(reviewId);
+    if (!review) {
+      return res.status(404).json({ message: 'Review not found' });
+    }
+
+    if (rating !== undefined) review.rating = rating;
+    if (comment !== undefined) review.comment = comment;
+    if (title !== undefined) review.title = title;
+
+    await review.save();
+    res.json({ message: 'Review updated successfully', review });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -77,4 +105,3 @@ exports.deleteReview = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-

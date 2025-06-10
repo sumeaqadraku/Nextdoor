@@ -1,17 +1,28 @@
 module.exports = (sequelize, DataTypes) => {
   const Review = sequelize.define('Review', {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     userId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: { model: 'users', key: 'id' },
-        onDelete: 'CASCADE'
-      },
-      propertyId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: { model: 'properties', key: 'id' },
-        onDelete: 'CASCADE'
-      },
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: { model: 'users', key: 'id' },
+      onDelete: 'CASCADE',
+    },
+    propertyId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: { model: 'properties', key: 'id' },
+      onDelete: 'CASCADE',
+    },
+    agentId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: { model: 'users', key: 'id' },
+      onDelete: 'CASCADE',
+    },
     rating: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -21,12 +32,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    userId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    propertyId: {
-      type: DataTypes.INTEGER,
+    title: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
   }, {
@@ -37,6 +44,7 @@ module.exports = (sequelize, DataTypes) => {
   Review.associate = (models) => {
     Review.belongsTo(models.User, { foreignKey: 'userId', as: 'user' });
     Review.belongsTo(models.Property, { foreignKey: 'propertyId', as: 'property' });
+    Review.belongsTo(models.User, { foreignKey: 'agentId', as: 'agent' });
   };
 
   return Review;

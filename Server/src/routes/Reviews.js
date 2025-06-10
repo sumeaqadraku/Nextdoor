@@ -1,12 +1,11 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const reviewController = require('../controllers/ReviewController');
+const ReviewController = require("../controllers/ReviewController");
 
-// CRUD routes
-router.get('/', reviewController.getAllReviews);
-router.get('/:id', reviewController.getReviewById);
-router.post('/', reviewController.createReview);       
-router.put('/:id', reviewController.updateReview);     
-router.delete('/:id', reviewController.deleteReview);
+router.get("/", ReviewController.getAllReviews);
+router.get("/:id", ReviewController.getReviewById);
+router.post("/", ReviewController.createReview);
+router.put("/:id", ReviewController.updateReview);
+router.delete("/:id", ReviewController.deleteReview);
 
 module.exports = router;

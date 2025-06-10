@@ -23,7 +23,7 @@ const savedRoutes = require('./src/routes/Saved');
 const requestRoutes = require('./src/routes/Requests');
 const buyerRoutes = require('./src/routes/Buyer');
 const adminRoutes = require('./src/routes/Admin');
-
+const reviewRoutes = require('./src/routes/Reviews');
 require('dotenv').config();``
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -38,8 +38,8 @@ app.use('/api/agents', agentRoutes);
 app.use('/api/properties', propertyRoutes); 
 app.use('/api/appointments', appointmentRoutes);
 app.use('/api/notifications', notificationRoutes);
-
-const PORT = process.env.PORT || 3000;
+app.use('/api/reviews', reviewRoutes);
+const PORT = process.env.PORT || 5000;
 
 
 app.get('/', (req, res) => {
@@ -50,4 +50,3 @@ app.listen(PORT, () => {
   console.log(`✅ Server is running on http://localhost:${PORT}`);
   
 });
-``

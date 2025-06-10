@@ -1,27 +1,65 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaStar } from "react-icons/fa";
+import axios from "axios"; // Ose përdor axiosInstance nëse e ke të konfiguruar
 
-export default function ReviewsSection() {
-    const [reviews, setReviews] = useState([
-        { name: "Erris Binxhija", title: "Best Agent Ever!", text: "I'm very pleased with this agent, he has helped me a lot on getting my apartment.", rating: 5 }
-    ]);
+export default function ReviewsSection({ agentId }) { // Shto agentId si prop nëse është e nevojshme
+    const [reviews, setReviews] = useState([]);
     const [title, setTitle] = useState("");
     const [text, setText] = useState("");
     const [rating, setRating] = useState(5);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
 
-    const handleSubmit = () => {
-        if (title && text) {
-            setReviews([...reviews, { name: "Anonymous", title, text, rating }]);
+    // Merr reviews nga serveri kur komponenti ngarkohet
+    useEffect(() => {
+        const fetchReviews = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5000/api/reviews`);
+                setReviews(response.data);
+            } catch (err) {
+                setError("Failed to load reviews");
+                console.error(err);
+            }
+        };
+        fetchReviews();
+    }, []);
+
+    const handleSubmit = async () => {
+        if (!title || !text) {
+            setError("Title and comment are required");
+            return;
+        }
+
+        setIsLoading(true);
+        try {
+            // Dërgo të dhënat në server
+            const response = await axios.post("http://localhost:5000/api/reviews", {
+                title,
+                comment: text,
+                rating,
+                agentId: agentId || 1, // Ndryshoje sipas nevojës
+                userId: 1 // Ndryshoje me ID e userit të loguar
+            });
+
+            // Shto review-n e re në listë
+            setReviews([...reviews, response.data]);
             setTitle("");
             setText("");
             setRating(5);
+            setError(null);
+        } catch (err) {
+            setError(err.response?.data?.message || "Failed to submit review");
+            console.error(err);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     return (
-        <div className="w-full  mx-auto bg-gray-100 p-6 rounded-lg ">
+        <div className="w-full mx-auto bg-gray-100 p-6 rounded-lg">
             {/* Comment Box */}
             <div className="bg-gray-200 p-4 rounded-lg shadow-md">
+                {error && <p className="text-red-500 mb-2">{error}</p>}
                 <div className="flex flex-col sm:flex-row gap-4">
                     <div className="bg-gray-400 rounded-full w-14 h-14"></div>
                     <div className="flex flex-col w-full">
@@ -53,8 +91,12 @@ export default function ReviewsSection() {
 
                 {/* Submit Button */}
                 <div className="flex justify-end items-center mt-3">
-                    <button className="bg-[#008CB3] text-white px-4 py-2 rounded-md hover:bg-[#007399] transition-all" onClick={handleSubmit}>
-                        Post
+                    <button 
+                        className="bg-[#008CB3] text-white px-4 py-2 rounded-md hover:bg-[#007399] transition-all disabled:opacity-50"
+                        onClick={handleSubmit}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? "Posting..." : "Post"}
                     </button>
                 </div>
             </div>
@@ -68,9 +110,9 @@ export default function ReviewsSection() {
                     <div key={index} className="bg-white p-4 rounded-lg shadow-md flex flex-col sm:flex-row items-start gap-4">
                         <div className="bg-gray-400 rounded-full w-14 h-14"></div>
                         <div className="w-full">
-                            <h3 className="font-semibold">{review.name}</h3>
+                            <h3 className="font-semibold">{review.user?.name || "Anonymous"}</h3>
                             <h4 className="text-[#008CB3] font-bold">{review.title}</h4>
-                            <p className="text-gray-700">{review.text}</p>
+                            <p className="text-gray-700">{review.comment}</p>
                         </div>
                         <div className="flex text-amber-400">
                             {[...Array(review.rating)].map((_, i) => (
