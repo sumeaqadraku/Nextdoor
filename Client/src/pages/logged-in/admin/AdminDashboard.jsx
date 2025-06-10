@@ -1,55 +1,57 @@
 import { useEffect, useState } from "react";
-import useCheckRole from "../../../context/checkRole";
+import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../../context/axiosInstance";
+import { FaUsers, FaUserTie, FaCalendarAlt } from "react-icons/fa";
+
+const StatCard = ({ title, value, icon, onClick }) => (
+  <div
+    className="bg-white p-6 rounded-xl shadow flex flex-col items-center cursor-pointer hover:bg-blue-50 transition"
+    onClick={onClick}
+  >
+    <div className="text-3xl mb-2 text-blue-600">{icon}</div>
+    <div className="text-2xl font-bold">{value}</div>
+    <div className="text-gray-600">{title}</div>
+  </div>
+);
 
 const AdminDashboard = () => {
-  useCheckRole(['admin'], '/login');
-
-  const [users, setUsers] = useState([]);
+  const [stats, setStats] = useState({});
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
-  // Fetch users
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const usersRes = await axiosInstance.get("/admin/users");
-        setUsers(usersRes.data);
-      } catch (err) {
-        console.error("Failed to fetch data", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
+    axiosInstance.get("/admin/stats")
+      .then(res => setStats(res.data))
+      .catch(() => setStats({}))
+      .finally(() => setLoading(false));
   }, []);
 
-  // Delete user
-  const handleDeleteUser = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this user?")) return;
-    await axiosInstance.delete(`/admin/users/${id}`);
-    setUsers(users.filter(u => u.id !== id));
-  };
-
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div className="p-10">Loading...</div>;
 
   return (
     <div className="p-10">
-      <h1 className="text-3xl font-bold mb-4">Admin Dashboard</h1>
-
-      <h2 className="text-xl font-semibold mt-8 mb-2">Users</h2>
-      <ul>
-        {users.map(user => (
-          <li key={user.id} className="mb-2">
-            {user.username} ({user.email}) 
-            <button 
-              className="ml-2 px-2 py-1 bg-red-500 text-white rounded"
-              onClick={() => handleDeleteUser(user.id)}
-            >
-              Delete
-            </button>
-          </li>
-        ))}
-      </ul>
+      <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
+        <StatCard
+          title="Users"
+          value={stats.userCount || 0}
+          icon={<FaUsers />}
+          onClick={() => navigate("/admin/users")}
+        />
+        <StatCard
+          title="Agents"
+          value={stats.agentCount || 0}
+          icon={<FaUserTie />}
+          onClick={() => navigate("/admin/agents")}
+        />
+        <StatCard
+          title="Appointments"
+          value={stats.appointmentCount || 0}
+          icon={<FaCalendarAlt />}
+          onClick={() => navigate("/admin/appointments")}
+        />
+      </div>
+      <div className="text-gray-500">Select a section above to manage users, agents, or appointments.</div>
     </div>
   );
 };

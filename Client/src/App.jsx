@@ -17,6 +17,9 @@ import UnauthorizedPage from './pages/Unathorized';
 import EditProfile from './pages/logged-in/EditProfile';
 import AdminDashboard from './pages/logged-in/admin/AdminDashboard';
 import AdminLayout from './components/AdminLayout';
+import UsersTable from "./pages/logged-in/admin/UsersTable";
+import AgentsTable from "./pages/logged-in/admin/AgentsTable";
+import AppointmentsTable from "./pages/logged-in/admin/AppointmentsTable";
 
 function App() {
   return (
@@ -50,7 +53,13 @@ function App() {
 
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="users" element={<UsersTable />} />
+          <Route path="agents" element={<AgentsTable />} />
+          <Route path="appointments" element={<AppointmentsTable />} />
         </Route>
+        
+        
+      
 
         <Route path="/unauthorized" element={<UnauthorizedPage />} />
         <Route path="/" element={<LoginPage />} />

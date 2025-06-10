@@ -22,11 +22,13 @@ const agentRoutes = require('./src/routes/Agent');
 const savedRoutes = require('./src/routes/Saved');
 const requestRoutes = require('./src/routes/Requests');
 const buyerRoutes = require('./src/routes/Buyer');
+const adminRoutes = require('./src/routes/Admin');
 
 require('dotenv').config();``
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+app.use('/api/admin', adminRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/buyers', buyerRoutes);
 app.use('/api/requests', requestRoutes);
