@@ -24,6 +24,10 @@ const user = JSON.parse(localStorage.getItem('userData'));
               <option value="prishtine">Prishtine</option>
               <option value="gjakove">Gjakove</option>
               <option value="ferizaj">Ferizaj</option>
+              <option value="ferizaj">Peje</option>
+              <option value="ferizaj">Prizren</option>
+              <option value="ferizaj">Mitrovice</option>
+              <option value="ferizaj">Gjilan</option>
             </select>
           </div>
         )}

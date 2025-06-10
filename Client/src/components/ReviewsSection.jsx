@@ -5,7 +5,6 @@ import { useParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext"; // Assuming you have an auth context
 export default function ReviewsSection() {
   const { id: agentId } = useParams();
-  const { user } = useAuth(); // Get authenticated user
   const [reviews, setReviews] = useState([]);
   const [formData, setFormData] = useState({
     title: "",
@@ -15,12 +14,12 @@ export default function ReviewsSection() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch reviews on component mount
   useEffect(() => {
     const fetchReviews = async () => {
       setIsLoading(true);
       try {
         const response = await axiosInstance.get(`/api/reviews?agentId=${agentId}`);
+        console.log(response.data);
         setReviews(response.data);
       } catch (err) {
         setError("Failed to load reviews. Please try again.");

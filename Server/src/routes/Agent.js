@@ -11,7 +11,7 @@ router.get('/countSold', authenticateToken, agentController.getStatusSold);
 router.get('/getRequests', authenticateToken, agentController.getRequests);
 
 // Create a property
-router.post('/createProperty',authenticateToken, upload.array("imageUrl", 4),agentController.createProperty);
+router.post('/createProperty', authenticateToken, upload.array("imageUrl", 4),agentController.createProperty);
 // Update a property
 router.put('/editProperty/:id',upload.array("imageUrl",4), agentController.editProperty);
 // Delete a property

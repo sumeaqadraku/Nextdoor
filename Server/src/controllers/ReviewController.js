@@ -2,7 +2,9 @@ const { Review, User } = require('../models');
 
 exports.createReview = async (req, res) => {
   try {
-    const { rating, comment, title, userId, propertyId, agentId } = req.body;
+    const { rating, comment, title, propertyId, agentId } = req.body;
+    const userId = req.user.id;
+
 
     if (!rating || !userId || !title || (!propertyId && !agentId)) {
       return res.status(400).json({ message: 'Rating, userId, title, and either propertyId or agentId are required' });

@@ -31,7 +31,6 @@ axiosInstance.interceptors.response.use(
         const newAccessToken = refreshResponse.data.token;
         localStorage.setItem('token', newAccessToken);
 
-        // Update the failed request with new token
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
 
         return axiosInstance(originalRequest);

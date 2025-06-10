@@ -11,6 +11,7 @@ router.get('/', authenticateToken, notificationController.getAgentBookingRequest
 router.get('/getNotifs', authenticateToken, notificationController.getNotifications);
 
 router.put('/decline',notificationController.declineBookingRequest);
+
 router.put('/accept', authenticateToken, notificationController.acceptBookingRequest)
 
 router.post('/updateReadStatus', authenticateToken, notificationController.updateReadStatus);

@@ -92,7 +92,6 @@ const PropertyDetails = () => {
                                 />
                             </div>
 
-                            {/* Thumbnails section */}
                             <div className="w-full md:w-1/3 grid grid-cols-2 grid-rows-2 gap-3">
                                 {propertyDetails.images.slice(1, 5).map((img) => (
                                 <div key={img.id} className="bg-gray-300 flex items-center overflow-hidden justify-center h-28 md:h-[180px] rounded-md">
