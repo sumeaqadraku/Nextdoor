@@ -23,7 +23,7 @@ const AgentsTable = () => {
   return (
     <div className="p-10">
       <h2 className="text-2xl font-bold mb-6">Agents</h2>
-      {/* Add Agent Form here for CREATE */}
+      
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-200 rounded shadow">
           <thead>

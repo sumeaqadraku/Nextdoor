@@ -108,7 +108,6 @@ const PropertyDetails = () => {
                             <p className="text-lg md:text-xl text-[#008CB3] font-semibold">${propertyDetails.price}/month</p>
                         </div>
 
-                        {/* Highlights */}
                         <div className="mt-4 flex flex-wrap gap-3 px-2">
                             {[`Size: ${propertyDetails.features.size}m2`, `Status: ${propertyDetails.status}`, `Type: ${propertyDetails.type}`, `For ${propertyDetails.listingTypes}`, `Has Certificate: ${propertyDetails.features.certificates} `].map((item, i) => (
                                 <div key={i} className="p-2 border-2 w-full sm:w-[30%] md:w-[20%] text-center text-sm font-semibold border-[#008CB3] rounded-md">
@@ -117,7 +116,7 @@ const PropertyDetails = () => {
                             ))}
                         </div>
 
-                        {/* Description & Info */}
+                        
                         <div className="w-full flex flex-wrap gap-12 mt-6 px-2">
                             <div className="w-full md:w-[60%]">
                                 <h2 className="text-xl md:text-2xl font-bold mb-2">Description:</h2>
@@ -145,13 +144,13 @@ const PropertyDetails = () => {
                             <MapComponent latitude={propertyDetails.location.latitude} longitude={propertyDetails.location.latitude} address={propertyDetails.location.address}/>
                         </div>
 
-                        {/* CTA */}
+                       
                         <div className="flex justify-center md:justify-start mt-8 px-2">
                             <button
                             onClick={() => setBookingModal(true)}
                              className="w-36 md:w-44 bg-[#008CB3] h-10 rounded-lg text-white text-sm font-medium">Book It</button>
                         </div>
-                        {/* Booking Modal */}
+                    
                         <BookingModal
                             isOpen={bookingModal}
                             onClose={() => setBookingModal(false)}

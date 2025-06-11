@@ -20,7 +20,7 @@ import AdminLayout from './components/AdminLayout';
 import UsersTable from "./pages/logged-in/admin/UsersTable";
 import AgentsTable from "./pages/logged-in/admin/AgentsTable";
 import AppointmentsTable from "./pages/logged-in/admin/AppointmentsTable";
-import AgentReviews from "./components/widgets/AgentReviews"; // Path-i i saktë
+import AgentReviews from "./components/widgets/AgentReviews"; 
 
 function App() {
   return (

@@ -23,7 +23,7 @@ const AppointmentsTable = () => {
   return (
     <div className="p-10">
       <h2 className="text-2xl font-bold mb-6">Appointments</h2>
-      {/* Add Appointment Form here for CREATE */}
+     
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-200 rounded shadow">
           <thead>
@@ -51,7 +51,6 @@ const AppointmentsTable = () => {
                   >
                     Delete
                   </button>
-                  {/* Add Edit button here if needed */}
                 </td>
               </tr>
             ))}

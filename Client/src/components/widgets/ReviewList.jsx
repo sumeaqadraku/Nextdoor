@@ -9,7 +9,6 @@ export default function ReviewsList() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch reviews on component mount
   useEffect(() => {
     const fetchReviews = async () => {
       setIsLoading(true);

@@ -197,16 +197,7 @@ const RegisterPage = () => {
               <p>Already have an account? <Link to="/login" className="text-[#1175a3] font-medium hover:underline">Sign In now</Link></p>
             </div>
 
-            <div className="mt-4 text-center">
-              <p className="mb-2 text-sm text-gray-600">You can also Log In with:</p>
-              <button
-                type="button"
-                className="flex items-center justify-center w-10 h-10 mx-auto bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-all"
-                onClick={() => console.log('Login with Google')}
-              >
-                <img src={GmailImage} alt="Google" className="w-5 h-5" />
-              </button>
-            </div>
+            
           </form>
         </div>
       </div>
