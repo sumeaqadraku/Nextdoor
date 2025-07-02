@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { FaStar } from "react-icons/fa";
-import axios from "axios"; // Ose përdor axiosInstance nëse e ke të konfiguruar
-
-export default function ReviewsSection({ agentId }) { // Shto agentId si prop nëse është e nevojshme
+import axios from "axios"; 
+export default function ReviewsSection({ agentId }) { 
     const [reviews, setReviews] = useState([]);
     const [title, setTitle] = useState("");
     const [text, setText] = useState("");
@@ -10,7 +9,6 @@ export default function ReviewsSection({ agentId }) { // Shto agentId si prop n�
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    // Merr reviews nga serveri kur komponenti ngarkohet
     useEffect(() => {
         const fetchReviews = async () => {
             try {
@@ -32,16 +30,14 @@ export default function ReviewsSection({ agentId }) { // Shto agentId si prop n�
 
         setIsLoading(true);
         try {
-            // Dërgo të dhënat në server
             const response = await axios.post("http://localhost:5000/api/reviews", {
                 title,
                 comment: text,
                 rating,
-                agentId: agentId || 1, // Ndryshoje sipas nevojës
-                userId: 1 // Ndryshoje me ID e userit të loguar
+                agentId: agentId || 1, 
+                userId: 1 
             });
-
-            // Shto review-n e re në listë
+ë
             setReviews([...reviews, response.data]);
             setTitle("");
             setText("");
@@ -57,7 +53,7 @@ export default function ReviewsSection({ agentId }) { // Shto agentId si prop n�
 
     return (
         <div className="w-full mx-auto bg-gray-100 p-6 rounded-lg">
-            {/* Comment Box */}
+         
             <div className="bg-gray-200 p-4 rounded-lg shadow-md">
                 {error && <p className="text-red-500 mb-2">{error}</p>}
                 <div className="flex flex-col sm:flex-row gap-4">
@@ -89,7 +85,7 @@ export default function ReviewsSection({ agentId }) { // Shto agentId si prop n�
                     </div>
                 </div>
 
-                {/* Submit Button */}
+              
                 <div className="flex justify-end items-center mt-3">
                     <button 
                         className="bg-[#008CB3] text-white px-4 py-2 rounded-md hover:bg-[#007399] transition-all disabled:opacity-50"

@@ -137,7 +137,7 @@ const PropertyModal = ({ onClose, onPropertyAdded }) => {
             className="bg-[#F6F6F6] py-2 px-4 rounded-lg text-gray-500  cursor-pointer transition duration-200 transform hover:scale-105">Cancel</button>
         </div>
 
-        {/* Close (X) */}
+       
         <button
           className="absolute top-3 right-4 text-gray-500 hover:text-gray-700 text-xl"
           onClick={onClose}

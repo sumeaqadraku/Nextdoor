@@ -183,6 +183,7 @@ const LoginPage = () => {
             </div>
 
             
+            
             <button 
               type="submit" 
               className={`w-full bg-[#1175a3] text-white p-3 rounded-lg font-semibold text-sm hover:bg-[#0e5f85] transition-all duration-200 ${isLoading ? 'relative bg-[#93c5fd] cursor-not-allowed' : ''}`}
@@ -199,7 +200,7 @@ const LoginPage = () => {
               <p>Don't have an account? <Link to="/register" className="text-[#1175a3] font-medium hover:text-[#0e5f85] hover:underline">Sign Up now</Link></p>
             </div>
 
-            
+           
           </form>
         </div>
       </div>

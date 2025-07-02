@@ -28,7 +28,7 @@ const BookingModal = ({ isOpen, onClose, onConfirm, propertyId }) => {
       const token = localStorage.getItem("token");
 
       const response = await axiosInstance.post(
-        `/requests/makeABooking`, // Make sure this matches your route
+        `/requests/makeABooking`, 
         { message, propertyId },
         {
           headers: {
@@ -39,7 +39,7 @@ const BookingModal = ({ isOpen, onClose, onConfirm, propertyId }) => {
 
       if (response.status === 201) {
         setMessage("");
-        onConfirm?.(); // Optional success callback
+        onConfirm?.(); 
         onClose();
       }
     } catch (error) {

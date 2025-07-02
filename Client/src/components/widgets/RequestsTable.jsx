@@ -46,7 +46,7 @@ export default function RequestsMailPanel( {requestss}) {
 
   return (
     <div className="bg-white shadow rounded-2xl opacity-80 border border-[#D9D9D9] mx-10 px-10 py-4 flex flex-col h-[600px]">
-      {/* Header */}
+     
       <div className="h-10 bg-[#F6F6F6] flex justify-between items-center px-6 rounded-2xl w-full">
         <button className="text-[#b4b3b3] cursor-pointer">Mark all as read</button>
         <div className="flex items-center gap-5">
@@ -72,7 +72,7 @@ export default function RequestsMailPanel( {requestss}) {
         </div>
       </div>
 
-      {/* Request Rows */}
+
       <div className="overflow-y-auto mt-1 h-[500px]">
         <div className="flex flex-col mx-3">
           {pageItems.map((req) => (
@@ -80,7 +80,7 @@ export default function RequestsMailPanel( {requestss}) {
               key={req.id}
               className="w-full flex items-center py-1 px-5 justify-between border-b border-[#D9D9D9] hover:bg-[#F6F6F6] transition duration-200"
             >
-              {/* client + message */}
+             
               <div className="flex items-center gap-10">
                 <div className="flex items-center gap-3 py-2">
                   <FiUser className="text-[#b2b0b0] rounded-full p-2 bg-gray-100 text-[45px]" />
@@ -95,7 +95,7 @@ export default function RequestsMailPanel( {requestss}) {
                 </div>
               </div>
 
-              {/* actions */}
+          
               <div className="flex gap-2">
                 <button
                   onClick={() => {
@@ -119,12 +119,12 @@ export default function RequestsMailPanel( {requestss}) {
             </div>
           ))}
 
-          {/* Accept Modal */}
+         
           {showModal && <AppointmentModal clientRequestId={selected?.clientRequestId}  propertyId={selected?.propertyId} onClose={() => setShowModal(false)} />}
         </div>
       </div>
 
-      {/* Decline Modal */}
+   
       <DeclineRequest
         open={modalOpen}
         onClose={() => setModalOpen(false)}

@@ -1,9 +1,9 @@
-// AgentReviews.jsx
+
 import React from "react";
 import { useParams } from "react-router-dom";
 import useCheckRole from "../../context/checkRole"; 
 import ReviewsList from "./ReviewList";
-import ReviewsSection from "../ReviewsSection"; // Assuming this is the component for managing reviews
+import ReviewsSection from "../ReviewsSection"; 
 const AgentReviews = ({ editable = false }) => {
   useCheckRole(['agent'], '/login');
   const { agentId } = useParams();

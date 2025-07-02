@@ -127,7 +127,7 @@ const HomePage = () => {
             </div>
           </div>
 
-          {/* Property Grid */}
+         
           <div className="px-10 py-2 w-full">
           <h1 className="text-2xl font-semibold">Top Apartment Rooms</h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 h-[470px] overflow-y-auto mt-3 pb-4">

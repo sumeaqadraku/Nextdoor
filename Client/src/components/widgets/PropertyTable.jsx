@@ -45,7 +45,6 @@ const PropertyTable = ({ properties: propProperties }) => {
           status: newStatus,
         });
 
-        // Update local state after successful API response
         setProperties((prev) =>
           prev.map((property) =>
             property.id === id ? { ...property, status: newStatus } : property

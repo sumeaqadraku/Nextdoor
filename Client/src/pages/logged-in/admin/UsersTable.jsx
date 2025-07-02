@@ -48,7 +48,7 @@ const UsersTable = () => {
                   >
                     Delete
                   </button>
-                  {/* Add Edit button here if needed */}
+                
                 </td>
               </tr>
             ))}

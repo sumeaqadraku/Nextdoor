@@ -2,7 +2,7 @@ import React from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
-// Vendndodhja e qendrës
+
 
 const MapComponent = ({longitude,latitude,address}) => {
     console.log("🛰️ MapComponent received →", { latitude, longitude, address });
