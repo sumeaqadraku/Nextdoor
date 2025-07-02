@@ -29,6 +29,10 @@ db.NewListing = require('./NewListingModel')(sequelize, DataTypes);
 db.Notification = require('./NotificationModel')(sequelize, DataTypes);
 db.SavedProperty = require('./SavedPropertiesModel')(sequelize, DataTypes);
 
+//I krijon qto dyja
+db.Ligjeruesi = require('./Ligjeruesi')(sequelize, DataTypes);
+db.Ligjerata = require('./LigjerataModel')(sequelize, DataTypes);
+
 
 
 // ✅ Setup associations

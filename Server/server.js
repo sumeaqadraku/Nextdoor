@@ -24,6 +24,8 @@ const requestRoutes = require('./src/routes/Requests');
 const buyerRoutes = require('./src/routes/Buyer');
 const adminRoutes = require('./src/routes/Admin');
 const reviewRoutes = require('./src/routes/Reviews');
+const ligjeratatRoutes = require('./src/routes/Ligjeratat');
+
 require('dotenv').config();
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -39,6 +41,7 @@ app.use('/api/properties', propertyRoutes);
 app.use('/api/appointments', appointmentRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/reviews', reviewRoutes);
+app.use('/api/ligjeratat', ligjeratatRoutes);
 
 const PORT = process.env.PORT || 5000;
 

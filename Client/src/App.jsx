@@ -21,6 +21,8 @@ import UsersTable from "./pages/logged-in/admin/UsersTable";
 import AgentsTable from "./pages/logged-in/admin/AgentsTable";
 import AppointmentsTable from "./pages/logged-in/admin/AppointmentsTable";
 import AgentReviews from "./components/widgets/AgentReviews"; 
+import Ligjeratat from './pages/logged-in/Ligjeruesit/Ligjerata';
+import EditLigjeruesi from './pages/logged-in/Ligjeruesit/EditLigjeruesi';
 
 function App() {
   return (
@@ -61,6 +63,9 @@ function App() {
           <Route path="appointments" element={<AppointmentsTable />} />
         </Route>
 
+        <Route path="/ligjeratat" element={<Ligjeratat />} />
+        <Route path="/editLigjeruesi/:id" element={<EditLigjeruesi />} />
+        
         <Route path="/unauthorized" element={<UnauthorizedPage />} />
         <Route path="/" element={<LoginPage />} />
       </Routes>
