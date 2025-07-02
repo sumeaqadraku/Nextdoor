@@ -105,6 +105,7 @@ const countProperties = async (req, res) => {
     const userId = req.user?.id;
     const agent = await Agent.findOne({ where: { userId } });
     const agentId = agent?.id;
+    console.log(agentId);
 
     const propertyCount = await Property.count({
       where: { agentId }

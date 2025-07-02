@@ -168,7 +168,6 @@ const RegisterPage = () => {
                 <option value="">Pick your role...</option>
                 <option value="buyer">Buyer</option>  
                 <option value="agent">Agent</option>
-                <option value="admin">Admin</option>
               </select>
               {errors.role && <span className="text-red-500 text-xs mt-1">{errors.role}</span>}
             </div>
@@ -197,16 +196,7 @@ const RegisterPage = () => {
               <p>Already have an account? <Link to="/login" className="text-[#1175a3] font-medium hover:underline">Sign In now</Link></p>
             </div>
 
-            <div className="mt-4 text-center">
-              <p className="mb-2 text-sm text-gray-600">You can also Log In with:</p>
-              <button
-                type="button"
-                className="flex items-center justify-center w-10 h-10 mx-auto bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-all"
-                onClick={() => console.log('Login with Google')}
-              >
-                <img src={GmailImage} alt="Google" className="w-5 h-5" />
-              </button>
-            </div>
+           
           </form>
         </div>
       </div>

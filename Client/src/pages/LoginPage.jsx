@@ -182,10 +182,7 @@ const LoginPage = () => {
               <label htmlFor="remember" className="text-sm text-gray-700">Remember me</label>
             </div>
 
-            <div className="text-right mb-4">
-              <a href="#" className="text-sm font-medium text-[#1175a3] hover:text-[#0e5f85] hover:underline">Forgot Password?</a>
-            </div>
-
+            
             <button 
               type="submit" 
               className={`w-full bg-[#1175a3] text-white p-3 rounded-lg font-semibold text-sm hover:bg-[#0e5f85] transition-all duration-200 ${isLoading ? 'relative bg-[#93c5fd] cursor-not-allowed' : ''}`}
@@ -202,18 +199,7 @@ const LoginPage = () => {
               <p>Don't have an account? <Link to="/register" className="text-[#1175a3] font-medium hover:text-[#0e5f85] hover:underline">Sign Up now</Link></p>
             </div>
 
-            <div className="text-center mt-6">
-              <p className="text-sm text-gray-600 mb-2">You can also Log In with:</p>
-              <div className="flex justify-center gap-4">
-                <button 
-                  type="button"
-                  className="bg-white border border-gray-200 rounded-full w-12 h-12 flex items-center justify-center hover:bg-gray-50 hover:-translate-y-0.5 transition-all duration-200"
-                  onClick={() => console.log('Login with Google')}
-                >
-                  <img src={GmailImage} alt="Google" className="w-6 h-6" />
-                </button>
-              </div>
-            </div>
+            
           </form>
         </div>
       </div>

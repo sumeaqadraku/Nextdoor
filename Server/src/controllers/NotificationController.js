@@ -142,28 +142,40 @@ exports.updateReadStatus = async (req, res) => {
     }
   }
 
-  exports.removeAllNotifications = async (req, res) => {
-    try {
-      const userId = req.user.id;
+ const { Op } = require("sequelize");
 
-      if (!userId) {
-        return res.status(400).json({ message: 'User ID is required.' });
-      }
+exports.removeAllNotifications = async (req, res) => {
+  try {
+    const userId = req.user.id;
 
-      const deletedCount = await Notification.destroy({
-        where: { userId }
-      });
+    const clientRequests = await ClientRequest.findAll({
+      where: { userId },
+      attributes: ['notif_id'],
+    });
 
-      if (deletedCount === 0) {
-        return res.status(404).json({ message: 'No notifications found for this user.' });
-      }
+    const clientRequestNotifIds = clientRequests.map(cr => cr.notif_id);
 
-      res.status(200).json({ message: 'All notifications removed successfully.' });
-    } catch (error) {
-      console.error('Error removing notifications:', error);
-      res.status(500).json({ message: 'Internal server error.' });
+
+    const deletedCount = await Notification.destroy({
+      where: {
+        [Op.or]: [
+          { userId },
+          { id: { [Op.in]: clientRequestNotifIds } },
+        ],
+      },
+    });
+
+    if (deletedCount === 0) {
+      return res.status(404).json({ message: 'No notifications found for this user.' });
     }
+
+    res.status(200).json({ message: 'All related notifications removed successfully.' });
+  } catch (error) {
+    console.error('Error removing notifications:', error);
+    res.status(500).json({ message: 'Internal server error.' });
   }
+};
+
 
 exports.getAgentBookingRequests = async (req, res) => {
   try {

@@ -8,7 +8,6 @@ const authenticateToken = require('../middleware/auth').authenticateToken;
 router.get('/countProperties', authenticateToken, agentController.countProperties);
 router.get('/countAppointments', authenticateToken, agentController.countScheduledAppointments);
 router.get('/countSold', authenticateToken, agentController.getStatusSold);
-router.get('/getRequests', authenticateToken, agentController.getRequests);
 
 // Create a property
 router.post('/createProperty', authenticateToken, upload.array("imageUrl", 4),agentController.createProperty);

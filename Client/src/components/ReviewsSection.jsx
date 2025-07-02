@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { FaStar } from "react-icons/fa";
 import axiosInstance from "../context/axiosInstance";
 import { useParams } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 export default function ReviewsSection() {
   const { id: agentId } = useParams();
   const [reviews, setReviews] = useState([]);

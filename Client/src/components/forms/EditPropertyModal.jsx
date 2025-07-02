@@ -80,7 +80,16 @@ const EditPropertyModal = ({ onClose}) => {
              <FormInput label={"Price:"} placeholder={"Enter price... (300.00)"} name={"price"} type={"number"} onChange={handleChange}/>
              <FormInput label={"Owner Name:"} placeholder={"Enter owner's name..."} name={"owner"} type={"text"} onChange={handleChange}/>
              <Select label={"Listing Type:"} value={formData.listingTypes}  name={"listingTypes"} onChange={handleChange} options={[{value: "Rent", label: "Rent"},{value: "Sale", label:"Sale"}]} /> 
-             <FormInput label={"City:"} placeholder={"Enter city name..."} name={"city"} type={"text"} onChange={handleChange}/>
+             <Select label={"City:"} value={formData.city} placeholder={"Enter city name..."} name={"city"} type={"text"} onChange={handleChange}
+                options={[
+                  {value: "Prishtine", label: "Prishtine"},
+                  { value: "Gjakove", label: "Gjakove" },
+                  { value: "Prizren", label: "Prizren" },
+                  { value: "Ferizaj", label: "Ferizaj" },
+                  { value: "Peje", label: "Peje" },
+                  { value: "Mitrovice", label: "Mitrovice" },
+                  { value: "Gjilan", label: "Gjilan" }
+                ]}/>             
              <FormInput label={"Address:"} placeholder={"Enter property address..."} name={"address"} type={"text"} onChange={handleChange}/>
              <FormInput label={"Latitude:"} placeholder={"Enter latitude value..."} name={"latitude"} type={"number"} onChange={handleChange}/>
              <FormInput label={"Longitude:"} placeholder={"Enter longitude value..."} name={"longitude"} type={"number"} onChange={handleChange}/>

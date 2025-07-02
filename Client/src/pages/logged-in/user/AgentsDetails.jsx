@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 const AgentDetails = () => {
   useCheckRole(['buyer', 'admin', 'agent'], '/login');
   const { id } = useParams();
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
 
   const [agent, setAgent] = useState(null);

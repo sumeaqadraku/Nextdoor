@@ -18,7 +18,7 @@ router.post('/updateReadStatus', authenticateToken, notificationController.updat
 
 router.post('/markAllAsRead', authenticateToken, notificationController.markAllNotificationsAsRead);
 
-router.post('/deleteNotification', authenticateToken, notificationController.removeAllNotifications);
+router.post('/removeNotification', authenticateToken, notificationController.removeAllNotifications);
 
 
 

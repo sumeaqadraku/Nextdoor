@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { Bar } from "react-chartjs-2";
+import toast from "react-hot-toast";
+
 import {
   FaRegBuilding,
   FaCheckCircle,
@@ -26,11 +28,6 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 const AgentDashboard = () => {
   useCheckRole(['agent','admin'], '/login');
-  const [topProperties] = useState([
-    { id: 1, name: "Luxury Condo", location: "Prishtine", price: "$600,000" },
-    { id: 2, name: "Modern Flat", location: "Ferizaj", price: "$420,000" },
-    { id: 3, name: "Spacious Villa", location: "Shkup", price: "$900,000" },
-  ]);
 
   const [stats, setStats] = useState({
     listings: 0,
@@ -40,17 +37,18 @@ const AgentDashboard = () => {
     leads: 0,
     meetings: 0,
   });
+  const [appointments, setAppointments] = useState([]);
+
 
   const fetchDashboardData = async () => {
     try {
       const token = localStorage.getItem("token");
       const headers = { Authorization: `Bearer ${token}` };
 
-      const [propsRes, soldRes, appointRes, reqsRes] = await Promise.all([
+      const [propsRes, soldRes, appointRes, ] = await Promise.all([
         axiosInstance.get("/agents/countProperties", { headers }),
         axiosInstance.get("/agents/countSold", { headers }),
         axiosInstance.get("/agents/countAppointments", { headers }),
-        axiosInstance.get("/agents/getRequests", { headers }),
       ]);
       
       console.log(propsRes.data)
@@ -59,7 +57,6 @@ const AgentDashboard = () => {
       listings: propsRes.data.count || 0,
       sold: soldRes.data.count || 0,
       appointments: appointRes.data.count || 0,
-      leads: reqsRes.data.count || 0,
       
     });
     } catch (err) {
@@ -67,20 +64,44 @@ const AgentDashboard = () => {
     }
   };
 
+  const fetchAppointments = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    const headers = { Authorization: `Bearer ${token}` };
+
+    const response = await axiosInstance.get("/appointments", { headers });
+    console.log("Appointment API Response:", response.data); // 👈 Inspect this
+    setAppointments(response.data); // You may need response.data.appointments or similar
+  } catch (err) {
+    console.error("Error fetching appointments", err);
+  }
+ };
+
   useEffect(() => {
     fetchDashboardData();
+    fetchAppointments();
   }, []);
 
-  const salesData = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May"],
-    datasets: [
-      {
-        label: "Sales ($)",
-        data: [12000, 19000, 15000, 22000, 18000],
-        backgroundColor: "#1275A4",
-      },
-    ],
-  };
+ const handleStatusChange = async (id, newStatus) => {
+  try {
+    const response = await axiosInstance.patch(`/appointments/status/${id}`, {
+      status: newStatus,
+    });
+
+    setAppointments((prev) =>
+      prev.map((appt) =>
+        appt.id === id ? { ...appt, status: newStatus } : appt
+      )
+    );
+
+    console.log(`Status for appointment ${id} updated to ${newStatus}`);
+    toast.success(`Appointment status updated to "${newStatus}"`);
+  } catch (error) {
+    console.error("Error updating appointment status:", error);
+    toast.error("Failed to update appointment status");
+  }
+};
+
 
   return (
     <div className="flex h-lvh">
@@ -88,8 +109,8 @@ const AgentDashboard = () => {
         {/* Header */}
          <div className="bg-white px-10 py-2 mb-5 flex justify-between items-center">
             <div className="">
-                <h1 className="text-2xl font-medium leading-tight">Property Management</h1>
-                <p className="text-[20px] font-light leading-5">Manage all your properties here</p>
+                <h1 className="text-2xl font-medium leading-tight">Dashboard</h1>
+                <p className="text-[20px] font-light leading-5">Manage all information here</p>
             </div>
             <div className="flex items-center gap-1">
                 <div className="bg-gray-200 size-10 rounded-full"></div>
@@ -98,47 +119,59 @@ const AgentDashboard = () => {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 px-10 xl:grid-cols-6 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 px-10 xl:grid-cols-3 gap-4 mb-6">
           <StatCard title="Listings" value={stats.listings} icon={<FaRegBuilding />} />
           <StatCard title="Sold" value={stats.sold} icon={<FaCheckCircle />} />
           <StatCard title="Pending" value={stats.appointments} icon={<FaHourglassHalf />} />
-          <StatCard title="Revenue" value={stats.revenue} icon={<FaDollarSign />} />
-          <StatCard title="New Leads" value={stats.leads} icon={<MdOutlinePersonAddAlt1 />} />
-          <StatCard title="Meetings" value="3 Today" icon={<FaCalendarAlt />} />
         </div>
-
-        {/* Main Section */}
+        
         <div className="grid grid-cols-1 lg:grid-cols-3 px-10 gap-6">
-          {/* Sales Chart */}
-          <div className="bg-white p-4 rounded-xl shadow col-span-2">
-            <h2 className="text-lg font-semibold mb-4">Monthly Sales</h2>
-            <Bar data={salesData} options={{ responsive: true }} />
-          </div>
+          
 
           {/* Top Properties */}
-          <div className="bg-white p-4 rounded-xl px-10 shadow">
-            <h2 className="text-lg font-semibold mb-4">Appointments</h2>
-            <ul className="divide-y">
-              {topProperties.map((prop) => (
-                <li key={prop.id} className="py-3 flex flex-col">
-                  <span className="font-medium">{prop.name}</span>
-                  <span className="text-sm text-gray-500">{prop.location}</span>
-                  <span className="text-sm text-[#1275A4] font-semibold">{prop.price}</span>
-                </li>
-              ))}
-            </ul>
+          <div className="bg-white p-4 rounded-xl px-10 shadow col-span-2">
+            <h2 className="text-lg font-semibold mb-4">Your Appointments</h2>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm">
+                <thead>
+                  <tr className="text-left border-b">
+                    <th className="py-2 px-3">Property</th>
+                    <th className="py-2 px-3">Date</th>
+                    <th className="py-2 px-3">Status</th>
+                  </tr>
+                </thead>
+                  <tbody>
+                    {(appointments || []).map((appt, index) => (
+                      <tr key={index}>
+                        <td className="py-2 px-3">{appt.title}</td>
+                        <td className="py-2 px-3">
+                          {new Date(appt.date).toLocaleDateString()}
+                        </td>
+                        <td className="py-2 px-3">
+                          <select
+                            value={appt.status}
+                            onChange={(e) => handleStatusChange(appt.id, e.target.value)}
+                            className={`border rounded px-2 py-1 text-sm ${
+                              appt.status === 'Completed'
+                                ? 'text-green-600'
+                                : appt.status === 'Cancelled'
+                                ? 'text-red-600'
+                                : 'text-yellow-600'
+                            }`}
+                          >
+                            <option value="Scheduled">Scheduled</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Cancelled">Cancelled</option>
+                          </select>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+              </table>
+            </div>
           </div>
         </div>
-
-        {/* Recent Activity */}
-        <div className="mt-6 bg-white p-4 rounded-xl px-10 shadow">
-          <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
-          <ul className="space-y-3 text-sm text-gray-600">
-            <li>📬 John Doe sent an inquiry on Luxury Condo.</li>
-            <li>✅ Mark Lee finalized deal for Family Home.</li>
-            <li>📞 Scheduled a tour with Emily Smith for Urban Studio.</li>
-          </ul>
-        </div>
+        
       </div>
     </div>
   );

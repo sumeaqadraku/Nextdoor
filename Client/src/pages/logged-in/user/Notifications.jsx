@@ -96,7 +96,7 @@ const NotificationsPage = () => {
  const markAllAsRead = async () => {
     try {
       const token = localStorage.getItem("token");
-      await axios.post(
+      await axiosInstance.post(
         "/notifications/markAllAsRead",
         {},
         {

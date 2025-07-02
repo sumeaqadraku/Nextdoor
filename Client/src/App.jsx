@@ -50,6 +50,7 @@ function App() {
           <Route path="dashboard" element={<AgentDasboard />} />
           <Route path="management" element={<AddProperty />} />
           <Route path="requests" element={<Requests />} />
+          <Route path="edit-profile" element={<EditProfile />} />
           <Route path="reviews/:agentId" element={<AgentReviews />} />
         </Route>
 

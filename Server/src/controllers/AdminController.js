@@ -35,7 +35,7 @@ exports.deleteUser = async (req, res) => {
 // List all agents
 exports.getAllAgents = async (req, res) => {
   try {
-    const agents = await Agent.findAll();
+    const agents = await User.findAll({where: {role: "agent"}});
     res.json(agents);
   } catch (err) {
     res.status(500).json({ error: err.message });

@@ -12,6 +12,8 @@ const AgentsTable = () => {
       .finally(() => setLoading(false));
   }, []);
 
+  console.log(agents);
+
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this agent?")) return;
     await axiosInstance.delete(`/admin/agents/${id}`);
